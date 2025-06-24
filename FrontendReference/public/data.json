@@ -1,0 +1,17 @@
+[
+    {
+        "id":"1",
+        "courseName":"Chandi Path",
+        "image":"/images/chandiPaath.jpg"
+    },
+    {
+        "id":"2",
+        "courseName":"Divne Mother",
+        "image":"/images/Divine-mother-22.08.2023-OK.jpg"
+    },
+    {
+        "id":"3",
+        "courseName":"Bhaja Govindam",
+        "image":"/images/BHAJAGOVINDAM-OK.png"
+    }
+]

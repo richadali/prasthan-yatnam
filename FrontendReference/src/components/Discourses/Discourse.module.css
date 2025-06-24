@@ -1,0 +1,99 @@
+.discourse {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 4rem; 
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.fullpage{
+  background-image: url('/src/assets/IMG-5.png'); /* Set the background image */
+  background-repeat: no-repeat;                   /* Prevents the image from repeating */
+  background-size: cover;                         /* Ensures the image covers the container */
+  background-position: center bottom;             /* Align the image to the center bottom */
+  height: 900px;                
+  margin-top: -22px;
+  min-height: 100vh;
+}
+
+.searchContainer {
+  width: 500px;
+  margin: 1.5rem auto;
+  padding: 0 2rem;
+ align-items: center;
+ margin-bottom:-0.2rem;
+
+  
+}
+
+.searchInput {
+  margin-top: 20px;
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.2rem;
+  border: 2px solid #b7934a;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #3a2f2d;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.searchInput::placeholder {
+  color: #a0855c;
+}
+
+.loaderContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+
+/* .discourseCard {
+  background: linear-gradient(to bottom, #f8f4e8, #e6d6a8);
+  border: 2px solid #b7934a;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.discourseCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.discourseCard img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 2px solid #b7934a;
+}
+
+.discourseCard h3 {
+  font-size: 1.5rem;
+  color: #4a1c40;
+  margin: 1rem;
+  font-weight: bold;
+}
+
+.discourseCard p {
+  font-size: 1rem;
+  color: #3a2f2d;
+  margin: 0 1rem 1rem;
+  line-height: 1.4;
+} */
+
+@media (max-width: 768px) {
+  .discourse {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .searchInput {
+    font-size: 1rem;
+    padding: 0.8rem;
+  }
+}

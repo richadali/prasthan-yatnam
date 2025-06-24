@@ -1,0 +1,13 @@
+.playerDiv {
+  width: 100%;
+  min-width: 300px; /* Example minimum width */
+  min-height: 300px; /* Example minimum height */
+  position: relative;
+  opacity: 0; /* Start with opacity 0 */
+  transition: opacity 1s ease;
+  background: black; /* Fallback for loading */
+}
+
+.playerDiv.loaded {
+  opacity: 1; /* Opacity when loaded */
+}

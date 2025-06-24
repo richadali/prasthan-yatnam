@@ -1,0 +1,30 @@
+/* GalleryItem.module.css */
+
+.galleryItem {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    animation: ease-in-out fadeInUp 1s;
+    height:150px;
+    width: 200px;
+    margin-left: 40px;
+  }
+  
+  .galleryItem:hover {
+    transform:  scale(1.05);
+    box-shadow:0px 0px 8px 0px;
+  }
+  
+  .galleryItem h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+    color: rgb(255, 255, 255);
+  }
+  
+  .galleryItem p {
+    font-size: 1rem;
+    color: #e8e6e6;
+  }
+  

@@ -1,0 +1,125 @@
+.controls__div {
+    position:absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 2;
+    background: rgba(0,0,0,0.6);
+}
+
+.controls__div {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .visible {
+    opacity: 1;
+  }
+  
+  .iconBubble {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    background-color: rgba(83, 157, 213, 0.229); 
+    border-radius: 50%;
+    margin: 10px; 
+    transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
+  }
+  
+  .iconBubble:hover {
+    animation: bounce 0.3s;
+    transform: scale(1.1);
+    background-color: rgba(83, 157, 213, 0.437);
+  }
+  
+  @keyframes bounce {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.95); }
+    100% { transform: scale(1.1); }
+  }
+
+  .iconSquare {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 60px;
+    background-color: rgba(83, 157, 213, 0.229); 
+    border-radius: 10%; 
+    margin: 10px;
+    transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  }
+
+  .nextButton {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 20px;
+    margin: 10px;
+    font-size: 33px;
+    font-weight: 600; 
+    color: #d3d0d0; 
+    cursor: pointer; 
+    position: relative; /* Required for pseudo-element and animations */
+    overflow: hidden; /* Hide overflow to prevent highlight from extending beyond button */
+    background-color: rgba(83, 157, 213, 0.229); 
+    border-radius: 10px; /* Adjust as needed to match button's border radius */
+  }
+  
+  .nextButton::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    border-radius: 50%;
+    background-color: rgba(226, 217, 217, 0.863); /* Highlighter color and transparency */
+    animation: highlighter 2s linear infinite; /* Animation properties */
+  }
+  
+  @keyframes highlighter {
+    0% {
+      transform: scale(0.5); /* Start smaller */
+      opacity: 0.6; /* Start with lower opacity */
+    }
+    50% {
+      transform: scale(1.2); /* Grow larger */
+      opacity: 0.4; /* Decrease opacity */
+    }
+    100% {
+      transform: scale(2); /* Grow larger */
+      opacity: 0; /* Fade out */
+    }
+  }
+  
+
+  
+  
+  
+  .controls__icons {
+    color: white;
+    font-size: 50px;
+    transform: scale(0.9);
+    transition: color 0.3s, transform 0.3s; /* Add transition for color and transform */
+  }
+  
+  .volume__slider {
+    width: 100;
+    margin-top: -50px;
+    margin-left: 130px;
+}
+
+.bottom__icons {
+    color:#999;
+}
+
+.bottom__icons:hover {
+    color: white;
+}

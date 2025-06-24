@@ -1,0 +1,45 @@
+.discourse_card_container {
+    margin: 10px;
+    padding-left:50px;
+    padding-left:50px;
+  }
+  
+  .discourse_card {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+  }
+  
+  .image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    flex-shrink: 0;
+    padding: 5px;;
+  }
+  
+  .content {
+    padding: 20px;
+  }
+  
+  .title {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    color: navy;
+  }
+  
+  .description {
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  
+  .button {
+    margin-top: 10px;
+  }
+  
