@@ -4,7 +4,7 @@
 <style>
     /* Hero Section */
     .hero-section {
-        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://source.unsplash.com/1600x900/?himalaya,spirituality') no-repeat center center;
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/324.jpg') no-repeat center center;
         background-size: cover;
         height: 80vh;
         display: flex;
@@ -15,7 +15,8 @@
 
     .hero-content {
         max-width: 800px;
-        margin: 0 auto;
+        margin-left: auto;
+        margin-right: 5%;
         text-align: center;
     }
 
@@ -175,8 +176,7 @@
         <div class="row">
             <div class="col-lg-6 mb-4">
                 <div class="card border-0 shadow-sm h-100">
-                    <img src="https://source.unsplash.com/800x500/?divine,mother,kali" class="card-img-top"
-                        alt="Divine Mother">
+                    <img src="/images/discourses/divine-mother.jpg" class="card-img-top" alt="Divine Mother">
                 </div>
             </div>
             <div class="col-lg-6 mb-4 d-flex align-items-center">
@@ -200,8 +200,7 @@
         <div class="row">
             <div class="col-md-6 mb-4">
                 <div class="card course-card border-0">
-                    <img src="https://source.unsplash.com/800x500/?hinduism,temple" class="card-img-top course-img"
-                        alt="Hinduism">
+                    <img src="/images/discourses/hinduism.jpg" class="card-img-top course-img" alt="Hinduism">
                     <div class="card-body">
                         <h5 class="card-title fw-bold">Hinduism: Core Concepts</h5>
                         <p class="card-text">Explore the fundamental concepts of Hinduism and their relevance in modern
@@ -212,8 +211,7 @@
             </div>
             <div class="col-md-6 mb-4">
                 <div class="card course-card border-0">
-                    <img src="https://source.unsplash.com/800x500/?sai,baba" class="card-img-top course-img"
-                        alt="Sai Baba">
+                    <img src="/images/discourses/saiBaba.jpg" class="card-img-top course-img" alt="Sai Baba">
                     <div class="card-body">
                         <h5 class="card-title fw-bold">Sai Baba: Life & Teachings</h5>
                         <p class="card-text">Discover the profound teachings and life story of Sai Baba of Shirdi.</p>
@@ -235,7 +233,9 @@
         <div class="row">
             <div class="col-md-4 mb-4">
                 <div class="testimonial-card text-center">
-                    <img src="https://source.unsplash.com/100x100/?person" class="testimonial-avatar" alt="Student">
+                    <div class="testimonial-avatar bg-light d-flex align-items-center justify-content-center">
+                        <i class="fas fa-user fa-2x text-secondary"></i>
+                    </div>
                     <i class="fas fa-quote-left testimonial-quote"></i>
                     <p class="mb-3">"The Divine Mother course changed my perspective on spirituality. The teachings were
                         profound yet accessible."</p>
@@ -245,7 +245,9 @@
             </div>
             <div class="col-md-4 mb-4">
                 <div class="testimonial-card text-center">
-                    <img src="https://source.unsplash.com/100x100/?woman" class="testimonial-avatar" alt="Student">
+                    <div class="testimonial-avatar bg-light d-flex align-items-center justify-content-center">
+                        <i class="fas fa-user fa-2x text-secondary"></i>
+                    </div>
                     <i class="fas fa-quote-left testimonial-quote"></i>
                     <p class="mb-3">"I've been searching for authentic spiritual teachings for years. Prasthan Yatnam
                         offers exactly what I was looking for."</p>
@@ -255,7 +257,9 @@
             </div>
             <div class="col-md-4 mb-4">
                 <div class="testimonial-card text-center">
-                    <img src="https://source.unsplash.com/100x100/?man" class="testimonial-avatar" alt="Student">
+                    <div class="testimonial-avatar bg-light d-flex align-items-center justify-content-center">
+                        <i class="fas fa-user fa-2x text-secondary"></i>
+                    </div>
                     <i class="fas fa-quote-left testimonial-quote"></i>
                     <p class="mb-3">"The courses are well-structured and the instructors are knowledgeable. I highly
                         recommend Prasthan Yatnam to all spiritual seekers."</p>

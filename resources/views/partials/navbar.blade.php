@@ -39,9 +39,10 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle fw-medium" href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
-                        {{ Auth::user()->name }}
+                        <i class="fas fa-user-circle me-1"></i> {{ Auth::user()->full_name }}
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ url('/dashboard') }}">Dashboard</a></li>
                         <li><a class="dropdown-item" href="{{ url('/profile') }}">Profile</a></li>
                         <li><a class="dropdown-item" href="{{ url('/my-courses') }}">My Courses</a></li>
                         <li>
@@ -58,8 +59,9 @@
                 @else
                 <li class="nav-item">
                     <a class="nav-link fw-medium {{ request()->is('login') ? 'active' : '' }}"
-                        href="{{ url('/login') }}">LOGIN</a>
+                        href="{{ route('login') }}">LOGIN</a>
                 </li>
+
                 @endauth
             </ul>
         </div>
