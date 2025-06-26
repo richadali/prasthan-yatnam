@@ -64,7 +64,7 @@ class RegisterController extends Controller
                 'unique:users',
                 'regex:/^[0-9]{6,15}$/',
             ],
-            'organization' => ['nullable', 'string', 'max:255'],
+            'organization' => ['required', 'string', 'max:255'],
             'password' => ['required', 'string', 'confirmed', Password::min(8)->mixedCase()->numbers()],
         ], [
             'phone.regex' => 'Phone number should contain 6-15 digits only, without spaces or special characters.',

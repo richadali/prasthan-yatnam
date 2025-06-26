@@ -14,9 +14,9 @@
     }
 
     .login-header {
-        background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+        background: linear-gradient(135deg, #FA8128, #e86b00);
         color: white;
-        padding: 2rem;
+        padding: 2rem 2rem 1rem;
     }
 
     .form-group {
@@ -25,6 +25,61 @@
 
     .invalid-feedback {
         display: block;
+    }
+
+    .account-tabs {
+        margin-top: 20px;
+    }
+
+    .account-tabs .btn {
+        border-radius: 30px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .account-tabs .btn-outline-light {
+        border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .account-tabs .btn-outline-light:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .account-tabs .btn-light {
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Custom Button Styles with Gradients */
+    .navy-btn {
+        background: linear-gradient(to bottom, #000080, #0000b3);
+        border: none;
+        color: white;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .navy-btn:hover {
+        background: linear-gradient(to bottom, #0000b3, #000080);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .orange-btn {
+        background: linear-gradient(to bottom, #FA8128, #e86b00);
+        border: none;
+        color: white;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .orange-btn:hover {
+        background: linear-gradient(to bottom, #e86b00, #FA8128);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
     }
 </style>
 @endsection
@@ -36,8 +91,24 @@
             <div class="col-md-6">
                 <div class="card login-card">
                     <div class="login-header text-center">
-                        <h2 class="mb-3">Welcome Back</h2>
-                        <p class="mb-0">Login to continue your spiritual journey</p>
+                        <h3 class="mb-2">Welcome</h3>
+                        <p class="mb-3">Continue your journey with Prasthan Yatnam</p>
+
+                        <!-- Account Navigation Tabs -->
+                        <div class="account-tabs mb-3">
+                            <div class="row">
+                                <div class="col-6">
+                                    <a href="{{ route('register') }}"
+                                        class="btn btn-outline-light btn-block py-2 w-100 text-white opacity-75">I am
+                                        new</a>
+                                </div>
+                                <div class="col-6">
+                                    <a href="{{ route('login') }}"
+                                        class="btn btn-light btn-block py-2 w-100 text-warning fw-bold">I have an
+                                        account</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body p-4 p-md-5">
                         @if (session('success'))
@@ -99,14 +170,9 @@
                             </div>
 
                             <div class="form-group mb-0 mt-4">
-                                <button type="submit" class="btn btn-primary w-100 py-2">
+                                <button type="submit" class="btn navy-btn w-100 py-2">
                                     Login
                                 </button>
-                            </div>
-
-                            <div class="text-center mt-4">
-                                <p>Don't have an account? <a href="{{ route('register') }}" class="text-blue">Register
-                                        here</a></p>
                             </div>
                         </form>
                     </div>

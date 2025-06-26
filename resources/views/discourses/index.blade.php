@@ -74,7 +74,7 @@
 @section('content')
 <section class="discourse-section">
     <div class="container">
-        <h1 class="section-title">Spiritual Discourses</h1>
+        <h1 class="section-title">Available Discourses</h1>
 
         @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
