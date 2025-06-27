@@ -125,3 +125,4 @@ class ProfileController extends Controller
             ->with('success', 'Your password has been updated successfully.');
     }
 }
+ 

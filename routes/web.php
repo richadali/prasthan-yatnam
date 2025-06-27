@@ -108,7 +108,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware(['web', 'auth:admin'])->group(function () {
         // Dashboard
         Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
-        Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard.index');
 
         // Discourse Management
         Route::resource('discourses', App\Http\Controllers\Admin\DiscourseController::class);
