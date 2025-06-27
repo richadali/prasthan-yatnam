@@ -94,8 +94,7 @@
     }
 
     .discourse-img {
-        height: 250px;
-        object-fit: cover;
+        width: 100%;
         transition: transform 0.3s ease;
     }
 
@@ -220,8 +219,6 @@
             margin-top: 20px;
         }
 
-
-
         .about-section .section-title {
             font-size: 1.5rem;
             margin-bottom: 1.5rem;
@@ -298,7 +295,39 @@
 
         <div id="discourseCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
             <div class="carousel-inner">
-                <!-- Divine Mother Discourse -->
+                @forelse($featuredDiscourses as $index => $discourse)
+                <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                    <div class="discourse-carousel-item">
+                        <div class="row">
+                            <div class="col-lg-6 mb-4">
+                                <div class="discourse-img-container">
+                                    <img src="{{ $discourse->thumbnail ? asset('storage/' . $discourse->thumbnail) : asset('images/discourses/default.jpg') }}"
+                                        class="img-fluid w-100" alt="{{ $discourse->title }}">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mb-4 d-flex align-items-center">
+                                <div>
+                                    <h3 class="fw-bold mb-3">Discourse On:</h3>
+                                    <p class="lead">{{ $discourse->title }}</p>
+                                    <p>{{ Str::limit(strip_tags($discourse->description), 150) }}</p>
+
+                                    @if($discourse->is_upcoming)
+                                    <span class="btn orange-btn mt-3" style="cursor: default;">Upcoming</span>
+                                    @if($discourse->expected_release_date)
+                                    <small class="d-block mt-2 text-light">Expected: {{
+                                        $discourse->expected_release_date->format('M d, Y') }}</small>
+                                    @endif
+                                    @else
+                                    <a href="{{ route('discourses.show', $discourse->slug) }}"
+                                        class="btn orange-btn mt-3">Watch Now</a>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @empty
+                <!-- Default carousel item if no discourses are available -->
                 <div class="carousel-item active">
                     <div class="discourse-carousel-item">
                         <div class="row">
@@ -310,61 +339,19 @@
                             </div>
                             <div class="col-lg-6 mb-4 d-flex align-items-center">
                                 <div>
-                                    <h3 class="fw-bold mb-3">Discourse On:</h3>
-                                    <p class="lead">'Divine Mother: Getting rid of misconceptions regarding Maa Kali and
-                                        the facts and
-                                        the spiritual interpretation'</p>
-                                    <a href="{{ url('/discourses') }}" class="btn orange-btn mt-3">Watch Now</a>
+                                    <h3 class="fw-bold mb-3">No Discourses Available</h3>
+                                    <p class="lead">Check back soon for upcoming spiritual discourses</p>
+                                    <a href="{{ url('/discourses') }}" class="btn orange-btn mt-3">Browse Discourses</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Hinduism Discourse -->
-                <div class="carousel-item">
-                    <div class="discourse-carousel-item">
-                        <div class="row">
-                            <div class="col-lg-6 mb-4">
-                                <div class="discourse-img-container">
-                                    <img src="/images/discourses/hinduism.jpg" class="img-fluid w-100" alt="Hinduism">
-                                </div>
-                            </div>
-                            <div class="col-lg-6 mb-4 d-flex align-items-center">
-                                <div>
-                                    <h3 class="fw-bold mb-3">Discourse On:</h3>
-                                    <p class="lead">'Hinduism: Core Concepts - Explore the fundamental concepts of
-                                        Hinduism and their relevance in modern times'</p>
-                                    <a href="{{ url('/discourses') }}" class="btn orange-btn mt-3">Watch Now</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sai Baba Discourse -->
-                <div class="carousel-item">
-                    <div class="discourse-carousel-item">
-                        <div class="row">
-                            <div class="col-lg-6 mb-4">
-                                <div class="discourse-img-container">
-                                    <img src="/images/discourses/saiBaba.jpg" class="img-fluid w-100" alt="Sai Baba">
-                                </div>
-                            </div>
-                            <div class="col-lg-6 mb-4 d-flex align-items-center">
-                                <div>
-                                    <h3 class="fw-bold mb-3">Discourse On:</h3>
-                                    <p class="lead">'Sai Baba: Life & Teachings - Discover the profound teachings and
-                                        life story of Sai Baba of Shirdi'</p>
-                                    <a href="{{ url('/discourses') }}" class="btn orange-btn mt-3">Watch Now</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforelse
             </div>
 
-            <!-- Carousel Controls -->
+            <!-- Carousel Controls (only if there are discourses) -->
+            @if(count($featuredDiscourses) > 1)
             <button class="carousel-control-prev" type="button" data-bs-target="#discourseCarousel"
                 data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -378,20 +365,16 @@
 
             <!-- Carousel Indicators -->
             <div class="carousel-indicators">
-                <button type="button" data-bs-target="#discourseCarousel" data-bs-slide-to="0" class="active"
-                    aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#discourseCarousel" data-bs-slide-to="1"
-                    aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#discourseCarousel" data-bs-slide-to="2"
-                    aria-label="Slide 3"></button>
+                @foreach($featuredDiscourses as $index => $discourse)
+                <button type="button" data-bs-target="#discourseCarousel" data-bs-slide-to="{{ $index }}"
+                    class="{{ $index === 0 ? 'active' : '' }}" aria-current="{{ $index === 0 ? 'true' : 'false' }}"
+                    aria-label="Slide {{ $index + 1 }}"></button>
+                @endforeach
             </div>
+            @endif
         </div>
     </div>
 </section>
-
-
-
-
 
 <!-- About Section -->
 <section class="about-section">
@@ -428,9 +411,10 @@
         
         // Initialize the Bootstrap carousel with options
         var carousel = new bootstrap.Carousel(discourseCarousel, {
-            interval: 2000, 
-            wrap: true,     // Cycle continuously
-            pause: 'hover'  // Pause when mouse hovers over carousel
+            interval: 3000,    // Show each slide for 5 seconds
+            wrap: true,        // Cycle continuously
+            pause: 'hover',    // Pause when mouse hovers over carousel
+            ride: 'carousel'   // Start cycling automatically after user manually cycles
         });
     });
 </script>

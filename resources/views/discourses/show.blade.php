@@ -136,6 +136,22 @@
         position: relative;
         margin-bottom: 2rem;
     }
+
+    .upcoming-badge {
+        background-color: #FA8128;
+        color: white;
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        margin-top: 1rem;
+        display: inline-block;
+    }
+
+    .expected-date {
+        font-style: italic;
+        color: #e0e0e0;
+        margin-top: 0.5rem;
+    }
 </style>
 @endsection
 
@@ -146,7 +162,12 @@
         <div class="discourse-description">
             {{ strip_tags($discourse->description) }}
         </div>
-        @if($hasAccess)
+        @if($isUpcoming)
+        <span class="upcoming-badge">Coming Soon</span>
+        @if($discourse->expected_release_date)
+        <div class="expected-date">Expected Release: {{ $discourse->expected_release_date->format('F d, Y') }}</div>
+        @endif
+        @elseif($hasAccess)
         <span class="badge bg-success">Enrolled</span>
         @elseif($discourse->price > 0)
         <span class="badge bg-primary">₹{{ number_format($discourse->price, 2) }}</span>
@@ -175,6 +196,13 @@
         <div class="col-lg-8">
             <div class="video-list">
                 <h3 class="mb-4">Discourse Content</h3>
+                @if($isUpcoming)
+                <div class="alert alert-warning">
+                    <i class="fas fa-clock me-2"></i> This discourse is not yet available. Content will be accessible
+                    after the release date.
+                </div>
+                @endif
+
                 @forelse($discourse->videos as $video)
                 <div class="video-item">
                     <div class="d-flex justify-content-between align-items-start">
@@ -188,7 +216,7 @@
                             </div>
                         </div>
                         <div>
-                            @if($hasAccess)
+                            @if($hasAccess && !$isUpcoming)
                             <a href="{{ route('videos.show', ['discourse_slug' => $discourse->slug, 'video_id' => $video->id]) }}"
                                 class="btn btn-primary btn-sm">
                                 Watch Video
@@ -225,7 +253,12 @@
                         <li>Access on mobile and TV</li>
                     </ul>
 
-                    @if($hasAccess)
+                    @if($isUpcoming)
+                    <button class="btn btn-warning w-100" disabled>
+                        Coming Soon
+                    </button>
+                    <p class="text-center mt-2 small">This discourse is not yet available for enrollment.</p>
+                    @elseif($hasAccess)
                     <a href="{{ route('discourses.my') }}" class="btn btn-success w-100">
                         Go to My Discourses
                     </a>

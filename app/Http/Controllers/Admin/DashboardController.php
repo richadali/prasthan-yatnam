@@ -25,8 +25,8 @@ class DashboardController extends Controller
         $stats = [
             'total_discourses' => Discourse::count(),
             'active_discourses' => Discourse::where('is_active', true)->count(),
+            'upcoming_discourses' => Discourse::where('is_active', true)->where('is_upcoming', true)->count(),
             'total_users' => User::count(),
-            'featured_discourses' => Discourse::where('is_featured', true)->count(),
         ];
 
         $latest_discourses = Discourse::latest()->take(5)->get();

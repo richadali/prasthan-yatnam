@@ -37,6 +37,8 @@ class DiscourseController extends Controller
             'description' => 'required|string',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_active' => 'boolean',
+            'is_upcoming' => 'boolean',
+            'expected_release_date' => 'nullable|date',
             'price' => 'nullable|numeric|min:0',
             'slug' => 'nullable|string|max:255|unique:discourses,slug',
             'videos.*.title' => 'nullable|string|max:255',
@@ -62,6 +64,9 @@ class DiscourseController extends Controller
 
         // Set is_active to true by default if not provided
         $validated['is_active'] = $request->has('is_active') ? $request->boolean('is_active') : true;
+
+        // Set is_upcoming to false by default if not provided
+        $validated['is_upcoming'] = $request->has('is_upcoming') ? $request->boolean('is_upcoming') : false;
 
         // Set price to 0 if not provided
         $validated['price'] = $validated['price'] ?? 0;
@@ -113,6 +118,8 @@ class DiscourseController extends Controller
             'description' => 'required|string',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_active' => 'boolean',
+            'is_upcoming' => 'boolean',
+            'expected_release_date' => 'nullable|date',
             'price' => 'nullable|numeric|min:0',
             'slug' => 'nullable|string|max:255|unique:discourses,slug,' . $discourse->id,
             'videos.*.id' => 'nullable|exists:discourse_videos,id',
@@ -145,6 +152,7 @@ class DiscourseController extends Controller
 
         // Set boolean fields
         $validated['is_active'] = $request->has('is_active');
+        $validated['is_upcoming'] = $request->has('is_upcoming');
 
         // Set price to 0 if not provided
         $validated['price'] = $validated['price'] ?? 0;

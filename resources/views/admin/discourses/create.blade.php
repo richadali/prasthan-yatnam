@@ -201,6 +201,23 @@
                             </div>
                             <div class="form-text">Make this discourse visible and accessible to users</div>
                         </div>
+
+                        <div class="mb-4">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="is_upcoming"
+                                    name="is_upcoming" value="1" {{ old('is_upcoming') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="is_upcoming">Mark as Upcoming</label>
+                            </div>
+                            <div class="form-text">Mark this discourse as upcoming (videos can be added later)</div>
+                        </div>
+
+                        <div class="mb-4" id="expected-release-date-container"
+                            style="{{ old('is_upcoming') ? '' : 'display: none;' }}">
+                            <label for="expected_release_date" class="form-label">Expected Release Date</label>
+                            <input type="date" class="form-control" id="expected_release_date"
+                                name="expected_release_date" value="{{ old('expected_release_date') }}">
+                            <div class="form-text">When this discourse is expected to be available</div>
+                        </div>
                     </div>
                 </div>
 
@@ -343,6 +360,14 @@
             if (titleInput.value !== '') {
                 slugInput.value = createSlug(titleInput.value);
             }
+        });
+        
+        // Toggle expected release date field based on is_upcoming checkbox
+        const isUpcomingCheckbox = document.getElementById('is_upcoming');
+        const expectedReleaseDateContainer = document.getElementById('expected-release-date-container');
+        
+        isUpcomingCheckbox.addEventListener('change', function() {
+            expectedReleaseDateContainer.style.display = this.checked ? 'block' : 'none';
         });
         
         function createSlug(text) {

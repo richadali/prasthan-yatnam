@@ -177,7 +177,6 @@
                         <i class="fas fa-user-circle me-1"></i> {{ Auth::user()->full_name }}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ url('/dashboard') }}">Dashboard</a></li>
                         <li><a class="dropdown-item" href="{{ url('/profile') }}">Profile</a></li>
                         <li><a class="dropdown-item" href="{{ url('/my-discourses') }}">My Discourses</a></li>
                         <li>

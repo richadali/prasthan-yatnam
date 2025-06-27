@@ -14,6 +14,7 @@
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         max-width: 320px;
         margin: 0 auto;
+        position: relative;
     }
 
     .discourse-card:hover {
@@ -70,13 +71,40 @@
         height: 3px;
         background: var(--primary-blue);
     }
+
+    .upcoming-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #FA8128;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        z-index: 1;
+    }
+
+    .expected-date {
+        color: #6c757d;
+        font-size: 0.9rem;
+        font-style: italic;
+    }
+
+    .upcoming-section {
+        background-color: #f0f2f5;
+        padding-top: 3rem;
+        margin-top: 2rem;
+        border-top: 1px solid #dee2e6;
+    }
 </style>
 @endsection
 
 @section('content')
+<!-- Active Discourses Section -->
 <section class="discourse-section">
     <div class="container">
-
+        <h2 class="section-title">Available Discourses</h2>
 
         @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
@@ -93,7 +121,7 @@
         @endif
 
         <div class="row g-4">
-            @forelse($discourses as $discourse)
+            @forelse($activeDiscourses as $discourse)
             <div class="col-md-6 col-lg-4">
                 <div class="discourse-card">
                     <img src="{{ $discourse->thumbnail ? asset('storage/' . $discourse->thumbnail) : asset('images/discourses/default.jpg') }}"
@@ -125,4 +153,42 @@
         </div>
     </div>
 </section>
+
+<!-- Upcoming Discourses Section -->
+@if(count($upcomingDiscourses) > 0)
+<section class="discourse-section upcoming-section">
+    <div class="container">
+        <h2 class="section-title">Upcoming Discourses</h2>
+        <div class="row g-4">
+            @foreach($upcomingDiscourses as $discourse)
+            <div class="col-md-6 col-lg-4">
+                <div class="discourse-card">
+                    <img src="{{ $discourse->thumbnail ? asset('storage/' . $discourse->thumbnail) : asset('images/discourses/default.jpg') }}"
+                        alt="{{ $discourse->title }}" class="discourse-thumbnail">
+                    <div class="card-body p-4">
+                        <h3 class="discourse-title">{{ $discourse->title }}</h3>
+                        <p class="discourse-description">{{ strip_tags($discourse->description) }}</p>
+
+                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                            @if($discourse->expected_release_date)
+                            <span class="expected-date">Expected: {{ $discourse->expected_release_date->format('M d, Y')
+                                }}</span>
+                            @else
+                            <span class="expected-date">Coming soon</span>
+                            @endif
+
+                            @if($discourse->price > 0)
+                            <span class="discourse-price">₹{{ number_format($discourse->price, 2) }}</span>
+                            @else
+                            <span class="discourse-price free">Free</span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
 @endsection

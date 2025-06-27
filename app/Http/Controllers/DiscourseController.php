@@ -13,11 +13,17 @@ class DiscourseController extends Controller
      */
     public function index()
     {
-        $discourses = Discourse::where('is_active', true)
+        $activeDiscourses = Discourse::where('is_active', true)
+            ->where('is_upcoming', false)
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('discourses.index', compact('discourses'));
+        $upcomingDiscourses = Discourse::where('is_active', true)
+            ->where('is_upcoming', true)
+            ->orderBy('expected_release_date')
+            ->get();
+
+        return view('discourses.index', compact('activeDiscourses', 'upcomingDiscourses'));
     }
 
     /**
@@ -32,6 +38,7 @@ class DiscourseController extends Controller
         // Check if user is enrolled
         $hasAccess = false;
         $freePreviewVideos = [];
+        $isUpcoming = $discourse->is_upcoming;
 
         if (Auth::check()) {
             $user = Auth::user();
@@ -47,7 +54,7 @@ class DiscourseController extends Controller
         // Since we removed free preview functionality, set empty array
         $freePreviewVideos = [];
 
-        return view('discourses.show', compact('discourse', 'hasAccess', 'freePreviewVideos'));
+        return view('discourses.show', compact('discourse', 'hasAccess', 'freePreviewVideos', 'isUpcoming'));
     }
 
     /**
@@ -58,6 +65,12 @@ class DiscourseController extends Controller
         $discourse = Discourse::where('slug', $slug)
             ->where('is_active', true)
             ->firstOrFail();
+
+        // Don't allow enrollment for upcoming discourses
+        if ($discourse->is_upcoming) {
+            return redirect()->route('discourses.show', $slug)
+                ->with('error', 'This discourse is not yet available for enrollment. Please check back later.');
+        }
 
         $user = Auth::user();
 

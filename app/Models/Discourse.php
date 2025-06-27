@@ -16,12 +16,16 @@ class Discourse extends Model
         'description',
         'thumbnail',
         'is_active',
+        'is_upcoming',
+        'expected_release_date',
         'price',
         'slug',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'is_upcoming' => 'boolean',
+        'expected_release_date' => 'date',
         'price' => 'decimal:2',
     ];
 

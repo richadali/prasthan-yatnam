@@ -110,7 +110,11 @@
                         <td>₹{{ number_format($discourse->price) }}</td>
                         <td>
                             @if($discourse->is_active)
+                            @if($discourse->is_upcoming)
+                            <span class="badge bg-warning">Upcoming</span>
+                            @else
                             <span class="badge bg-success">Active</span>
+                            @endif
                             @else
                             <span class="badge bg-secondary">Inactive</span>
                             @endif

@@ -162,7 +162,7 @@ class VideoController extends Controller
             $durationString = $videoData['contentDetails']['duration'] ?? 'PT0S';
             $duration = $this->parseDuration($durationString);
 
-            return response()->json([
+        return response()->json([
                 'title' => $title,
                 'duration_seconds' => $duration,
             ]);

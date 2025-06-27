@@ -71,13 +71,13 @@
                     <div class="d-flex align-items-center">
                         <div class="flex-shrink-0 me-3">
                             <div class="d-flex align-items-center justify-content-center rounded-circle"
-                                style="width: 60px; height: 60px; background-color: rgba(220, 53, 69, 0.1);">
-                                <i class="fas fa-star fa-2x" style="color: #dc3545;"></i>
+                                style="width: 60px; height: 60px; background-color: rgba(255, 193, 7, 0.1);">
+                                <i class="fas fa-calendar-alt fa-2x" style="color: #ffc107;"></i>
                             </div>
                         </div>
                         <div class="flex-grow-1">
-                            <h4 class="mb-0">{{ number_format($stats['featured_discourses']) }}</h4>
-                            <p class="text-muted mb-0">Featured Discourses</p>
+                            <h4 class="mb-0">{{ number_format($stats['upcoming_discourses']) }}</h4>
+                            <p class="text-muted mb-0">Upcoming Discourses</p>
                         </div>
                     </div>
                 </div>
@@ -103,7 +103,7 @@
                                 <tr>
                                     <th>Title</th>
                                     <th>Status</th>
-                                    <th>Featured</th>
+                                    <th>Expected Release Date</th>
                                     <th>Price</th>
                                     <th>Action</th>
                                 </tr>
@@ -133,16 +133,21 @@
                                     </td>
                                     <td>
                                         @if($discourse->is_active)
+                                        @if($discourse->is_upcoming)
+                                        <span class="badge bg-warning">Upcoming</span>
+                                        @else
                                         <span class="badge bg-success">Active</span>
+                                        @endif
                                         @else
                                         <span class="badge bg-secondary">Inactive</span>
                                         @endif
                                     </td>
                                     <td>
-                                        @if($discourse->is_featured)
-                                        <span class="text-warning"><i class="fas fa-star"></i></span>
+                                        @if($discourse->is_upcoming && $discourse->expected_release_date)
+                                        <span class="text-warning">{{ $discourse->expected_release_date->format('M d,
+                                            Y') }}</span>
                                         @else
-                                        <span class="text-muted"><i class="far fa-star"></i></span>
+                                        <span class="text-muted">-</span>
                                         @endif
                                     </td>
                                     <td>₹{{ number_format($discourse->price) }}</td>

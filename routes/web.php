@@ -5,11 +5,10 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DiscourseController;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\HomeController;
 
 // Public routes
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/discourses', function () {
     return view('discourses.index');
