@@ -4,7 +4,7 @@
 <style>
     /* Hero Section */
     .hero-section {
-        background: url('/images/background1.png') no-repeat;
+        background: url('{{ asset(' images/background1.png') }}') no-repeat;
         background-size: cover;
         background-position: center;
         padding: 150px 0;
@@ -74,7 +74,7 @@
     /* Featured Courses */
     .featured-courses {
         padding: 5rem 0;
-        background: url('/images/himalaya.jpg') no-repeat;
+        background: url('{{ asset(' images/himalaya.jpg') }}') no-repeat;
         background-size: cover;
         background-position: center;
         color: white;
@@ -114,7 +114,7 @@
 
     /* About Section */
     .about-section {
-        background: url('/images/background2.png') no-repeat;
+        background: url('{{ asset(' images/background2.png') }}') no-repeat;
         background-size: cover;
         background-position: center bottom;
         height: 510px;
@@ -333,8 +333,8 @@
                         <div class="row">
                             <div class="col-lg-6 mb-4">
                                 <div class="discourse-img-container">
-                                    <img src="/images/discourses/divine-mother.jpg" class="img-fluid w-100"
-                                        alt="Divine Mother">
+                                    <img src="{{ asset('images/discourses/divine-mother.jpg') }}"
+                                        class="img-fluid w-100" alt="Divine Mother">
                                 </div>
                             </div>
                             <div class="col-lg-6 mb-4 d-flex align-items-center">
