@@ -103,7 +103,6 @@
                                 <tr>
                                     <th>Title</th>
                                     <th>Status</th>
-                                    <th>Expected Release Date</th>
                                     <th>Price</th>
                                     <th>Action</th>
                                 </tr>
@@ -115,7 +114,7 @@
                                         <div class="d-flex align-items-center">
                                             <div class="me-3">
                                                 @if($discourse->thumbnail)
-                                                <img src="{{ asset('storage/images/discourses/' . $discourse->thumbnail) }}"
+                                                <img src="{{ asset('storage/' . $discourse->thumbnail) }}"
                                                     alt="{{ $discourse->title }}" class="rounded"
                                                     style="width: 40px; height: 40px; object-fit: cover;">
                                                 @else
@@ -142,14 +141,6 @@
                                         <span class="badge bg-secondary">Inactive</span>
                                         @endif
                                     </td>
-                                    <td>
-                                        @if($discourse->is_upcoming && $discourse->expected_release_date)
-                                        <span class="text-warning">{{ $discourse->expected_release_date->format('M d,
-                                            Y') }}</span>
-                                        @else
-                                        <span class="text-muted">-</span>
-                                        @endif
-                                    </td>
                                     <td>₹{{ number_format($discourse->price) }}</td>
                                     <td>
                                         <a href="{{ route('admin.discourses.edit', $discourse->id) }}"
@@ -160,7 +151,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="5" class="text-center py-4">No discourses found</td>
+                                    <td colspan="4" class="text-center py-4">No discourses found</td>
                                 </tr>
                                 @endforelse
                             </tbody>
