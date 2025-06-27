@@ -13,6 +13,51 @@
         overflow: hidden;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         margin-bottom: 2rem;
+        position: relative;
+    }
+
+    /* Hide YouTube logo and title */
+    .video-player iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+
+    /* Custom overlays to hide YouTube elements */
+    .youtube-overlay-top {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background-color: #000;
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    .youtube-overlay-bottom-right {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 120px;
+        height: 60px;
+        background-color: #000;
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    .youtube-overlay-top-right {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 150px;
+        height: 60px;
+        background-color: #000;
+        z-index: 2;
+        pointer-events: none;
     }
 
     .video-title {
@@ -40,21 +85,6 @@
         font-weight: 600;
     }
 
-    .progress-container {
-        height: 5px;
-        background-color: #e9ecef;
-        border-radius: 5px;
-        margin-bottom: 1rem;
-        overflow: hidden;
-    }
-
-    .progress-bar {
-        height: 100%;
-        background: linear-gradient(90deg, var(--primary-blue), var(--dark-blue));
-        border-radius: 5px;
-        transition: width 0.3s ease;
-    }
-
     .video-meta {
         display: flex;
         justify-content: space-between;
@@ -73,21 +103,20 @@
                 <div class="video-player">
                     <div class="ratio ratio-16x9">
                         <iframe id="youtube-player"
-                            src="https://www.youtube.com/embed/{{ $video->youtube_video_id }}?enablejsapi=1&rel=0&modestbranding=1"
+                            src="https://www.youtube.com/embed/{{ $video->youtube_video_id }}?enablejsapi=1&rel=0&modestbranding=1&controls=1&disablekb=1&showinfo=0&iv_load_policy=3&fs=1&cc_load_policy=0&origin={{ url('') }}&playsinline=1&color=white"
                             title="{{ $video->title }}" allowfullscreen
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
                     </div>
+                    <!-- Overlay elements to hide YouTube branding -->
+                    <div class="youtube-overlay-top"></div>
+                    <div class="youtube-overlay-bottom-right"></div>
+                    <div class="youtube-overlay-top-right"></div>
                 </div>
 
                 <h1 class="video-title">{{ $video->title }}</h1>
 
                 <div class="video-meta">
                     <span>Duration: {{ $video->formatted_duration }}</span>
-                    <span>Last watched: {{ $progress->last_watched_at->diffForHumans() }}</span>
-                </div>
-
-                <div class="progress-container">
-                    <div class="progress-bar" style="width: {{ $progress->progress_percentage }}%"></div>
                 </div>
 
                 <div class="video-description">
@@ -122,7 +151,7 @@
                     <h4 class="course-title">{{ $discourse->title }}</h4>
                     <p>{{ count($discourse->videos) }} videos</p>
                     <a href="{{ route('discourses.show', $discourse->slug) }}" class="btn btn-outline-primary btn-sm">
-                        Back to Course
+                        Back to Discourse
                     </a>
                 </div>
 
@@ -150,81 +179,130 @@
 <script>
     let player;
     let videoId = '{{ $video->youtube_video_id }}';
-    let currentPosition = {{ $progress->current_position_seconds ?? 0 }};
-    let videoDuration = {{ $video->duration_seconds ?? 0 }};
-    let videoCompleted = {{ $progress->completed ? 'true' : 'false' }};
-    let updateInterval;
-    let lastUpdateTime = 0;
+    
+    // Function to adjust overlay positions based on player dimensions
+    function adjustOverlays() {
+        const iframe = document.getElementById('youtube-player');
+        if (!iframe) return;
+        
+        // Get the actual dimensions of the player
+        const playerRect = iframe.getBoundingClientRect();
+        const playerHeight = playerRect.height;
+        
+        // Calculate dimensions for overlays
+        const topHeight = Math.max(60, playerHeight * 0.1); // 10% of player height or min 60px
+        const bottomRightHeight = Math.max(60, playerHeight * 0.12); // 12% of player height or min 60px
+        
+        // Apply dimensions to overlays
+        const topOverlay = document.querySelector('.youtube-overlay-top');
+        if (topOverlay) {
+            topOverlay.style.height = topHeight + 'px';
+        }
+        
+        const bottomRightOverlay = document.querySelector('.youtube-overlay-bottom-right');
+        if (bottomRightOverlay) {
+            bottomRightOverlay.style.height = bottomRightHeight + 'px';
+            bottomRightOverlay.style.width = (bottomRightHeight * 2) + 'px'; // Make it wider
+        }
+        
+        const topRightOverlay = document.querySelector('.youtube-overlay-top-right');
+        if (topRightOverlay) {
+            topRightOverlay.style.height = topHeight + 'px';
+            topRightOverlay.style.width = (topHeight * 2.5) + 'px'; // Make it wider
+        }
+    }
+    
+    // Try to remove YouTube branding with custom styling
+    const removeYouTubeBranding = () => {
+        try {
+            const iframe = document.getElementById('youtube-player');
+            if (!iframe) return;
+            
+            // Adjust overlay positions
+            adjustOverlays();
+            
+            // Create a style element
+            const style = document.createElement('style');
+            
+            // Add CSS to hide YouTube elements
+            style.textContent = `
+                .ytp-chrome-top,
+                .ytp-chrome-bottom .ytp-youtube-button,
+                .ytp-chrome-bottom .ytp-subtitles-button,
+                .ytp-watermark,
+                .ytp-show-cards-title,
+                .ytp-title,
+                .ytp-title-text,
+                .ytp-title-link,
+                .ytp-share-button,
+                .ytp-watch-later-button,
+                a.ytp-youtube-button.ytp-button.yt-uix-sessionlink {
+                    display: none !important;
+                    opacity: 0 !important;
+                    visibility: hidden !important;
+                }
+            `;
+            
+            // Try to inject style into iframe
+            setTimeout(() => {
+                try {
+                    if (iframe.contentDocument) {
+                        iframe.contentDocument.head.appendChild(style);
+                    }
+                } catch (e) {
+                    console.log('Could not access iframe directly due to cross-origin restrictions');
+                }
+            }, 1000);
+        } catch (e) {
+            console.error('Error removing YouTube branding:', e);
+        }
+    };
+    
+    // Run this immediately and after a short delay
+    removeYouTubeBranding();
+    setTimeout(removeYouTubeBranding, 1000);
     
     function onYouTubeIframeAPIReady() {
         player = new YT.Player('youtube-player', {
             events: {
                 'onReady': onPlayerReady,
                 'onStateChange': onPlayerStateChange
+            },
+            playerVars: {
+                'rel': 0,                // Don't show related videos
+                'showinfo': 0,           // Hide video title and uploader info
+                'modestbranding': 1,     // Hide YouTube logo
+                'iv_load_policy': 3,     // Hide video annotations
+                'cc_load_policy': 0,     // Hide closed captions by default
+                'fs': 1,                 // Show fullscreen button
+                'controls': 1,           // Show video controls
+                'disablekb': 1,          // Disable keyboard controls
+                'color': 'white',        // Use white progress bar
+                'playsinline': 1         // Play inline on mobile
             }
         });
     }
     
     function onPlayerReady(event) {
-        // Seek to the last saved position if available
-        if (currentPosition > 0) {
-            player.seekTo(currentPosition, true);
-        }
-        
-        // Start tracking progress
-        updateInterval = setInterval(updateProgress, 5000); // Update every 5 seconds
+        // Adjust overlays after player is ready
+        adjustOverlays();
+        setTimeout(adjustOverlays, 500);
+        setTimeout(adjustOverlays, 1500);
     }
     
     function onPlayerStateChange(event) {
-        // Update progress when video is paused
-        if (event.data == YT.PlayerState.PAUSED || event.data == YT.PlayerState.ENDED) {
-            updateProgress(true);
-        }
-        
-        // Mark video as completed when it ends
-        if (event.data == YT.PlayerState.ENDED) {
-            videoCompleted = true;
-            updateProgress(true);
-        }
+        // Adjust overlays when state changes
+        adjustOverlays();
     }
     
-    function updateProgress(force = false) {
-        if (!player || typeof player.getCurrentTime !== 'function') {
-            return;
-        }
-        
-        const currentTime = Math.floor(player.getCurrentTime());
-        
-        // Only update if position changed by at least 5 seconds or forced
-        if (force || Math.abs(currentTime - lastUpdateTime) >= 5) {
-            lastUpdateTime = currentTime;
-            
-            // Calculate progress percentage
-            const percentage = videoDuration > 0 ? (currentTime / videoDuration) * 100 : 0;
-            
-            // Update progress bar
-            document.querySelector('.progress-bar').style.width = percentage + '%';
-            
-            // Save progress to server
-            fetch('{{ route("videos.progress", $video->id) }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    current_position: currentTime,
-                    completed: videoCompleted
-                })
-            })
-            .catch(error => console.error('Error updating progress:', error));
-        }
-    }
-    
-    // Clean up when leaving the page
-    window.addEventListener('beforeunload', function() {
-        clearInterval(updateInterval);
-        updateProgress(true);
+    // Additional attempt to hide YouTube elements when DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        removeYouTubeBranding();
+        adjustOverlays();
+        setTimeout(adjustOverlays, 1000);
     });
+    
+    // Adjust overlays when window is resized
+    window.addEventListener('resize', adjustOverlays);
 </script>
 @endsection

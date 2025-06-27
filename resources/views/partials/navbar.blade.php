@@ -164,10 +164,12 @@
                     <a class="nav-link fw-medium {{ request()->is('about') ? 'active' : '' }}"
                         href="{{ url('/about') }}">ABOUT</a>
                 </li>
+                @guest
                 <li class="nav-item">
                     <a class="nav-link fw-medium {{ request()->is('login') ? 'active' : '' }}"
                         href="{{ route('login') }}">LOGIN</a>
                 </li>
+                @endguest
                 @auth
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle fw-medium" href="#" role="button" data-bs-toggle="dropdown"
@@ -177,7 +179,7 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{{ url('/dashboard') }}">Dashboard</a></li>
                         <li><a class="dropdown-item" href="{{ url('/profile') }}">Profile</a></li>
-                        <li><a class="dropdown-item" href="{{ url('/my-courses') }}">My Courses</a></li>
+                        <li><a class="dropdown-item" href="{{ url('/my-discourses') }}">My Discourses</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>

@@ -15,14 +15,12 @@ class Discourse extends Model
         'title',
         'description',
         'thumbnail',
-        'is_featured',
         'is_active',
         'price',
         'slug',
     ];
 
     protected $casts = [
-        'is_featured' => 'boolean',
         'is_active' => 'boolean',
         'price' => 'decimal:2',
     ];
@@ -37,9 +35,41 @@ class Discourse extends Model
         static::creating(function ($discourse) {
             // Generate slug if not provided
             if (!$discourse->slug) {
-                $discourse->slug = Str::slug($discourse->title);
+                $discourse->slug = $discourse->generateUniqueSlug($discourse->title);
             }
         });
+
+        static::updating(function ($discourse) {
+            // If title changed but slug didn't, update the slug
+            if ($discourse->isDirty('title') && !$discourse->isDirty('slug')) {
+                $discourse->slug = $discourse->generateUniqueSlug($discourse->title);
+            }
+        });
+
+        // Delete all related videos when a discourse is deleted
+        static::deleting(function ($discourse) {
+            $discourse->videos()->delete();
+        });
+    }
+
+    /**
+     * Generate a unique slug for the discourse.
+     *
+     * @param string $title
+     * @return string
+     */
+    protected function generateUniqueSlug($title)
+    {
+        $slug = Str::slug($title);
+        $originalSlug = $slug;
+        $count = 1;
+
+        // Check if the slug already exists
+        while (static::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $count++;
+        }
+
+        return $slug;
     }
 
     /**
@@ -60,19 +90,5 @@ class Discourse extends Model
             ->withTimestamps();
     }
 
-    /**
-     * Check if discourse has free preview videos
-     */
-    public function hasFreePreview(): bool
-    {
-        return $this->videos()->where('is_free_preview', true)->exists();
-    }
-
-    /**
-     * Get free preview videos
-     */
-    public function freePreviewVideos()
-    {
-        return $this->videos()->where('is_free_preview', true)->orderBy('sequence')->get();
-    }
+    // Free preview functionality has been removed
 }

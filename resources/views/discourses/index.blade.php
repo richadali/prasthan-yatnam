@@ -8,11 +8,12 @@
     }
 
     .discourse-card {
-        border-radius: 15px;
         overflow: hidden;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         height: 100%;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        max-width: 320px;
+        margin: 0 auto;
     }
 
     .discourse-card:hover {
@@ -21,7 +22,7 @@
     }
 
     .discourse-thumbnail {
-        height: 200px;
+        height: 240px;
         object-fit: cover;
         width: 100%;
     }
@@ -40,6 +41,7 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
         margin-bottom: 1rem;
+        height: 60px;
     }
 
     .discourse-price {
@@ -74,7 +76,7 @@
 @section('content')
 <section class="discourse-section">
     <div class="container">
-        <h1 class="section-title">Available Discourses</h1>
+
 
         @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
@@ -94,11 +96,11 @@
             @forelse($discourses as $discourse)
             <div class="col-md-6 col-lg-4">
                 <div class="discourse-card">
-                    <img src="{{ asset('images/discourses/' . ($discourse->thumbnail ?? 'default.jpg')) }}"
+                    <img src="{{ $discourse->thumbnail ? asset('storage/' . $discourse->thumbnail) : asset('images/discourses/default.jpg') }}"
                         alt="{{ $discourse->title }}" class="discourse-thumbnail">
                     <div class="card-body p-4">
                         <h3 class="discourse-title">{{ $discourse->title }}</h3>
-                        <p class="discourse-description">{{ $discourse->description }}</p>
+                        <p class="discourse-description">{{ strip_tags($discourse->description) }}</p>
 
                         <div class="d-flex justify-content-between align-items-center">
                             @if($discourse->price > 0)

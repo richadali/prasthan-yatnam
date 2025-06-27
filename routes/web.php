@@ -61,6 +61,7 @@ Route::middleware('auth')->group(function () {
 // Discourse routes
 Route::get('/discourses', [DiscourseController::class, 'index'])->name('discourses.index');
 Route::get('/discourses/{slug}', [DiscourseController::class, 'show'])->name('discourses.show');
+Route::post('/discourses/{slug}/enroll', [DiscourseController::class, 'enroll'])->middleware('auth')->name('discourses.enroll');
 
 // My Discourses route (requires authentication)
 Route::get('/my-discourses', [DiscourseController::class, 'myDiscourses'])
@@ -75,11 +76,6 @@ Route::get('/discourses/{discourse_slug}/videos/{video_id}', [VideoController::c
 // Free preview video route (no auth required)
 Route::get('/discourses/{discourse_slug}/preview/{video_id}', [VideoController::class, 'preview'])
     ->name('videos.preview');
-
-// Video progress tracking (AJAX)
-Route::post('/videos/{video_id}/progress', [VideoController::class, 'updateProgress'])
-    ->middleware('auth')
-    ->name('videos.progress');
 
 // Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {

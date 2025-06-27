@@ -3,7 +3,7 @@
 @section('styles')
 <style>
     .my-discourses-section {
-        padding: 5rem 0;
+        padding: 2rem 0;
         background-color: #f8f9fa;
     }
 
@@ -30,6 +30,8 @@
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         height: 100%;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        max-width: 320px;
+        margin: 0 auto;
     }
 
     .discourse-card:hover {
@@ -38,9 +40,10 @@
     }
 
     .discourse-thumbnail {
-        height: 200px;
+        height: 240px;
         object-fit: cover;
         width: 100%;
+        object-position: center;
     }
 
     .discourse-title {
@@ -59,33 +62,7 @@
         margin-bottom: 1rem;
     }
 
-    .progress-container {
-        height: 5px;
-        background-color: #e9ecef;
-        border-radius: 5px;
-        margin-bottom: 0.5rem;
-        overflow: hidden;
-    }
-
-    .progress-bar {
-        height: 100%;
-        background: linear-gradient(90deg, var(--primary-blue), var(--dark-blue));
-        border-radius: 5px;
-    }
-
-    .progress-text {
-        font-size: 0.8rem;
-        color: #6c757d;
-        margin-bottom: 1rem;
-    }
-
     .enrolled-date {
-        font-size: 0.8rem;
-        color: #6c757d;
-        margin-bottom: 1rem;
-    }
-
-    .last-watched {
         font-size: 0.8rem;
         color: #6c757d;
         margin-bottom: 1rem;
@@ -96,7 +73,7 @@
 @section('content')
 <section class="my-discourses-section">
     <div class="container">
-        <h1 class="section-title">My Courses</h1>
+        <h2 class="section-title">My Discourses</h2>
 
         @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
@@ -116,7 +93,7 @@
             @forelse($enrolledDiscourses as $discourse)
             <div class="col-md-6 col-lg-4">
                 <div class="discourse-card">
-                    <img src="{{ asset('images/discourses/' . ($discourse->thumbnail ?? 'default.jpg')) }}"
+                    <img src="{{ $discourse->thumbnail ? asset('storage/' . $discourse->thumbnail) : asset('images/discourses/default.jpg') }}"
                         alt="{{ $discourse->title }}" class="discourse-thumbnail">
                     <div class="card-body p-4">
                         <h3 class="discourse-title">{{ $discourse->title }}</h3>
@@ -124,47 +101,9 @@
                         <p class="enrolled-date">Enrolled: {{
                             \Carbon\Carbon::parse($discourse->pivot->enrolled_at)->format('M d, Y') }}</p>
 
-                        @php
-                        $totalVideos = count($discourse->videos);
-                        $completedVideos = 0;
-                        $lastWatchedVideo = null;
-                        $lastWatchedTime = null;
-
-                        foreach ($discourse->videos as $video) {
-                        $progress = $video->userProgress()->where('user_id', Auth::id())->first();
-                        if ($progress && $progress->completed) {
-                        $completedVideos++;
-                        }
-
-                        if ($progress && (!$lastWatchedTime || $progress->last_watched_at > $lastWatchedTime)) {
-                        $lastWatchedVideo = $video;
-                        $lastWatchedTime = $progress->last_watched_at;
-                        }
-                        }
-
-                        $progressPercentage = $totalVideos > 0 ? ($completedVideos / $totalVideos) * 100 : 0;
-                        @endphp
-
-                        <div class="progress-container">
-                            <div class="progress-bar" style="width: {{ $progressPercentage }}%"></div>
-                        </div>
-                        <p class="progress-text">{{ $completedVideos }} of {{ $totalVideos }} videos completed ({{
-                            number_format($progressPercentage, 0) }}%)</p>
-
-                        @if($lastWatchedVideo && $lastWatchedTime)
-                        <p class="last-watched">Last watched: {{ $lastWatchedTime->diffForHumans() }}</p>
-                        @endif
-
-                        <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex justify-content-between align-items-center mt-3">
                             <a href="{{ route('discourses.show', $discourse->slug) }}"
-                                class="btn btn-outline-primary">View Course</a>
-
-                            @if($lastWatchedVideo)
-                            <a href="{{ route('videos.show', ['discourse_slug' => $discourse->slug, 'video_id' => $lastWatchedVideo->id]) }}"
-                                class="btn btn-primary">Continue</a>
-                            @else
-                            <a href="{{ route('discourses.show', $discourse->slug) }}" class="btn btn-primary">Start</a>
-                            @endif
+                                class="btn btn-primary w-100">View Discourse</a>
                         </div>
                     </div>
                 </div>

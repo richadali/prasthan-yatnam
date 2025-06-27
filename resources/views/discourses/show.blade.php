@@ -4,7 +4,7 @@
 <style>
     .discourse-header {
         background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-        url('{{ asset("images/discourses/" . ($discourse->thumbnail ?? "default.jpg")) }}');
+        url('{{ $discourse->thumbnail ? asset("storage/" . $discourse->thumbnail) : asset("images/discourses/default.jpg") }}');
         background-size: cover;
         background-position: center;
         color: white;
@@ -144,7 +144,7 @@
     <div class="container text-center">
         <h1 class="discourse-title">{{ $discourse->title }}</h1>
         <div class="discourse-description">
-            {{ $discourse->description }}
+            {{ strip_tags($discourse->description) }}
         </div>
         @if($hasAccess)
         <span class="badge bg-success">Enrolled</span>
@@ -173,30 +173,14 @@
 
     <div class="row">
         <div class="col-lg-8">
-            @if(count($freePreviewVideos) > 0)
-            <div class="preview-video-container">
-                <h3 class="mb-4">Free Preview</h3>
-                <div class="ratio ratio-16x9 mb-3">
-                    <iframe
-                        src="{{ route('videos.preview', ['discourse_slug' => $discourse->slug, 'video_id' => $freePreviewVideos[0]->id]) }}"
-                        title="{{ $freePreviewVideos[0]->title }}" allowfullscreen></iframe>
-                </div>
-                <h4>{{ $freePreviewVideos[0]->title }}</h4>
-                <p class="text-muted">{{ $freePreviewVideos[0]->description }}</p>
-            </div>
-            @endif
-
             <div class="video-list">
-                <h3 class="mb-4">Course Content</h3>
+                <h3 class="mb-4">Discourse Content</h3>
                 @forelse($discourse->videos as $video)
                 <div class="video-item">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <h5 class="video-title">
                                 {{ $video->title }}
-                                @if($video->is_free_preview)
-                                <span class="preview-badge">Free Preview</span>
-                                @endif
                             </h5>
                             <p class="video-description">{{ $video->description }}</p>
                             <div class="video-meta">
@@ -204,18 +188,11 @@
                             </div>
                         </div>
                         <div>
-                            @if($hasAccess || $video->is_free_preview)
-                            @if($video->is_free_preview)
-                            <a href="{{ route('videos.preview', ['discourse_slug' => $discourse->slug, 'video_id' => $video->id]) }}"
-                                class="btn btn-outline-primary btn-sm">
-                                Watch Preview
-                            </a>
-                            @else
+                            @if($hasAccess)
                             <a href="{{ route('videos.show', ['discourse_slug' => $discourse->slug, 'video_id' => $video->id]) }}"
                                 class="btn btn-primary btn-sm">
                                 Watch Video
                             </a>
-                            @endif
                             @else
                             <button class="btn btn-secondary btn-sm" disabled>
                                 <i class="fas fa-lock me-1"></i> Locked
@@ -226,7 +203,7 @@
                 </div>
                 @empty
                 <div class="text-center py-4">
-                    <p>No videos available for this course yet.</p>
+                    <p>No videos available for this discourse yet.</p>
                 </div>
                 @endforelse
             </div>
@@ -246,15 +223,14 @@
                         <li>{{ count($discourse->videos) }} video lessons</li>
                         <li>Lifetime access</li>
                         <li>Access on mobile and TV</li>
-                        <li>Certificate of completion</li>
                     </ul>
 
                     @if($hasAccess)
                     <a href="{{ route('discourses.my') }}" class="btn btn-success w-100">
-                        Go to My Courses
+                        Go to My Discourses
                     </a>
                     @elseif(Auth::check())
-                    <form action="#" method="POST">
+                    <form action="{{ route('discourses.enroll', $discourse->slug) }}" method="POST">
                         @csrf
                         <button type="submit" class="btn btn-primary w-100">
                             @if($discourse->price > 0)

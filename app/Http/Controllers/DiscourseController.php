@@ -29,7 +29,7 @@ class DiscourseController extends Controller
             ->where('is_active', true)
             ->firstOrFail();
 
-        // Check if user is enrolled or if the discourse has free preview videos
+        // Check if user is enrolled
         $hasAccess = false;
         $freePreviewVideos = [];
 
@@ -44,11 +44,38 @@ class DiscourseController extends Controller
                 ->exists();
         }
 
-        if (!$hasAccess && $discourse->hasFreePreview()) {
-            $freePreviewVideos = $discourse->freePreviewVideos();
-        }
+        // Since we removed free preview functionality, set empty array
+        $freePreviewVideos = [];
 
         return view('discourses.show', compact('discourse', 'hasAccess', 'freePreviewVideos'));
+    }
+
+    /**
+     * Enroll the user in a discourse.
+     */
+    public function enroll($slug)
+    {
+        $discourse = Discourse::where('slug', $slug)
+            ->where('is_active', true)
+            ->firstOrFail();
+
+        $user = Auth::user();
+
+        // Check if user is already enrolled
+        if ($user->enrolledDiscourses()->where('discourse_id', $discourse->id)->exists()) {
+            return redirect()->route('discourses.show', $slug)
+                ->with('info', 'You are already enrolled in this course.');
+        }
+
+        // Enroll the user
+        $user->enrolledDiscourses()->attach($discourse->id, [
+            'enrolled_at' => now(),
+            'payment_status' => $discourse->price > 0 ? 'pending' : 'free',
+            'amount_paid' => 0,
+        ]);
+
+        return redirect()->route('discourses.my')
+            ->with('success', 'You have successfully enrolled in ' . $discourse->title);
     }
 
     /**

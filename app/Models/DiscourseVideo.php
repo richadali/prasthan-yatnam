@@ -13,17 +13,12 @@ class DiscourseVideo extends Model
     protected $fillable = [
         'discourse_id',
         'title',
-        'description',
         'youtube_video_id',
         'sequence',
-        'is_free_preview',
-        'is_active',
         'duration_seconds',
     ];
 
     protected $casts = [
-        'is_free_preview' => 'boolean',
-        'is_active' => 'boolean',
         'duration_seconds' => 'integer',
         'sequence' => 'integer',
     ];
@@ -34,14 +29,6 @@ class DiscourseVideo extends Model
     public function discourse(): BelongsTo
     {
         return $this->belongsTo(Discourse::class);
-    }
-
-    /**
-     * Get the user progress records for this video.
-     */
-    public function userProgress()
-    {
-        return $this->hasMany(UserVideoProgress::class);
     }
 
     /**

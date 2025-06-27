@@ -8,8 +8,18 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     * Remove the user_video_progress table as we're no longer tracking video progress
      */
     public function up(): void
+    {
+        Schema::dropIfExists('user_video_progress');
+    }
+
+    /**
+     * Reverse the migrations.
+     * Recreate the user_video_progress table if needed
+     */
+    public function down(): void
     {
         Schema::create('user_video_progress', function (Blueprint $table) {
             $table->id();
@@ -23,13 +33,5 @@ return new class extends Migration
             // Unique constraint to prevent duplicate progress records
             $table->unique(['user_id', 'discourse_video_id']);
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('user_video_progress');
     }
 };

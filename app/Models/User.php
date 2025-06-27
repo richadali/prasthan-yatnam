@@ -47,9 +47,9 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
 
     /**
      * Get the user's full name.
@@ -112,14 +112,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the video progress records for the user.
-     */
-    public function videoProgress()
-    {
-        return $this->hasMany(UserVideoProgress::class);
-    }
-
-    /**
      * Check if the user is enrolled in a specific discourse.
      */
     public function isEnrolledIn(Discourse $discourse): bool
@@ -138,12 +130,7 @@ class User extends Authenticatable
      */
     public function hasAccessToVideo(DiscourseVideo $video): bool
     {
-        // Allow access if the video is a free preview
-        if ($video->is_free_preview) {
-            return true;
-        }
-
-        // Allow access if the user is enrolled in the discourse
+        // Check if the user is enrolled in the discourse
         return $this->isEnrolledIn($video->discourse);
     }
 }
