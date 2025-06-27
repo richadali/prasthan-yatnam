@@ -20,14 +20,14 @@ composer install --no-interaction --prefer-dist --optimize-autoloader
 echo "⚙️ Running migrations..."
 php artisan migrate --force
 
-echo "🧹 Clearing and caching Laravel config..."
+echo "🧹 Clearing Laravel caches..."
 php artisan config:clear
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+php artisan cache:clear
+php artisan view:clear
+php artisan route:clear
 
 echo "🔄 Updating storage link..."
-php artisan storage:link --force
+php artisan storage:link --force 2>/dev/null || true
 
 echo "🔐 Setting permissions..."
 sudo chown -R $USER:$GROUP "$APP_DIR"
