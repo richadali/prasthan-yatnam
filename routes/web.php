@@ -7,6 +7,7 @@ use App\Http\Controllers\DiscourseController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Auth;
 
 // Public routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -86,6 +87,14 @@ Route::get('/discourses/{discourse_slug}/preview/{video_id}', [VideoController::
 
 // Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {
+    // Root admin route - check if admin is logged in, otherwise redirect to admin login
+    Route::get('/', function () {
+        if (Auth::guard('admin')->check()) {
+            return redirect()->route('admin.dashboard');
+        }
+        return redirect()->route('admin.login');
+    })->name('index');
+
     // Guest Admin Routes (login, register)
     Route::middleware(['web', 'guest:admin'])->group(function () {
         // Admin Auth Routes
@@ -107,11 +116,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Protected Admin Routes
     Route::middleware(['web', 'auth:admin'])->group(function () {
         // Dashboard
-        Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
-        Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard.index');
+        Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
 
         // Discourse Management
         Route::resource('discourses', App\Http\Controllers\Admin\DiscourseController::class);
+
+        // Enrollment Management
+        Route::get('/enrollments', [App\Http\Controllers\Admin\EnrollmentController::class, 'index'])->name('enrollments.index');
+        Route::get('/enrollments/{id}', [App\Http\Controllers\Admin\EnrollmentController::class, 'show'])->name('enrollments.show');
+        Route::put('/enrollments/{id}/status', [App\Http\Controllers\Admin\EnrollmentController::class, 'updateStatus'])->name('enrollments.update-status');
 
         // Video Management
         Route::get('/discourses/{discourse}/videos', [App\Http\Controllers\Admin\VideoController::class, 'index'])->name('discourses.videos.index');

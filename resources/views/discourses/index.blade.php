@@ -104,7 +104,7 @@
 <!-- Active Discourses Section -->
 <section class="discourse-section">
     <div class="container">
-        <h2 class="section-title">Available Discourses</h2>
+        <h2 class="section-title">AVAILABLE DISCOURSES</h2>
 
         @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">

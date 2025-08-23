@@ -21,7 +21,7 @@
 
     /* Navigation Menu Styles */
     .navy-gradient {
-        background: linear-gradient(to bottom, #000080, #0000b3);
+        background: linear-gradient(to bottom, #0B0B45, #0000b3);
         padding: 0;
     }
 

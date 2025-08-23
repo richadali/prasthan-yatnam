@@ -295,6 +295,15 @@
                         </a>
                     </div>
                 </div>
+
+                <!-- Enrollments Link -->
+                <a href="{{ route('admin.enrollments.index') }}"
+                    class="list-group-item list-group-item-action {{ request()->is('admin/enrollments*') ? 'active' : '' }}">
+                    <div class="list-group-item-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="list-group-item-text">Enrollments</div>
+                </a>
             </div>
         </div>
 

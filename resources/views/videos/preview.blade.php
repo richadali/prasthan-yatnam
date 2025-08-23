@@ -179,7 +179,7 @@
                         <ul class="feature-list">
                             <li>{{ count($discourse->videos) }} video lessons</li>
                             <li>Lifetime access</li>
-                            <li>Access on mobile and TV</li>
+                            <li>Access on mobile and Computer</li>
                             <li>Certificate of completion</li>
                         </ul>
 

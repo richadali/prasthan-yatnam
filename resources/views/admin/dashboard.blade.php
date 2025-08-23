@@ -8,24 +8,7 @@
 <div class="container-fluid px-0">
     <!-- Stats Cards -->
     <div class="row g-4 mb-4">
-        <div class="col-xl-3 col-md-6">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-shrink-0 me-3">
-                            <div class="d-flex align-items-center justify-content-center rounded-circle"
-                                style="width: 60px; height: 60px; background-color: rgba(0, 0, 128, 0.1);">
-                                <i class="fas fa-users fa-2x" style="color: #000080;"></i>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h4 class="mb-0">{{ number_format($stats['total_users']) }}</h4>
-                            <p class="text-muted mb-0">Total Users</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
 
         <div class="col-xl-3 col-md-6">
             <div class="card border-0 shadow-sm h-100">
@@ -52,25 +35,6 @@
                     <div class="d-flex align-items-center">
                         <div class="flex-shrink-0 me-3">
                             <div class="d-flex align-items-center justify-content-center rounded-circle"
-                                style="width: 60px; height: 60px; background-color: rgba(40, 167, 69, 0.1);">
-                                <i class="fas fa-check-circle fa-2x" style="color: #28a745;"></i>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h4 class="mb-0">{{ number_format($stats['active_discourses']) }}</h4>
-                            <p class="text-muted mb-0">Active Discourses</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-shrink-0 me-3">
-                            <div class="d-flex align-items-center justify-content-center rounded-circle"
                                 style="width: 60px; height: 60px; background-color: rgba(255, 193, 7, 0.1);">
                                 <i class="fas fa-calendar-alt fa-2x" style="color: #ffc107;"></i>
                             </div>
@@ -83,6 +47,46 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 me-3">
+                            <div class="d-flex align-items-center justify-content-center rounded-circle"
+                                style="width: 60px; height: 60px; background-color: rgba(0, 0, 128, 0.1);">
+                                <i class="fas fa-users fa-2x" style="color: #000080;"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h4 class="mb-0">{{ number_format($stats['total_users']) }}</h4>
+                            <p class="text-muted mb-0">Total Users</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 me-3">
+                            <div class="d-flex align-items-center justify-content-center rounded-circle"
+                                style="width: 60px; height: 60px; background-color: rgba(13, 110, 253, 0.1);">
+                                <i class="fas fa-user-graduate fa-2x" style="color: #0d6efd;"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h4 class="mb-0">{{ number_format($stats['total_enrollments']) }}</h4>
+                            <p class="text-muted mb-0">Total Enrollments</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 
     <div class="row g-4">

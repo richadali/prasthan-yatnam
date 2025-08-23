@@ -195,7 +195,7 @@
     <div class="row">
         <div class="col-lg-8">
             <div class="video-list">
-                <h3 class="mb-4">Discourse Content</h3>
+                <h3 class="mb-4">Discourse Parts</h3>
                 @if($isUpcoming)
                 <div class="alert alert-warning">
                     <i class="fas fa-clock me-2"></i> This discourse is not yet available. Content will be accessible
@@ -250,7 +250,7 @@
                     <ul class="feature-list">
                         <li>{{ count($discourse->videos) }} video lessons</li>
                         <li>Lifetime access</li>
-                        <li>Access on mobile and TV</li>
+                        <li>Access on mobile and Computer</li>
                     </ul>
 
                     @if($isUpcoming)

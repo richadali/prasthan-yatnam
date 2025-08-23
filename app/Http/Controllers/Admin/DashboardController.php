@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Discourse;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -24,9 +25,9 @@ class DashboardController extends Controller
     {
         $stats = [
             'total_discourses' => Discourse::count(),
-            'active_discourses' => Discourse::where('is_active', true)->count(),
             'upcoming_discourses' => Discourse::where('is_active', true)->where('is_upcoming', true)->count(),
             'total_users' => User::count(),
+            'total_enrollments' => DB::table('user_discourses')->count(),
         ];
 
         $latest_discourses = Discourse::latest()->take(5)->get();

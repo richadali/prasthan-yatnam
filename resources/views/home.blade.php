@@ -309,7 +309,7 @@
                                 <div>
                                     <h3 class="fw-bold mb-3">Discourse On:</h3>
                                     <p class="lead">{{ $discourse->title }}</p>
-                                    <p>{{ Str::limit(strip_tags($discourse->description), 150) }}</p>
+                                    <p><i>{{ Str::limit(strip_tags($discourse->description), 150) }}</i></p>
 
                                     @if($discourse->is_upcoming)
                                     <span class="btn orange-btn mt-3" style="cursor: default;">Upcoming</span>
@@ -382,7 +382,7 @@
         <div class="row justify-content-center">
             <div class="col-lg-8 text-center">
                 <h2 class="fw-bold section-title">FOUNDER CUM DIRECTOR'S MESSAGE</h2>
-                <p class="mb-4">Peace, love and healing..Sarve Bhavantu Sukhinaha..</p>
+                <p class="mb-4" style="font-size: 1.2rem;">Peace, love and healing..Sarve Bhavantu Sukhinaha..</p>
                 <p class="mb-4">
                     We are joyous to launch Prasthan Yatnam's webportal to the World.
                     We hope and pray that it serves the purpose of unifying the world in this conflict ridden times and
