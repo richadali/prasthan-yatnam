@@ -7,12 +7,55 @@
         padding: 150px 0;
         width: 100%;
         min-height: 500px;
+        position: relative;
     }
 
     .hero-content {
         max-width: 800px;
         margin: 0 auto;
         text-align: center;
+        position: relative;
+    }
+
+    .hero-tag {
+        position: absolute;
+        top: 20px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        padding: 8px 15px;
+        font-size: 1rem;
+        font-weight: 500;
+        animation: fadeInDown 1s ease-out, pulse 2s infinite;
+        z-index: 10;
+    }
+
+    @keyframes fadeInDown {
+        0% {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(255, 127, 39, 0.7);
+        }
+
+        70% {
+            box-shadow: 0 0 0 10px rgba(255, 127, 39, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(255, 127, 39, 0);
+        }
     }
 
     .hero-quote {
@@ -39,8 +82,8 @@
     .navy-btn {
         background: linear-gradient(to bottom, #000080, #0000b3);
         border: 2px solid white;
-        color: white;s
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        color: white;
+        s box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
         font-weight: 500;
         transition: all 0.3s ease;
     }
@@ -270,7 +313,20 @@
 <section class="hero-section" style="padding: 0; min-height: 0; position: relative;">
     <div class="container-fluid px-0">
         <div class="hero-content" style="max-width: 100%;">
-            <img src="{{ asset('images/Photo-for-the-month-of-September-2025.jpg') }}" class="img-fluid w-100">
+            @if($heroImage->tag)
+            <div class="hero-tag">
+                {{ $heroImage->tag }}
+            </div>
+            @endif
+
+            @if(Str::startsWith($heroImage->image_path, 'images/'))
+            <img src="{{ asset($heroImage->image_path) }}" class="img-fluid w-100"
+                alt="{{ $heroImage->tag ?? 'Hero Image' }}">
+            @else
+            <img src="{{ asset('storage/' . $heroImage->image_path) }}" class="img-fluid w-100"
+                alt="{{ $heroImage->tag ?? 'Hero Image' }}">
+            @endif
+
             @guest
             <div class="d-flex justify-content-center gap-3"
                 style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">

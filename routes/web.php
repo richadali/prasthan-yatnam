@@ -16,9 +16,8 @@ Route::get('/discourses', function () {
     return view('discourses.index');
 })->name('discourses');
 
-Route::get('/poems', function () {
-    return view('poems.index');
-})->name('poems');
+Route::get('/poems', [App\Http\Controllers\PoemController::class, 'index'])->name('poems');
+Route::get('/poems/{id}', [App\Http\Controllers\PoemController::class, 'show'])->name('poems.show');
 
 Route::get('/activity', function () {
     return view('activity.index');
@@ -183,5 +182,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Testimonial Management
         Route::resource('testimonials', App\Http\Controllers\Admin\TestimonialController::class);
+
+        // Hero Image Management
+        Route::resource('hero-images', App\Http\Controllers\Admin\HeroImageController::class);
+        Route::patch('/hero-images/{id}/toggle-active', [App\Http\Controllers\Admin\HeroImageController::class, 'toggleActive'])->name('hero-images.toggle-active');
+
+        // Poem Management
+        Route::resource('poems', App\Http\Controllers\Admin\PoemController::class);
     });
 });

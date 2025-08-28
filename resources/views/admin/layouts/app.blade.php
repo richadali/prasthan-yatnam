@@ -313,6 +313,24 @@
                     </div>
                     <div class="list-group-item-text">Testimonials</div>
                 </a>
+
+                <!-- Hero Images Link -->
+                <a href="{{ route('admin.hero-images.index') }}"
+                    class="list-group-item list-group-item-action {{ request()->is('admin/hero-images*') ? 'active' : '' }}">
+                    <div class="list-group-item-icon">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    <div class="list-group-item-text">Banner Image</div>
+                </a>
+
+                <!-- Poems Link -->
+                <a href="{{ route('admin.poems.index') }}"
+                    class="list-group-item list-group-item-action {{ request()->is('admin/poems*') ? 'active' : '' }}">
+                    <div class="list-group-item-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="list-group-item-text">Poems</div>
+                </a>
             </div>
         </div>
 

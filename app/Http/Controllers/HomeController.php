@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Discourse;
+use App\Models\HeroImage;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -12,6 +13,10 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // Get the current active hero image
+        $heroImage = HeroImage::getCurrentActive();
+
+
         // Get 3 active discourses
         $activeDiscourses = Discourse::where('is_active', true)
             ->where('is_upcoming', false)
@@ -35,6 +40,6 @@ class HomeController extends Controller
             $featuredDiscourses = $activeDiscourses->take(3);
         }
 
-        return view('home', compact('featuredDiscourses', 'upcomingDiscourses'));
+        return view('home', compact('featuredDiscourses', 'upcomingDiscourses', 'heroImage'));
     }
 }

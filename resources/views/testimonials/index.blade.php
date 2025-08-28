@@ -30,6 +30,19 @@
         margin-bottom: 3rem;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         border: 1px solid #eee;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .testimonial-masonry {
+        column-count: 2;
+        column-gap: 2rem;
+    }
+
+    @media (max-width: 991px) {
+        .testimonial-masonry {
+            column-count: 1;
+        }
     }
 
     .testimonial-card:hover {
@@ -153,35 +166,35 @@
             </div>
         </div>
 
-        <div class="row">
+        @if($testimonials->count() > 0)
+        <div class="testimonial-masonry">
             @foreach($testimonials as $testimonial)
-            <div class="col-lg-6 mb-4">
-                <div class="testimonial-card">
-                    <div class="testimonial-content text-center">
-                        @if($testimonial->image)
-                        <img src="{{ asset('storage/' . $testimonial->image) }}" alt="{{ $testimonial->name }}"
-                            class="testimonial-img">
-                        @else
-                        <div class="testimonial-icon-placeholder">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        @endif
-                        <div class="testimonial-text mb-4">
-                            {{ $testimonial->message }}
-                        </div>
-                        <h4 class="testimonial-name">{{ $testimonial->name }}</h4>
-                        <p class="testimonial-designation">{{ $testimonial->designation }}</p>
+            <div class="testimonial-card">
+                <div class="testimonial-content text-center">
+                    @if($testimonial->image)
+                    <img src="{{ asset('storage/' . $testimonial->image) }}" alt="{{ $testimonial->name }}"
+                        class="testimonial-img">
+                    @else
+                    <div class="testimonial-icon-placeholder">
+                        <i class="fas fa-user"></i>
                     </div>
+                    @endif
+                    <div class="testimonial-text mb-4">
+                        {{ $testimonial->message }}
+                    </div>
+                    <h4 class="testimonial-name">{{ $testimonial->name }}</h4>
+                    <p class="testimonial-designation">{{ $testimonial->designation }}</p>
                 </div>
             </div>
             @endforeach
-
-            @if($testimonials->count() == 0)
+        </div>
+        @else
+        <div class="row">
             <div class="col-12 text-center">
                 <p class="lead">No testimonials available yet.</p>
             </div>
-            @endif
         </div>
+        @endif
     </div>
 </section>
 @endsection
