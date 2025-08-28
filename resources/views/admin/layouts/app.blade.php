@@ -304,6 +304,15 @@
                     </div>
                     <div class="list-group-item-text">Enrollments</div>
                 </a>
+
+                <!-- Testimonials Link -->
+                <a href="{{ route('admin.testimonials.index') }}"
+                    class="list-group-item list-group-item-action {{ request()->is('admin/testimonials*') ? 'active' : '' }}">
+                    <div class="list-group-item-icon">
+                        <i class="fas fa-quote-right"></i>
+                    </div>
+                    <div class="list-group-item-text">Testimonials</div>
+                </a>
             </div>
         </div>
 
