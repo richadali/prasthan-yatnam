@@ -161,6 +161,10 @@
                         href="{{ url('/testimonials') }}">TESTIMONIAL</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link fw-medium {{ request()->is('gallery') || request()->is('gallery/*') ? 'active' : '' }}"
+                        href="{{ url('/gallery') }}">GALLERY</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link fw-medium {{ request()->is('about') ? 'active' : '' }}"
                         href="{{ url('/about') }}">ABOUT</a>
                 </li>

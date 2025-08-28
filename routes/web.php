@@ -25,6 +25,10 @@ Route::get('/activity', function () {
 
 Route::get('/testimonials', [App\Http\Controllers\TestimonialController::class, 'index'])->name('testimonials');
 
+// Gallery Routes
+Route::get('/gallery', [App\Http\Controllers\GalleryController::class, 'index'])->name('gallery');
+Route::get('/gallery/{id}', [App\Http\Controllers\GalleryController::class, 'show'])->name('gallery.show');
+
 // Debug routes for testimonials
 Route::get('/debug/testimonials', function () {
     return App\Models\Testimonial::all();
@@ -189,5 +193,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Poem Management
         Route::resource('poems', App\Http\Controllers\Admin\PoemController::class);
+
+        // Gallery Management
+        Route::resource('albums', App\Http\Controllers\Admin\AlbumController::class);
+        Route::resource('gallery-images', App\Http\Controllers\Admin\GalleryImageController::class);
     });
 });

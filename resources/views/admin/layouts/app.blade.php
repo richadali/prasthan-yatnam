@@ -331,6 +331,31 @@
                     </div>
                     <div class="list-group-item-text">Poems</div>
                 </a>
+
+                <!-- Gallery Dropdown -->
+                <div class="sidebar-menu-item">
+                    <a href="#"
+                        class="list-group-item list-group-item-action {{ request()->is('admin/albums*') || request()->is('admin/gallery-images*') ? 'active' : '' }}"
+                        data-toggle="collapse" data-target="#gallerySubmenu">
+                        <div class="list-group-item-icon">
+                            <i class="fas fa-images"></i>
+                        </div>
+                        <div class="list-group-item-text">Gallery</div>
+                        <i
+                            class="fas fa-chevron-right sidebar-dropdown-icon ms-auto {{ request()->is('admin/albums*') || request()->is('admin/gallery-images*') ? 'rotate' : '' }}"></i>
+                    </a>
+                    <div class="submenu collapse {{ request()->is('admin/albums*') || request()->is('admin/gallery-images*') ? 'show' : '' }}"
+                        id="gallerySubmenu">
+                        <a href="{{ route('admin.albums.index') }}"
+                            class="list-group-item list-group-item-action {{ request()->routeIs('admin.albums.index') ? 'active' : '' }}">
+                            <div class="list-group-item-text">Albums</div>
+                        </a>
+                        <a href="{{ route('admin.gallery-images.index') }}"
+                            class="list-group-item list-group-item-action {{ request()->routeIs('admin.gallery-images.index') ? 'active' : '' }}">
+                            <div class="list-group-item-text">Images</div>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
 
