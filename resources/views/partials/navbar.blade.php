@@ -127,7 +127,7 @@
 
 <!-- Header Banner -->
 <div class="header-banner">
-    <img src="{{ asset('images/HEADER1.jpg') }}" alt="Prasthan Yatnam Header" class="img-fluid w-100">
+    <img src="{{ asset('images/HEADER2.jpg') }}" alt="Prasthan Yatnam Header" class="img-fluid w-100">
 
 </div>
 

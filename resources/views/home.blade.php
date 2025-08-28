@@ -4,9 +4,6 @@
 <style>
     /* Hero Section */
     .hero-section {
-        background: url('{{ asset("images/background1.png") }}') no-repeat;
-        background-size: cover;
-        background-position: center;
         padding: 150px 0;
         width: 100%;
         min-height: 500px;
@@ -41,8 +38,8 @@
     /* Custom Button Styles with Gradients */
     .navy-btn {
         background: linear-gradient(to bottom, #000080, #0000b3);
-        border: none;
-        color: white;
+        border: 2px solid white;
+        color: white;s
         box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
         font-weight: 500;
         transition: all 0.3s ease;
@@ -57,7 +54,7 @@
 
     .orange-btn {
         background: linear-gradient(to bottom, #FA8128, #e86b00);
-        border: none;
+        border: 2px solid white;
         color: white;
         box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
         font-weight: 500;
@@ -270,14 +267,13 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="hero-section">
+<section class="hero-section" style="padding: 0; min-height: 0; position: relative;">
     <div class="container-fluid px-0">
-        <div class="hero-content">
-            <h1 class="hero-quote">" The need not to journey, to sit still, is the greatest journey."</h1>
-            <h2 class="hero-author">~Raina Bhattacharjee</h2>
-
+        <div class="hero-content" style="max-width: 100%;">
+            <img src="{{ asset('images/Photo-for-the-month-of-September-2025.jpg') }}" class="img-fluid w-100">
             @guest
-            <div class="d-flex justify-content-center gap-3 mt-5">
+            <div class="d-flex justify-content-center gap-3"
+                style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
                 <a href="{{ url('/login') }}" class="btn navy-btn px-4 py-2">LOGIN</a>
                 <a href="{{ url('/register') }}" class="btn orange-btn px-4 py-2">REGISTER</a>
             </div>

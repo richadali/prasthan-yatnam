@@ -8,7 +8,8 @@
             </div>
             <div class="col-md-4 text-center">
                 <p class="small text-white-50 mb-md-0">
-                    Developed by Richad Ali
+                    <a href="https://richadali.dev" target="_blank" style="text-decoration:none">Developed by Richad
+                        Ali</a>
                 </p>
             </div>
             <div class="col-md-4">
