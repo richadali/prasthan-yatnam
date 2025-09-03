@@ -45,7 +45,7 @@
         cursor: pointer;
     }
 
-    .youtube-preview {
+    .video-preview {
         width: 240px;
         height: 150px;
         background-color: #eee;
@@ -61,44 +61,44 @@
         cursor: pointer;
     }
 
-    .youtube-preview img {
+    .video-preview img {
         width: 100%;
         height: 100%;
         object-fit: cover;
     }
 
-    .youtube-preview .yt-play {
+    .video-preview .play-icon {
         position: absolute;
-        color: rgba(255, 0, 0, 0.8);
+        color: rgba(255, 255, 255, 0.8);
         font-size: 3rem;
-        filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.7));
+        filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.7));
     }
 
-    .youtube-modal .modal-content {
+    .video-modal .modal-content {
         background-color: #000;
         border-radius: 8px;
     }
 
-    .youtube-modal .modal-header {
+    .video-modal .modal-header {
         border-bottom: 1px solid #333;
         padding: 0.5rem 1rem;
     }
 
-    .youtube-modal .modal-header .btn-close {
+    .video-modal .modal-header .btn-close {
         background-color: #fff;
         opacity: 0.8;
     }
 
-    .youtube-modal .modal-title {
+    .video-modal .modal-title {
         color: #fff;
         font-size: 1.1rem;
     }
 
-    .youtube-modal .modal-body {
+    .video-modal .modal-body {
         padding: 0;
     }
 
-    .youtube-embed-container {
+    .video-embed-container {
         position: relative;
         padding-bottom: 56.25%;
         /* 16:9 aspect ratio */
@@ -107,15 +107,63 @@
         max-width: 100%;
     }
 
-    .youtube-embed-container iframe {
+    .video-embed-container .video-js {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        border: 0;
+    }
+
+    .upload-progress {
+        display: none;
+        margin-top: 10px;
+    }
+
+    .upload-progress .progress {
+        height: 10px;
+        border-radius: 5px;
+    }
+
+    .video-upload-wrapper {
+        border: 2px dashed #ccc;
+        border-radius: 8px;
+        padding: 25px;
+        text-align: center;
+        background-color: #f9f9f9;
+        margin-bottom: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .video-upload-wrapper:hover {
+        border-color: #6c757d;
+        background-color: #f1f1f1;
+    }
+
+    .video-upload-wrapper input[type="file"] {
+        display: none;
+    }
+
+    .video-upload-icon {
+        font-size: 2.5rem;
+        color: #6c757d;
+        margin-bottom: 10px;
+    }
+
+    .video-upload-text {
+        color: #495057;
+    }
+
+    .video-upload-hint {
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-top: 5px;
     }
 </style>
+
+<!-- Include Video.js -->
+@include('admin.layouts.video-js-includes')
 @endsection
 
 @section('content')
@@ -171,8 +219,7 @@
                             <div class="image-preview mb-3">
                                 <div class="preview-content">
                                     @if($discourse->thumbnail)
-                                    <img src="{{ asset('storage/' . $discourse->thumbnail) }}"
-                                        alt="{{ $discourse->title }}">
+                                    <img src="{{ $discourse->getThumbnailUrl() }}" alt="{{ $discourse->title }}">
                                     @else
                                     <div class="preview-placeholder">
                                         <i class="fas fa-image fa-3x"></i>
@@ -234,89 +281,6 @@
                 <!-- Hidden field for slug -->
                 <input type="hidden" name="slug" id="slug" value="{{ old('slug', $discourse->slug) }}">
 
-                <hr class="my-4">
-
-                <h4 class="mb-4">Manage Videos</h4>
-                <p class="text-muted mb-3">Add, edit or remove videos for this discourse.</p>
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle me-2"></i> Simply paste any YouTube URL and click "Fetch Details" to
-                    automatically get the video title and duration.
-                </div>
-
-                <div id="videoContainer">
-                    <!-- Existing videos will be loaded here -->
-                    @foreach($discourse->videos->sortBy('sequence') as $index => $video)
-                    <div class="video-item" data-index="{{ $index }}" data-id="{{ $video->id }}">
-                        <div class="row align-items-center">
-                            <div class="col-lg-8">
-                                <div class="mb-3">
-                                    <label class="form-label">Video Title <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control video-title"
-                                        name="videos[{{ $index }}][title]" value="{{ $video->title }}" required>
-                                    <input type="hidden" name="videos[{{ $index }}][id]" value="{{ $video->id }}">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">YouTube URL <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control youtube-url"
-                                            name="videos[{{ $index }}][youtube_url]"
-                                            value="https://www.youtube.com/watch?v={{ $video->youtube_video_id }}"
-                                            required>
-                                        <button class="btn btn-outline-secondary fetch-yt-details" type="button">
-                                            <i class="fas fa-search me-1"></i> Fetch Details
-                                        </button>
-                                    </div>
-                                    <div class="form-text">Enter complete YouTube URL (youtu.be/abc or
-                                        youtube.com/watch?v=abc)</div>
-                                </div>
-                                <input type="hidden" class="youtube-id" name="videos[{{ $index }}][youtube_video_id]"
-                                    value="{{ $video->youtube_video_id }}">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Sequence</label>
-                                            <input type="number" class="form-control video-sequence"
-                                                name="videos[{{ $index }}][sequence]" min="0"
-                                                value="{{ $video->sequence }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Duration (seconds)</label>
-                                            <input type="number" class="form-control duration-seconds"
-                                                name="videos[{{ $index }}][duration_seconds]" min="0"
-                                                value="{{ $video->duration_seconds }}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="d-flex align-items-center justify-content-center mb-3">
-                                    <div class="youtube-preview" data-video-id="{{ $video->youtube_video_id }}"
-                                        data-video-title="{{ $video->title }}">
-                                        <img src="https://img.youtube.com/vi/{{ $video->youtube_video_id }}/maxresdefault.jpg"
-                                            alt="YouTube Thumbnail"
-                                            onerror="this.src='https://img.youtube.com/vi/{{ $video->youtube_video_id }}/0.jpg';">
-                                        <i class="fas fa-play yt-play"></i>
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-center">
-                                    <button type="button" class="btn btn-danger btn-sm remove-video">
-                                        <i class="fas fa-trash me-1"></i> Remove Video
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-
-                <div class="mb-4">
-                    <button type="button" class="btn btn-outline-primary" id="addVideoBtn">
-                        <i class="fas fa-plus-circle me-1"></i> Add Video
-                    </button>
-                </div>
-
                 <div class="d-flex justify-content-end mt-4">
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-save me-1"></i> Update Discourse
@@ -325,76 +289,102 @@
             </form>
         </div>
     </div>
-</div>
 
-<!-- Video template -->
-<template id="videoTemplate">
-    <div class="video-item" data-index="__INDEX__">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <div class="mb-3">
-                    <label class="form-label">Video Title <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control video-title" name="videos[__INDEX__][title]" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">YouTube URL <span class="text-danger">*</span></label>
-                    <div class="input-group">
-                        <input type="text" class="form-control youtube-url" name="videos[__INDEX__][youtube_url]"
-                            required>
-                        <button class="btn btn-outline-secondary fetch-yt-details" type="button">
-                            <i class="fas fa-search me-1"></i> Fetch Details
-                        </button>
-                    </div>
-                    <div class="form-text">Enter complete YouTube URL (youtu.be/abc or youtube.com/watch?v=abc)</div>
-                </div>
-                <input type="hidden" class="youtube-id" name="videos[__INDEX__][youtube_video_id]">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">Sequence</label>
-                            <input type="number" class="form-control video-sequence" name="videos[__INDEX__][sequence]"
-                                min="0" value="__INDEX__">
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">Duration (seconds)</label>
-                            <input type="number" class="form-control duration-seconds"
-                                name="videos[__INDEX__][duration_seconds]" min="0">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="d-flex align-items-center justify-content-center mb-3">
-                    <div class="youtube-preview">
-                        <i class="fas fa-play yt-play"></i>
-                    </div>
-                </div>
-                <div class="d-flex justify-content-center">
-                    <button type="button" class="btn btn-danger btn-sm remove-video">
-                        <i class="fas fa-trash me-1"></i> Remove Video
-                    </button>
-                </div>
+    <!-- Videos Section -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Manage Videos</h4>
+                <a href="{{ route('admin.discourses.videos.create', $discourse) }}" class="btn btn-primary">
+                    <i class="fas fa-plus-circle me-1"></i> Add New Video
+                </a>
             </div>
         </div>
-    </div>
-</template>
+        <div class="card-body">
+            <p class="text-muted mb-3">Add, edit or remove videos for this discourse.</p>
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i> Videos can be managed from the videos section.
+                <a href="{{ route('admin.discourses.videos.index', $discourse) }}" class="alert-link">Go to Videos</a>
+            </div>
 
-<!-- YouTube Video Modal -->
-<div class="modal fade youtube-modal" id="youtubeModal" tabindex="-1" aria-labelledby="youtubeModalLabel"
-    aria-hidden="true">
+            @if($discourse->videos->count() > 0)
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Thumbnail</th>
+                            <th>Title</th>
+                            <th>Duration</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($discourse->videos->sortBy('sequence') as $video)
+                        <tr>
+                            <td>{{ $video->sequence + 1 }}</td>
+                            <td>
+                                <div style="width: 80px; height: 45px; overflow: hidden; border-radius: 4px;">
+                                    <img src="{{ $video->getThumbnailUrl() }}" alt="{{ $video->title }}"
+                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                            </td>
+                            <td>{{ $video->title }}</td>
+                            <td>{{ $video->formatted_duration }}</td>
+                            <td>
+                                <a href="{{ route('admin.discourses.videos.edit', [$discourse, $video]) }}"
+                                    class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form action="{{ route('admin.discourses.videos.destroy', [$discourse, $video]) }}"
+                                    method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirm('Are you sure you want to delete this video?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            @else
+            <div class="text-center py-5">
+                <div class="mb-3">
+                    <i class="fas fa-video fa-3x text-muted"></i>
+                </div>
+                <h5 class="text-muted">No Videos Added Yet</h5>
+                <p>Add videos to this discourse to make it available to users.</p>
+                <a href="{{ route('admin.discourses.videos.create', $discourse) }}" class="btn btn-primary mt-2">
+                    <i class="fas fa-plus-circle me-1"></i> Add First Video
+                </a>
+            </div>
+            @endif
+        </div>
+    </div>
+</div>
+
+<!-- Video Preview Modal -->
+<div class="modal fade video-modal" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="youtubeModalLabel">Video Preview</h5>
+                <h5 class="modal-title" id="videoModalLabel">Video Preview</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="youtube-embed-container">
-                    <iframe id="youtubeIframe" src="" title="YouTube video player"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
+                <div class="video-embed-container">
+                    <video id="localVideoPlayer" class="video-js vjs-theme-forest" controls preload="auto">
+                        <source src="" type="video/mp4">
+                        <p class="vjs-no-js">
+                            To view this video please enable JavaScript, and consider upgrading to a
+                            web browser that <a href="https://videojs.com/html5-video-support/" target="_blank">supports
+                                HTML5 video</a>
+                        </p>
+                    </video>
                 </div>
             </div>
         </div>
@@ -473,225 +463,12 @@
             } else {
                 // If no new file is selected, show the existing thumbnail if available
                 @if($discourse->thumbnail)
-                    previewContainer.innerHTML = '<img src="{{ asset('storage/' . $discourse->thumbnail) }}" alt="{{ $discourse->title }}">';
+                    previewContainer.innerHTML = '<img src="{{ $discourse->getThumbnailUrl() }}" alt="{{ $discourse->title }}">';
                 @else
                     previewContainer.innerHTML = '<div class="preview-placeholder"><i class="fas fa-image fa-3x"></i></div>';
                 @endif
             }
         });
-        
-        // Videos management
-        let videoCount = {{ $discourse->videos->count() }};
-        const videoContainer = document.getElementById('videoContainer');
-        const videoTemplate = document.getElementById('videoTemplate').innerHTML;
-        const addVideoBtn = document.getElementById('addVideoBtn');
-        
-        // YouTube modal functionality
-        const youtubeModal = new bootstrap.Modal(document.getElementById('youtubeModal'));
-        const youtubeIframe = document.getElementById('youtubeIframe');
-        const youtubeModalTitle = document.getElementById('youtubeModalLabel');
-        
-        // Add click handler for YouTube previews
-        document.addEventListener('click', function(e) {
-            const preview = e.target.closest('.youtube-preview');
-            if (preview) {
-                const videoId = preview.dataset.videoId;
-                const videoTitle = preview.dataset.videoTitle || 'Video Preview';
-                
-                if (videoId) {
-                    // Set the iframe src and modal title
-                    youtubeIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-                    youtubeModalTitle.textContent = videoTitle;
-                    youtubeModal.show();
-                }
-            }
-        });
-        
-        // Reset iframe when modal is closed
-        document.getElementById('youtubeModal').addEventListener('hidden.bs.modal', function () {
-            youtubeIframe.src = '';
-        });
-        
-        // Add video button click handler
-        addVideoBtn.addEventListener('click', function() {
-            addNewVideo();
-        });
-        
-        // Remove video button click handler
-        videoContainer.addEventListener('click', function(e) {
-            if (e.target.classList.contains('remove-video') || e.target.parentElement.classList.contains('remove-video')) {
-                const videoItem = e.target.closest('.video-item');
-                if (videoItem) {
-                    // If it's an existing video, add a hidden field to mark it for deletion
-                    const videoId = videoItem.dataset.id;
-                    if (videoId) {
-                        const deleteField = document.createElement('input');
-                        deleteField.type = 'hidden';
-                        deleteField.name = 'delete_videos[]';
-                        deleteField.value = videoId;
-                        document.getElementById('discourseForm').appendChild(deleteField);
-                    }
-                    
-                    videoItem.remove();
-                    updateSequenceNumbers();
-                }
-            }
-        });
-        
-        // Fetch YouTube video details
-        videoContainer.addEventListener('click', function(e) {
-            if (e.target.classList.contains('fetch-yt-details') || e.target.parentElement.classList.contains('fetch-yt-details')) {
-                const videoItem = e.target.closest('.video-item');
-                const youtubeUrlInput = videoItem.querySelector('.youtube-url');
-                const youtubeIdInput = videoItem.querySelector('.youtube-id');
-                const youtubeUrl = youtubeUrlInput.value.trim();
-                
-                if (!youtubeUrl) {
-                    alert('Please enter a YouTube URL');
-                    return;
-                }
-                
-                // Extract video ID from URL
-                const videoId = extractYouTubeId(youtubeUrl);
-                if (!videoId) {
-                    alert('Invalid YouTube URL. Please enter a valid YouTube URL.');
-                    return;
-                }
-                
-                // Store the extracted ID in the hidden field
-                youtubeIdInput.value = videoId;
-                
-                fetchVideoDetails(videoId, videoItem);
-            }
-        });
-        
-        // Function to extract YouTube video ID from URL
-        function extractYouTubeId(url) {
-            // Handle youtu.be format
-            let match = url.match(/youtu\.be\/([^?&]+)/);
-            if (match) return match[1];
-            
-            // Handle youtube.com/watch?v= format
-            match = url.match(/youtube\.com\/watch\?v=([^&]+)/);
-            if (match) return match[1];
-            
-            // Handle youtube.com/embed/ format
-            match = url.match(/youtube\.com\/embed\/([^?&]+)/);
-            if (match) return match[1];
-            
-            // If it's just the ID itself, return it
-            if (/^[A-Za-z0-9_-]{11}$/.test(url)) return url;
-            
-            return null;
-        }
-        
-        function addNewVideo() {
-            let newVideoHtml = videoTemplate.replace(/__INDEX__/g, videoCount);
-            
-            // Create a temporary div to hold the HTML
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = newVideoHtml;
-            
-            // Append the new video to the container
-            videoContainer.appendChild(tempDiv.firstElementChild);
-            
-            videoCount++;
-        }
-        
-        function updateSequenceNumbers() {
-            const videoItems = document.querySelectorAll('.video-item');
-            videoItems.forEach((item, index) => {
-                const sequenceInput = item.querySelector('.video-sequence');
-                if (sequenceInput.value === '' || parseInt(sequenceInput.value) === parseInt(item.dataset.index)) {
-                    sequenceInput.value = index;
-                }
-                item.dataset.index = index;
-            });
-        }
-        
-        function fetchVideoDetails(youtubeId, videoItem) {
-            const titleInput = videoItem.querySelector('.video-title');
-            const durationInput = videoItem.querySelector('.duration-seconds');
-            const previewContainer = videoItem.querySelector('.youtube-preview');
-            const youtubeUrlInput = videoItem.querySelector('.youtube-url');
-            
-            // Clear any previous error messages
-            const previousErrors = videoItem.querySelectorAll('.api-error-message');
-            previousErrors.forEach(el => el.remove());
-            
-            // Set loading state
-            previewContainer.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            
-            // Fetch from API
-            fetch(`{{ route('admin.youtube.fetch-details') }}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({ youtube_video_id: youtubeId })
-            })
-            .then(response => {
-                return response.json().then(data => {
-                    if (!response.ok) {
-                        // API returned an error
-                        throw new Error(data.error || 'API request failed');
-                    }
-                    return data;
-                });
-            })
-            .then(data => {
-                console.log('YouTube data:', data);
-                
-                // Fill in the data
-                if (!titleInput.value && data.title) {
-                    titleInput.value = data.title;
-                }
-                
-                if (data.duration_seconds) {
-                    durationInput.value = data.duration_seconds;
-                }
-                
-                // Update preview
-                previewContainer.innerHTML = `
-                    <img src="https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg" alt="YouTube Thumbnail" onerror="this.src='https://img.youtube.com/vi/${youtubeId}/0.jpg';">
-                    <i class="fas fa-play yt-play"></i>
-                `;
-                
-                // Add video ID and title as data attributes for the player
-                previewContainer.dataset.videoId = youtubeId;
-                previewContainer.dataset.videoTitle = titleInput.value || 'Video Preview';
-            })
-            .catch(error => {
-                console.error('Error fetching video details:', error);
-                
-                // Show thumbnail if available
-                previewContainer.innerHTML = `
-                    <img src="https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg" alt="YouTube Thumbnail" onerror="this.src='https://img.youtube.com/vi/${youtubeId}/0.jpg';">
-                    <i class="fas fa-play yt-play"></i>
-                `;
-                
-                // Add video ID for the player
-                previewContainer.dataset.videoId = youtubeId;
-                
-                // Show error message
-                const inputGroup = youtubeUrlInput.closest('.mb-3');
-                if (inputGroup) {
-                    const errorDiv = document.createElement('div');
-                    errorDiv.className = 'alert alert-danger mt-2 api-error-message';
-                    errorDiv.innerHTML = `
-                        <strong>API Error:</strong> ${error.message}
-                        <div class="mt-1 small">
-                            <a href="https://console.cloud.google.com/apis/credentials" target="_blank">
-                                Get a YouTube API key
-                            </a>
-                            and add it to your .env file as YOUTUBE_API_KEY
-                        </div>
-                    `;
-                    inputGroup.appendChild(errorDiv);
-                }
-            });
-        }
         
         // Form submission
         const discourseForm = document.getElementById('discourseForm');
@@ -724,35 +501,9 @@
                 }
             }
             
-            // Process all videos - make sure IDs are extracted before submission
-            const videoItems = document.querySelectorAll('.video-item');
-            let hasInvalidUrls = false;
-            
-            videoItems.forEach(item => {
-                const urlInput = item.querySelector('.youtube-url');
-                const idInput = item.querySelector('.youtube-id');
-                const url = urlInput.value.trim();
-                
-                if (url && !idInput.value) {
-                    // Attempt to extract ID
-                    const id = extractYouTubeId(url);
-                    if (id) {
-                        idInput.value = id;
-                    } else {
-                        hasInvalidUrls = true;
-                        urlInput.classList.add('is-invalid');
-                    }
-                }
-            });
-            
             // Stop submission if invalid
-            if (hasInvalidUrls || !isValid) {
+            if (!isValid) {
                 e.preventDefault();
-                
-                if (hasInvalidUrls) {
-                    alert('One or more YouTube URLs are invalid. Please fix them before submitting.');
-                }
-                
                 return false;
             }
         });

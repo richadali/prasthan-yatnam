@@ -204,7 +204,8 @@
                 @endif
 
                 @forelse($discourse->videos as $video)
-                <div class="video-item">
+                <div class="video-item" data-video-path="{{ asset('storage/' . $video->video_path) }}"
+                    data-video-type="{{ $video->mime_type ?? 'video/mp4' }}">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <h5 class="video-title">

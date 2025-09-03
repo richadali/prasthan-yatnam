@@ -94,5 +94,15 @@ class Discourse extends Model
             ->withTimestamps();
     }
 
-    // Free preview functionality has been removed
+    /**
+     * Get the thumbnail URL
+     */
+    public function getThumbnailUrl()
+    {
+        if ($this->thumbnail) {
+            return asset('storage/' . $this->thumbnail);
+        }
+
+        return asset('images/video-placeholder.jpg');
+    }
 }

@@ -13,7 +13,11 @@ class DiscourseVideo extends Model
     protected $fillable = [
         'discourse_id',
         'title',
-        'youtube_video_id',
+        'video_path',
+        'video_filename',
+        'mime_type',
+        'file_size',
+        'is_processed',
         'sequence',
         'duration_seconds',
     ];
@@ -21,6 +25,8 @@ class DiscourseVideo extends Model
     protected $casts = [
         'duration_seconds' => 'integer',
         'sequence' => 'integer',
+        'is_processed' => 'boolean',
+        'file_size' => 'integer',
     ];
 
     /**
@@ -47,10 +53,34 @@ class DiscourseVideo extends Model
     }
 
     /**
-     * Generate the secure embed URL for this video.
+     * Get the video URL
      */
-    public function getEmbedUrl(): string
+    public function getVideoUrl(): string
     {
-        return 'https://www.youtube.com/embed/' . $this->youtube_video_id;
+        // Use the secure streaming route for paid content
+        // or direct access for free content
+        $discourse = $this->discourse;
+
+        if ($discourse && $discourse->price > 0) {
+            return route('video.stream', ['id' => $this->id]);
+        }
+
+        return asset('storage/' . $this->video_path);
+    }
+
+    /**
+     * Get the video thumbnail URL
+     */
+    public function getThumbnailUrl(): string
+    {
+        // Use the discourse's thumbnail
+        $discourse = $this->discourse;
+
+        if ($discourse && $discourse->thumbnail) {
+            return $discourse->getThumbnailUrl();
+        }
+
+        // Default thumbnail
+        return asset('images/video-placeholder.jpg');
     }
 }

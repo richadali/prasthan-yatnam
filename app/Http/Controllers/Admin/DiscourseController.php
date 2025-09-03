@@ -7,20 +7,21 @@ use App\Models\Discourse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class DiscourseController extends Controller
 {
     /**
-     * Display a listing of the discourses.
+     * Display a listing of the resource.
      */
     public function index()
     {
-        $discourses = Discourse::with('videos')->orderBy('created_at', 'desc')->paginate(10);
+        $discourses = Discourse::orderBy('created_at', 'desc')->paginate(10);
         return view('admin.discourses.index', compact('discourses'));
     }
 
     /**
-     * Show the form for creating a new discourse.
+     * Show the form for creating a new resource.
      */
     public function create()
     {
@@ -28,72 +29,86 @@ class DiscourseController extends Controller
     }
 
     /**
-     * Store a newly created discourse in storage.
+     * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_active' => 'boolean',
-            'is_upcoming' => 'boolean',
-            'expected_release_date' => 'nullable|date',
-            'price' => 'nullable|numeric|min:0',
-            'slug' => 'nullable|string|max:255|unique:discourses,slug',
-            'videos.*.title' => 'nullable|string|max:255',
-            'videos.*.youtube_video_id' => 'nullable|string|max:20',
-            'videos.*.sequence' => 'nullable|integer|min:0',
-            'videos.*.duration_seconds' => 'nullable|integer|min:0',
-        ]);
+        try {
+            $validated = $request->validate(
+                [
+                    'title' => 'required|string|max:255',
+                    'description' => 'required|string',
+                    'thumbnail' => 'nullable|image|max:51200',
+                    'price' => 'required|numeric|min:0',
+                    'is_active' => 'boolean',
+                    'is_upcoming' => 'boolean',
+                    'expected_release_date' => 'nullable|date',
+                    'slug' => 'nullable|string|unique:discourses,slug',
+                ],
+                [
+                    'slug.unique' => 'A discourse with this title already exists. Please choose a different title.',
+                ]
+            );
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Validation failed', $e->errors());
+            return response()->json([
+                'success' => false,
+                'errors' => $e->errors(),
+            ], 422);
+        }
+
+        // Handle boolean fields
+        $validated['is_active'] = $request->has('is_active');
+        $validated['is_upcoming'] = $request->has('is_upcoming');
 
         // Handle thumbnail upload
         if ($request->hasFile('thumbnail')) {
-            $thumbnailFile = $request->file('thumbnail');
-            $filename = time() . '_' . $thumbnailFile->getClientOriginalName();
-
-            // Store in public disk instead of using the 'public' prefix
-            $thumbnailPath = Storage::disk('public')->putFileAs(
-                'images/discourses',
-                $thumbnailFile,
-                $filename
-            );
-
-            $validated['thumbnail'] = $thumbnailPath;
+            try {
+                $path = $request->file('thumbnail')->store('thumbnails', 'public');
+                $validated['thumbnail'] = $path;
+                Log::info('Discourse thumbnail uploaded successfully', ['path' => $path]);
+            } catch (\Exception $e) {
+                Log::error('Thumbnail upload failed', ['error' => $e->getMessage()]);
+                return redirect()->back()
+                    ->with('error', 'Error uploading thumbnail: ' . $e->getMessage())
+                    ->withInput();
+            }
         }
-
-        // Set is_active to true by default if not provided
-        $validated['is_active'] = $request->has('is_active') ? $request->boolean('is_active') : true;
-
-        // Set is_upcoming to false by default if not provided
-        $validated['is_upcoming'] = $request->has('is_upcoming') ? $request->boolean('is_upcoming') : false;
-
-        // Set price to 0 if not provided
-        $validated['price'] = $validated['price'] ?? 0;
 
         // Create the discourse
         $discourse = Discourse::create($validated);
 
-        // Process videos if they exist in the request
+        // Handle videos if any
         if ($request->has('videos')) {
-            foreach ($request->videos as $videoData) {
-                if (!empty($videoData['youtube_video_id'])) {
+            foreach ($request->videos as $index => $videoData) {
+                // Check if a video file was uploaded
+                if ($request->hasFile("videos.{$index}.video_file")) {
+                    $file = $request->file("videos.{$index}.video_file");
+                    $path = $file->store('videos', 'public');
+
                     $discourse->videos()->create([
                         'title' => $videoData['title'],
-                        'youtube_video_id' => $videoData['youtube_video_id'],
-                        'sequence' => $videoData['sequence'] ?? 0,
+                        'video_path' => $path,
+                        'video_filename' => $file->getClientOriginalName(),
+                        'mime_type' => $file->getMimeType(),
+                        'file_size' => $file->getSize(),
+                        'is_processed' => false,
+                        'sequence' => $videoData['sequence'] ?? $index,
                         'duration_seconds' => $videoData['duration_seconds'] ?? null,
                     ]);
                 }
             }
         }
 
-        return redirect()->route('admin.discourses.index')
-            ->with('success', 'Discourse created successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Discourse created successfully.',
+            'discourse_id' => $discourse->id,
+        ]);
     }
 
     /**
-     * Display the specified discourse.
+     * Display the specified resource.
      */
     public function show(Discourse $discourse)
     {
@@ -101,7 +116,7 @@ class DiscourseController extends Controller
     }
 
     /**
-     * Show the form for editing the specified discourse.
+     * Show the form for editing the specified resource.
      */
     public function edit(Discourse $discourse)
     {
@@ -109,100 +124,69 @@ class DiscourseController extends Controller
     }
 
     /**
-     * Update the specified discourse in storage.
+     * Update the specified resource in storage.
      */
     public function update(Request $request, Discourse $discourse)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_active' => 'boolean',
-            'is_upcoming' => 'boolean',
-            'expected_release_date' => 'nullable|date',
-            'price' => 'nullable|numeric|min:0',
-            'slug' => 'nullable|string|max:255|unique:discourses,slug,' . $discourse->id,
-            'videos.*.id' => 'nullable|exists:discourse_videos,id',
-            'videos.*.title' => 'nullable|string|max:255',
-            'videos.*.youtube_video_id' => 'nullable|string|max:20',
-            'videos.*.sequence' => 'nullable|integer|min:0',
-            'videos.*.duration_seconds' => 'nullable|integer|min:0',
-            'delete_videos.*' => 'nullable|exists:discourse_videos,id',
-        ]);
+        $validated = $request->validate(
+            [
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'thumbnail' => 'nullable|image|max:51200',
+                'price' => 'required|numeric|min:0',
+                'is_active' => 'boolean',
+                'is_upcoming' => 'boolean',
+                'expected_release_date' => 'nullable|date',
+                'slug' => 'nullable|string|unique:discourses,slug,' . $discourse->id,
+            ],
+            [
+                'slug.unique' => 'A discourse with this title already exists. Please choose a different title.',
+            ]
+        );
 
-        // Handle thumbnail upload
-        if ($request->hasFile('thumbnail')) {
-            // Delete old thumbnail if exists
-            if ($discourse->thumbnail) {
-                Storage::disk('public')->delete($discourse->thumbnail);
-            }
-
-            $thumbnailFile = $request->file('thumbnail');
-            $filename = time() . '_' . $thumbnailFile->getClientOriginalName();
-
-            // Store in public disk instead of using the 'public' prefix
-            $thumbnailPath = Storage::disk('public')->putFileAs(
-                'images/discourses',
-                $thumbnailFile,
-                $filename
-            );
-
-            $validated['thumbnail'] = $thumbnailPath;
-        }
-
-        // Set boolean fields
+        // Handle boolean fields
         $validated['is_active'] = $request->has('is_active');
         $validated['is_upcoming'] = $request->has('is_upcoming');
 
-        // Set price to 0 if not provided
-        $validated['price'] = $validated['price'] ?? 0;
-
-        $discourse->update($validated);
-
-        // Process videos if they exist in the request
-        if ($request->has('videos')) {
-            foreach ($request->videos as $videoData) {
-                if (!empty($videoData['youtube_video_id'])) {
-                    // If video has an ID, update it
-                    if (!empty($videoData['id'])) {
-                        $discourse->videos()->where('id', $videoData['id'])->update([
-                            'title' => $videoData['title'],
-                            'youtube_video_id' => $videoData['youtube_video_id'],
-                            'sequence' => $videoData['sequence'] ?? 0,
-                            'duration_seconds' => $videoData['duration_seconds'] ?? null,
-                        ]);
-                    } else {
-                        // Otherwise create a new video
-                        $discourse->videos()->create([
-                            'title' => $videoData['title'],
-                            'youtube_video_id' => $videoData['youtube_video_id'],
-                            'sequence' => $videoData['sequence'] ?? 0,
-                            'duration_seconds' => $videoData['duration_seconds'] ?? null,
-                        ]);
-                    }
+        // Handle thumbnail upload
+        if ($request->hasFile('thumbnail')) {
+            try {
+                // Delete the old thumbnail if it exists
+                if ($discourse->thumbnail) {
+                    Storage::disk('public')->delete($discourse->thumbnail);
+                    Log::info('Deleted old thumbnail', ['path' => $discourse->thumbnail]);
                 }
+
+                $path = $request->file('thumbnail')->store('thumbnails', 'public');
+                $validated['thumbnail'] = $path;
+                Log::info('New thumbnail uploaded', ['path' => $path]);
+            } catch (\Exception $e) {
+                Log::error('Thumbnail upload failed during update', ['error' => $e->getMessage()]);
+                return redirect()->back()
+                    ->with('error', 'Error uploading thumbnail: ' . $e->getMessage())
+                    ->withInput();
             }
         }
 
-        // Delete videos if requested
-        if ($request->has('delete_videos')) {
-            $discourse->videos()->whereIn('id', $request->delete_videos)->delete();
-        }
+        // Update the discourse
+        $discourse->update($validated);
 
         return redirect()->route('admin.discourses.index')
             ->with('success', 'Discourse updated successfully.');
     }
 
     /**
-     * Remove the specified discourse from storage.
+     * Remove the specified resource from storage.
      */
     public function destroy(Discourse $discourse)
     {
         // Delete thumbnail if exists
         if ($discourse->thumbnail) {
             Storage::disk('public')->delete($discourse->thumbnail);
+            Log::info('Deleted discourse thumbnail', ['path' => $discourse->thumbnail]);
         }
 
+        // Delete all related videos (will cascade delete through the model boot method)
         $discourse->delete();
 
         return redirect()->route('admin.discourses.index')

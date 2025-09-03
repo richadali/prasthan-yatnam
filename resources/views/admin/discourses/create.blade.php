@@ -45,7 +45,7 @@
         cursor: pointer;
     }
 
-    .youtube-preview {
+    .video-preview {
         width: 240px;
         height: 150px;
         background-color: #eee;
@@ -61,44 +61,44 @@
         cursor: pointer;
     }
 
-    .youtube-preview img {
+    .video-preview img {
         width: 100%;
         height: 100%;
         object-fit: cover;
     }
 
-    .youtube-preview .yt-play {
+    .video-preview .play-icon {
         position: absolute;
-        color: rgba(255, 0, 0, 0.8);
+        color: rgba(255, 255, 255, 0.8);
         font-size: 3rem;
-        filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.7));
+        filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.7));
     }
 
-    .youtube-modal .modal-content {
+    .video-modal .modal-content {
         background-color: #000;
         border-radius: 8px;
     }
 
-    .youtube-modal .modal-header {
+    .video-modal .modal-header {
         border-bottom: 1px solid #333;
         padding: 0.5rem 1rem;
     }
 
-    .youtube-modal .modal-header .btn-close {
+    .video-modal .modal-header .btn-close {
         background-color: #fff;
         opacity: 0.8;
     }
 
-    .youtube-modal .modal-title {
+    .video-modal .modal-title {
         color: #fff;
         font-size: 1.1rem;
     }
 
-    .youtube-modal .modal-body {
+    .video-modal .modal-body {
         padding: 0;
     }
 
-    .youtube-embed-container {
+    .video-embed-container {
         position: relative;
         padding-bottom: 56.25%;
         /* 16:9 aspect ratio */
@@ -107,18 +107,67 @@
         max-width: 100%;
     }
 
-    .youtube-embed-container iframe {
+    .video-embed-container .video-js {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        border: 0;
+    }
+
+    .upload-progress {
+        display: none;
+        margin-top: 10px;
+    }
+
+    .upload-progress .progress {
+        height: 10px;
+        border-radius: 5px;
+    }
+
+    .video-upload-wrapper {
+        border: 2px dashed #ccc;
+        border-radius: 8px;
+        padding: 25px;
+        text-align: center;
+        background-color: #f9f9f9;
+        margin-bottom: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .video-upload-wrapper:hover {
+        border-color: #6c757d;
+        background-color: #f1f1f1;
+    }
+
+    .video-upload-wrapper input[type="file"] {
+        display: none;
+    }
+
+    .video-upload-icon {
+        font-size: 2.5rem;
+        color: #6c757d;
+        margin-bottom: 10px;
+    }
+
+    .video-upload-text {
+        color: #495057;
+    }
+
+    .video-upload-hint {
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-top: 5px;
     }
 </style>
+
+<!-- Include Video.js -->
+@include('admin.layouts.video-js-includes')
 @endsection
 
 @section('content')
+
 <div class="container-fluid px-0">
     <div class="row mb-4">
         <div class="col-md-6">
@@ -134,6 +183,17 @@
 
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body">
+            @if ($errors->any())
+            <div class="alert alert-danger mb-4">
+                <h4 class="alert-heading">Validation Errors</h4>
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
             <form action="{{ route('admin.discourses.store') }}" method="POST" enctype="multipart/form-data"
                 id="discourseForm">
                 @csrf
@@ -223,6 +283,7 @@
 
                 <!-- Hidden field for slug -->
                 <input type="hidden" name="slug" id="slug" value="{{ old('slug') }}">
+                <input type="hidden" name="discourse_id" id="discourse_id" value="">
 
                 <hr class="my-4">
 
@@ -230,10 +291,14 @@
                 <p class="text-muted mb-3">You can add initial videos now or add them later from the discourse
                     management page.</p>
                 <div class="alert alert-info">
-                    <i class="fas fa-info-circle me-2"></i> Simply paste any YouTube URL and click "Fetch Details" to
-                    automatically get the
-                    video title
-                    and duration.
+                    <i class="fas fa-info-circle me-2"></i> Upload your video files directly.
+                    Videos will be stored and streamed as-is for optimal quality.
+                    <div class="mt-2">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle"></i>
+                            The form may take a few minutes to process when uploading large videos. Please be patient.
+                        </small>
+                    </div>
                 </div>
 
                 <div id="videoContainer">
@@ -265,18 +330,36 @@
                     <label class="form-label">Video Title <span class="text-danger">*</span></label>
                     <input type="text" class="form-control video-title" name="videos[__INDEX__][title]" required>
                 </div>
+
+                <!-- Video upload -->
                 <div class="mb-3">
-                    <label class="form-label">YouTube URL <span class="text-danger">*</span></label>
-                    <div class="input-group">
-                        <input type="text" class="form-control youtube-url" name="videos[__INDEX__][youtube_url]"
-                            required>
-                        <button class="btn btn-outline-secondary fetch-yt-details" type="button">
-                            <i class="fas fa-search me-1"></i> Fetch Details
-                        </button>
+                    <div class="video-upload-wrapper">
+                        <input type="file" class="video-file" name="videos[__INDEX__][video_file]"
+                            accept="video/mp4,video/quicktime,video/x-msvideo,video/x-ms-wmv" required>
+                        <div class="video-upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="video-upload-text">
+                            <strong>Click to upload video</strong> or drag and drop
+                        </div>
+                        <div class="video-upload-hint">
+                            MP4, MOV, AVI, WMV up to 1GB
+                        </div>
                     </div>
-                    <div class="form-text">Enter complete YouTube URL (youtu.be/abc or youtube.com/watch?v=abc)</div>
+                    <div class="upload-progress">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                                style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <small class="text-muted upload-status">Preparing upload...</small>
+                    </div>
                 </div>
-                <input type="hidden" class="youtube-id" name="videos[__INDEX__][youtube_video_id]">
+                <input type="hidden" class="video-path" name="videos[__INDEX__][video_path]">
+                <input type="hidden" class="video-filename" name="videos[__INDEX__][video_filename]">
+                <input type="hidden" class="mime-type" name="videos[__INDEX__][mime_type]">
+                <input type="hidden" class="file-size" name="videos[__INDEX__][file_size]">
+                <input type="hidden" class="is-processed" name="videos[__INDEX__][is_processed]" value="0">
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
@@ -293,12 +376,11 @@
                         </div>
                     </div>
                 </div>
-                <!-- No hidden fields needed -->
             </div>
             <div class="col-lg-4">
                 <div class="d-flex align-items-center justify-content-center mb-3">
-                    <div class="youtube-preview" data-video-id="">
-                        <i class="fas fa-play yt-play"></i>
+                    <div class="video-preview" data-video-id="" data-video-type="">
+                        <i class="fas fa-play play-icon"></i>
                     </div>
                 </div>
                 <div class="d-flex justify-content-center">
@@ -311,20 +393,25 @@
     </div>
 </template>
 
-<!-- YouTube Video Modal -->
-<div class="modal fade youtube-modal" id="youtubeModal" tabindex="-1" aria-labelledby="youtubeModalLabel"
-    aria-hidden="true">
+<!-- Video Preview Modal -->
+<div class="modal fade video-modal" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="youtubeModalLabel">Video Preview</h5>
+                <h5 class="modal-title" id="videoModalLabel">Video Preview</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="youtube-embed-container">
-                    <iframe id="youtubeIframe" src="" title="YouTube video player"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
+                <div class="video-embed-container">
+                    <!-- Video.js player for videos -->
+                    <video id="localVideoPlayer" class="video-js vjs-theme-forest" controls preload="auto">
+                        <source src="" type="video/mp4">
+                        <p class="vjs-no-js">
+                            To view this video please enable JavaScript, and consider upgrading to a
+                            web browser that <a href="https://videojs.com/html5-video-support/" target="_blank">supports
+                                HTML5 video</a>
+                        </p>
+                    </video>
                 </div>
             </div>
         </div>
@@ -334,343 +421,284 @@
 
 @section('scripts')
 <script src="https://cdn.ckeditor.com/ckeditor5/38.0.1/classic/ckeditor.js"></script>
+<script src="{{ asset('js/chunk-upload.js') }}"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialize rich text editor
-        let editor;
+        console.log('Initializing CKEditor...');
+        
+        // Initialize CKEditor for description
         ClassicEditor
             .create(document.querySelector('#description'))
-            .then(newEditor => {
-                editor = newEditor;
-                
-                // Listen for changes in the editor and update the hidden textarea
-                editor.model.document.on('change:data', () => {
-                    document.querySelector('#description').value = editor.getData();
-                });
+            .then(editor => {
+                console.log('CKEditor initialized successfully');
+                window.editor = editor; // Store for debugging
             })
             .catch(error => {
-                console.error(error);
+                console.error('CKEditor initialization failed:', error);
             });
-        
-        // Auto-generate slug from title
-        const titleInput = document.getElementById('title');
-        const slugInput = document.getElementById('slug');
-        
-        titleInput.addEventListener('blur', function() {
-            if (titleInput.value !== '') {
-                slugInput.value = createSlug(titleInput.value);
-            }
-        });
-        
-        // Toggle expected release date field based on is_upcoming checkbox
-        const isUpcomingCheckbox = document.getElementById('is_upcoming');
-        const expectedReleaseDateContainer = document.getElementById('expected-release-date-container');
-        
-        isUpcomingCheckbox.addEventListener('change', function() {
-            expectedReleaseDateContainer.style.display = this.checked ? 'block' : 'none';
-        });
-        
-        function createSlug(text) {
-            return text
-                .toString()
-                .toLowerCase()
-                .trim()
-                .replace(/\s+/g, '-')     // Replace spaces with -
-                .replace(/[^\w\-]+/g, '') // Remove all non-word chars
-                .replace(/\-\-+/g, '-')   // Replace multiple - with single -
-                .replace(/^-+/, '')       // Trim - from start
-                .replace(/-+$/, '');      // Trim - from end
-        }
-        
-        // Image preview functionality
+
+        // Thumbnail preview
         const thumbnailInput = document.getElementById('thumbnail');
-        const previewContainer = document.querySelector('.image-preview');
-        
+        const previewContent = document.querySelector('.preview-content');
+
         thumbnailInput.addEventListener('change', function() {
-            while (previewContainer.firstChild) {
-                previewContainer.removeChild(previewContainer.firstChild);
-            }
-            
-            const file = this.files[0];
-            if (file) {
+            if (this.files && this.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    previewContainer.appendChild(img);
-                }
-                reader.readAsDataURL(file);
+                    previewContent.innerHTML = `<img src="${e.target.result}" alt="Thumbnail Preview">`;
+                };
+                reader.readAsDataURL(this.files[0]);
             } else {
-                previewContainer.innerHTML = '<div class="preview-placeholder"><i class="fas fa-image fa-3x"></i></div>';
+                previewContent.innerHTML = `
+                    <div class="preview-placeholder">
+                        <i class="fas fa-image fa-3x"></i>
+                    </div>
+                `;
             }
         });
-        
-        // Videos management
-        let videoCount = 0;
+
+        // Toggle expected release date based on is_upcoming
+        const isUpcomingCheckbox = document.getElementById('is_upcoming');
+        const releaseDateContainer = document.getElementById('expected-release-date-container');
+
+        isUpcomingCheckbox.addEventListener('change', function() {
+            releaseDateContainer.style.display = this.checked ? 'block' : 'none';
+        });
+
+        // Generate slug from title
+        const titleInput = document.getElementById('title');
+        const slugInput = document.getElementById('slug');
+
+        titleInput.addEventListener('blur', function() {
+            if (!slugInput.value) {
+                const slug = this.value
+                    .toLowerCase()
+                    .replace(/[^\w\s-]/g, '')
+                    .replace(/\s+/g, '-')
+                    .replace(/-+/g, '-')
+                    .trim();
+                slugInput.value = slug;
+            }
+        });
+
+        // Video handling
+        let videoIndex = 0;
         const videoContainer = document.getElementById('videoContainer');
         const videoTemplate = document.getElementById('videoTemplate').innerHTML;
         const addVideoBtn = document.getElementById('addVideoBtn');
-        
-        // YouTube modal functionality
-        const youtubeModal = new bootstrap.Modal(document.getElementById('youtubeModal'));
-        const youtubeIframe = document.getElementById('youtubeIframe');
-        const youtubeModalTitle = document.getElementById('youtubeModalLabel');
-        
-        // Add click handler for YouTube previews
-        document.addEventListener('click', function(e) {
-            const preview = e.target.closest('.youtube-preview');
-            if (preview) {
-                const videoId = preview.dataset.videoId;
-                const videoTitle = preview.dataset.videoTitle || 'Video Preview';
-                
-                if (videoId) {
-                    // Set the iframe src and modal title
-                    youtubeIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-                    youtubeModalTitle.textContent = videoTitle;
-                    youtubeModal.show();
-                }
-            }
-        });
-        
-        // Reset iframe when modal is closed
-        document.getElementById('youtubeModal').addEventListener('hidden.bs.modal', function () {
-            youtubeIframe.src = '';
-        });
-        
-        // Add video button click handler
+        const videoFiles = [];
+
+        // Add video
         addVideoBtn.addEventListener('click', function() {
-            addNewVideo();
-        });
-        
-        // Remove video button click handler
-        videoContainer.addEventListener('click', function(e) {
-            if (e.target.classList.contains('remove-video') || e.target.parentElement.classList.contains('remove-video')) {
-                const videoItem = e.target.closest('.video-item');
-                if (videoItem) {
-                    videoItem.remove();
-                    updateSequenceNumbers();
-                }
-            }
-        });
-        
-        // Fetch YouTube video details
-        videoContainer.addEventListener('click', function(e) {
-            if (e.target.classList.contains('fetch-yt-details') || e.target.parentElement.classList.contains('fetch-yt-details')) {
-                const videoItem = e.target.closest('.video-item');
-                const youtubeUrlInput = videoItem.querySelector('.youtube-url');
-                const youtubeIdInput = videoItem.querySelector('.youtube-id');
-                const youtubeUrl = youtubeUrlInput.value.trim();
-                
-                if (!youtubeUrl) {
-                    alert('Please enter a YouTube URL');
-                    return;
-                }
-                
-                // Extract video ID from URL
-                const videoId = extractYouTubeId(youtubeUrl);
-                if (!videoId) {
-                    alert('Invalid YouTube URL. Please enter a valid YouTube URL.');
-                    return;
-                }
-                
-                // Store the extracted ID in the hidden field
-                youtubeIdInput.value = videoId;
-                
-                fetchVideoDetails(videoId, videoItem);
-            }
-        });
-        
-        // Function to extract YouTube video ID from URL
-        function extractYouTubeId(url) {
-            // Handle youtu.be format
-            let match = url.match(/youtu\.be\/([^?&]+)/);
-            if (match) return match[1];
+            const newVideo = videoTemplate.replace(/__INDEX__/g, videoIndex);
+            const videoDiv = document.createElement('div');
+            videoDiv.innerHTML = newVideo;
+            videoContainer.appendChild(videoDiv.firstElementChild);
+
+            // Initialize the video upload functionality
+            const uploadWrapper = videoContainer.querySelector(`.video-item[data-index="${videoIndex}"] .video-upload-wrapper`);
+            const fileInput = videoContainer.querySelector(`.video-item[data-index="${videoIndex}"] .video-file`);
+            const titleInput = videoContainer.querySelector(`.video-item[data-index="${videoIndex}"] .video-title`);
+            const durationInput = videoContainer.querySelector(`.video-item[data-index="${videoIndex}"] .duration-seconds`);
             
-            // Handle youtube.com/watch?v= format
-            match = url.match(/youtube\.com\/watch\?v=([^&]+)/);
-            if (match) return match[1];
-            
-            // Handle youtube.com/embed/ format
-            match = url.match(/youtube\.com\/embed\/([^?&]+)/);
-            if (match) return match[1];
-            
-            // If it's just the ID itself, return it
-            if (/^[A-Za-z0-9_-]{11}$/.test(url)) return url;
-            
-            return null;
-        }
-        
-        function addNewVideo() {
-            let newVideoHtml = videoTemplate.replace(/__INDEX__/g, videoCount);
-            
-            // Create a temporary div to hold the HTML
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = newVideoHtml;
-            
-            // Append the new video to the container
-            videoContainer.appendChild(tempDiv.firstElementChild);
-            
-            videoCount++;
-        }
-        
-        function updateSequenceNumbers() {
-            const videoItems = document.querySelectorAll('.video-item');
-            videoItems.forEach((item, index) => {
-                const sequenceInput = item.querySelector('.video-sequence');
-                if (sequenceInput.value === '' || parseInt(sequenceInput.value) === parseInt(item.dataset.index)) {
-                    sequenceInput.value = index;
-                }
-                item.dataset.index = index;
+            uploadWrapper.addEventListener('click', function() {
+                fileInput.click();
             });
-        }
-        
-        function fetchVideoDetails(youtubeId, videoItem) {
-            const titleInput = videoItem.querySelector('.video-title');
-            const durationInput = videoItem.querySelector('.duration-seconds');
-            const previewContainer = videoItem.querySelector('.youtube-preview');
-            const youtubeUrlInput = videoItem.querySelector('.youtube-url');
             
-            // Clear any previous error messages
-            const previousErrors = videoItem.querySelectorAll('.api-error-message');
-            previousErrors.forEach(el => el.remove());
-            
-            // Set loading state
-            previewContainer.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            
-            // Fetch from API
-            fetch(`{{ route('admin.youtube.fetch-details') }}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({ youtube_video_id: youtubeId })
-            })
-            .then(response => {
-                return response.json().then(data => {
-                    if (!response.ok) {
-                        // API returned an error
-                        throw new Error(data.error || 'API request failed');
-                    }
-                    return data;
-                });
-            })
-            .then(data => {
-                console.log('YouTube data:', data);
-                
-                // Fill in the data
-                if (!titleInput.value && data.title) {
-                    titleInput.value = data.title;
-                }
-                
-                if (data.duration_seconds) {
-                    durationInput.value = data.duration_seconds;
-                }
-                
-                // Update preview
-                previewContainer.innerHTML = `
-                    <img src="https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg" alt="YouTube Thumbnail" onerror="this.src='https://img.youtube.com/vi/${youtubeId}/0.jpg';">
-                    <i class="fas fa-play yt-play"></i>
-                `;
-                
-                // Add video ID and title as data attributes for the player
-                previewContainer.dataset.videoId = youtubeId;
-                previewContainer.dataset.videoTitle = titleInput.value || 'Video Preview';
-            })
-            .catch(error => {
-                console.error('Error fetching video details:', error);
-                
-                // Show thumbnail if available
-                previewContainer.innerHTML = `
-                    <img src="https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg" alt="YouTube Thumbnail" onerror="this.src='https://img.youtube.com/vi/${youtubeId}/0.jpg';">
-                    <i class="fas fa-play yt-play"></i>
-                `;
-                
-                // Add video ID for the player
-                previewContainer.dataset.videoId = youtubeId;
-                
-                // Show error message
-                const inputGroup = youtubeUrlInput.closest('.mb-3');
-                if (inputGroup) {
-                    const errorDiv = document.createElement('div');
-                    errorDiv.className = 'alert alert-danger mt-2 api-error-message';
-                    errorDiv.innerHTML = `
-                        <strong>API Error:</strong> ${error.message}
-                        <div class="mt-1 small">
-                            <a href="https://console.cloud.google.com/apis/credentials" target="_blank">
-                                Get a YouTube API key
-                            </a>
-                            and add it to your .env file as YOUTUBE_API_KEY
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files.length > 0) {
+                    const file = this.files[0];
+                    const fileName = file.name;
+                    const fileSize = (file.size / (1024 * 1024)).toFixed(2);
+                    
+                    // Store the file in the array
+                    videoFiles[videoIndex - 1] = file;
+
+                    // Update upload wrapper display
+                    uploadWrapper.innerHTML = `
+                        <div class="video-upload-text">
+                            <strong>${fileName}</strong> (${fileSize} MB)
+                        </div>
+                        <div class="video-upload-hint">
+                            Click to change file
                         </div>
                     `;
-                    inputGroup.appendChild(errorDiv);
-                }
-            });
-        }
-        
-        // Form submission
-        const discourseForm = document.getElementById('discourseForm');
-        discourseForm.addEventListener('submit', function(e) {
-            // Create slug if empty
-            if (!slugInput.value && titleInput.value) {
-                slugInput.value = createSlug(titleInput.value);
-            }
-            
-            // Validate CKEditor content
-            let isValid = true;
-            
-            // Check if editor exists and get its content
-            if (typeof editor !== 'undefined') {
-                const editorContent = editor.getData().trim();
-                const descriptionField = document.querySelector('#description');
-                const descriptionError = document.querySelector('#description-error');
-                
-                // Update the textarea with the editor content
-                descriptionField.value = editorContent;
-                
-                // Check if content is empty
-                if (!editorContent) {
-                    isValid = false;
-                    descriptionField.classList.add('is-invalid');
-                    descriptionError.style.display = 'block';
-                } else {
-                    descriptionField.classList.remove('is-invalid');
-                    descriptionError.style.display = 'none';
-                }
-            }
-            
-            // Process all videos - make sure IDs are extracted before submission
-            const videoItems = document.querySelectorAll('.video-item');
-            let hasInvalidUrls = false;
-            
-            videoItems.forEach(item => {
-                const urlInput = item.querySelector('.youtube-url');
-                const idInput = item.querySelector('.youtube-id');
-                const url = urlInput.value.trim();
-                
-                if (url && !idInput.value) {
-                    // Attempt to extract ID
-                    const id = extractYouTubeId(url);
-                    if (id) {
-                        idInput.value = id;
-                    } else {
-                        hasInvalidUrls = true;
-                        urlInput.classList.add('is-invalid');
+                    
+                    // Auto-fill title if empty
+                    if (!titleInput.value.trim()) {
+                        titleInput.value = fileName.replace(/\.[^/.]+$/, "");
+                    }
+                    
+                    // Extract video duration
+                    if (durationInput) {
+                        const video = document.createElement('video');
+                        video.preload = 'metadata';
+                        
+                        video.onloadedmetadata = function() {
+                            const duration = Math.round(video.duration);
+                            if (duration && duration > 0) {
+                                durationInput.value = duration;
+                            }
+                            window.URL.revokeObjectURL(video.src);
+                        };
+                        
+                        video.src = URL.createObjectURL(file);
                     }
                 }
             });
-            
-            // Stop submission if invalid
-            if (hasInvalidUrls || !isValid) {
-                e.preventDefault();
-                
-                if (hasInvalidUrls) {
-                    alert('One or more YouTube URLs are invalid. Please fix them before submitting.');
-                }
-                
-                return false;
-            }
+
+            // Remove video
+            const removeBtn = videoContainer.querySelector(`.video-item[data-index="${videoIndex}"] .remove-video`);
+            removeBtn.addEventListener('click', function() {
+                this.closest('.video-item').remove();
+            });
+
+            videoIndex++;
         });
+
+        // Test form submission with detailed debugging
+        const form = document.getElementById('discourseForm');
+        if (form) {
+            console.log('Form found:', form);
+            console.log('Form action:', form.action);
+            console.log('Form method:', form.method);
+            
+            // Check if form has any existing event listeners
+            console.log('Form HTML:', form.outerHTML.substring(0, 200) + '...');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log('=== FORM SUBMIT EVENT FIRED ===');
+
+
+                // Update CKEditor content before submission
+                if (window.editor) {
+                    const descriptionTextarea = document.querySelector('#description');
+                    descriptionTextarea.value = window.editor.getData();
+                    console.log('Updated description with CKEditor content.');
+                }
+
+                const formData = new FormData(form);
+
+                // Submit the main form data first
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                }).then(response => {
+                    if (!response.ok) {
+                        return response.json().then(errorData => {
+                            throw errorData;
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        const discourseId = data.discourse_id;
+                        document.getElementById('discourse_id').value = discourseId;
+
+                        // Start chunked uploads for each video
+                        let uploadsRemaining = videoFiles.filter(file => file).length;
+                        if (uploadsRemaining === 0) {
+                            window.location.href = "{{ route('admin.discourses.index') }}";
+                            return;
+                        }
+
+                        videoFiles.forEach((file, index) => {
+                            if (file) {
+                                const uploader = new ChunkedUploader(file, {
+                                    endpoint: "{{ route('admin.video.upload.chunk') }}",
+                                    finalize_endpoint: "{{ route('admin.video.upload.finalize') }}",
+                                    discourseId: discourseId,
+                                    title: form.querySelector(`input[name="videos[${index}][title]"]`).value,
+                                    sequence: form.querySelector(`input[name="videos[${index}][sequence]"]`).value,
+                                    duration_seconds: form.querySelector(`input[name="videos[${index}][duration_seconds]"]`).value,
+                                    onProgress: (progress) => {
+                                        console.log(`Upload progress for video ${index}: ${progress}%`);
+                                        const progressWrapper = document.querySelector(`.video-item[data-index="${index}"] .upload-progress`);
+                                        const progressBar = progressWrapper.querySelector('.progress-bar');
+                                        const uploadStatus = progressWrapper.querySelector('.upload-status');
+
+                                        if (progressWrapper) {
+                                            progressWrapper.style.display = 'block';
+                                        }
+                                        if (progressBar) {
+                                            progressBar.style.width = `${progress}%`;
+                                            progressBar.setAttribute('aria-valuenow', progress);
+                                        }
+                                        if (uploadStatus) {
+                                            uploadStatus.textContent = `Uploading... ${progress}%`;
+                                        }
+                                    },
+                                    onComplete: (response) => {
+                                        console.log(`Upload complete for video ${index}:`, response);
+                                        uploadsRemaining--;
+                                        if (uploadsRemaining === 0) {
+                                            window.location.href = "{{ route('admin.discourses.index') }}";
+                                        }
+                                    },
+                                    onError: (error) => {
+                                        console.error(`Upload error for video ${index}:`, error);
+                                        uploadsRemaining--;
+                                        if (uploadsRemaining === 0) {
+                                            window.location.href = "{{ route('admin.discourses.index') }}";
+                                        }
+                                    }
+                                });
+                                uploader.start();
+                            }
+                        });
+                    }
+                }).catch(errorData => {
+                    console.error('An error occurred during form submission:', errorData);
+                    const errorContainer = document.querySelector('.alert-danger ul');
+                    if (errorContainer) {
+                        errorContainer.innerHTML = '';
+                        for (const field in errorData.errors) {
+                            const messages = errorData.errors[field];
+                            messages.forEach(message => {
+                                const li = document.createElement('li');
+                                li.textContent = message;
+                                errorContainer.appendChild(li);
+                            });
+                        }
+                        errorContainer.closest('.alert-danger').style.display = 'block';
+                    }
+                });
+            });
+            
+            // Test submit button
+            const submitBtn = form.querySelector('button[type="submit"]');
+            console.log('Submit button found:', submitBtn);
+            
+            if (submitBtn) {
+                console.log('Submit button HTML:', submitBtn.outerHTML);
+                
+                submitBtn.addEventListener('click', function(e) {
+                    e.preventDefault(); // Prevent default button behavior
+                    console.log('=== SUBMIT BUTTON CLICKED ===');
+
+                    // Manually trigger form submission
+                    form.dispatchEvent(new Event('submit', { cancelable: true }));
+                });
+            }
+            
+            // Also check for any other submit buttons or inputs
+            const allSubmits = form.querySelectorAll('button[type="submit"], input[type="submit"]');
+            console.log('All submit elements found:', allSubmits.length);
+            allSubmits.forEach((btn, index) => {
+                console.log(`Submit element ${index}:`, btn);
+            });
+            
+        } else {
+            console.error('Form not found!');
+        }
+        
+        console.log('DOM loaded for discourse creation form');
     });
 </script>
 @endsection

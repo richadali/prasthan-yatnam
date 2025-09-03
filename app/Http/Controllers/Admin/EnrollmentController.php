@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\Discourse;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class EnrollmentController extends Controller
 {
     /**
-     * Display a listing of all enrollments.
+     * Display a listing of enrollments.
      */
     public function index(Request $request)
     {
@@ -19,47 +19,33 @@ class EnrollmentController extends Controller
             ->join('users', 'user_discourses.user_id', '=', 'users.id')
             ->join('discourses', 'user_discourses.discourse_id', '=', 'discourses.id')
             ->select(
-                'user_discourses.id',
-                'users.id as user_id',
-                'users.first_name',
-                'users.last_name',
-                'users.email',
-                'discourses.id as discourse_id',
-                'discourses.title as discourse_title',
-                'user_discourses.enrolled_at',
-                'user_discourses.expires_at',
-                'user_discourses.payment_status',
-                'user_discourses.amount_paid'
+                'user_discourses.*',
+                'users.name as user_name',
+                'users.email as user_email',
+                'discourses.title as discourse_title'
             );
 
+        // Filter by status if provided
+        if ($request->has('status') && $request->status !== 'all') {
+            $query->where('user_discourses.payment_status', $request->status);
+        }
+
         // Filter by discourse if provided
-        if ($request->has('discourse_id')) {
-            $query->where('discourses.id', $request->discourse_id);
+        if ($request->has('discourse_id') && $request->discourse_id) {
+            $query->where('user_discourses.discourse_id', $request->discourse_id);
         }
 
-        // Filter by user if provided
-        if ($request->has('user_id')) {
-            $query->where('users.id', $request->user_id);
-        }
-
-        // Filter by payment status if provided
-        if ($request->has('payment_status')) {
-            $query->where('user_discourses.payment_status', $request->payment_status);
-        }
-
-        // Sort by enrolled_at date by default (newest first)
-        $enrollments = $query->orderBy('user_discourses.enrolled_at', 'desc')
+        $enrollments = $query->orderBy('user_discourses.created_at', 'desc')
             ->paginate(15)
-            ->withQueryString();
+            ->appends($request->query());
 
-        // Get all discourses for the filter dropdown
-        $discourses = Discourse::orderBy('title')->get(['id', 'title']);
+        $discourses = Discourse::orderBy('title')->get();
 
         return view('admin.enrollments.index', compact('enrollments', 'discourses'));
     }
 
     /**
-     * Display details of a specific enrollment.
+     * Display the specified enrollment.
      */
     public function show($id)
     {
@@ -68,14 +54,8 @@ class EnrollmentController extends Controller
             ->join('discourses', 'user_discourses.discourse_id', '=', 'discourses.id')
             ->select(
                 'user_discourses.*',
-                'users.id as user_id',
-                'users.first_name',
-                'users.last_name',
-                'users.email',
-                'users.phone',
-                'users.country_code',
-                'users.organization',
-                'discourses.id as discourse_id',
+                'users.name as user_name',
+                'users.email as user_email',
                 'discourses.title as discourse_title',
                 'discourses.price as discourse_price'
             )
@@ -83,27 +63,26 @@ class EnrollmentController extends Controller
             ->first();
 
         if (!$enrollment) {
-            return redirect()->route('admin.enrollments.index')
-                ->with('error', 'Enrollment not found.');
+            abort(404);
         }
 
         return view('admin.enrollments.show', compact('enrollment'));
     }
 
     /**
-     * Update enrollment payment status.
+     * Update the enrollment status.
      */
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
-            'payment_status' => 'required|in:pending,completed,failed,refunded'
+            'payment_status' => 'required|in:pending,completed,failed,refunded',
         ]);
 
         DB::table('user_discourses')
             ->where('id', $id)
             ->update([
                 'payment_status' => $request->payment_status,
-                'updated_at' => now()
+                'updated_at' => now(),
             ]);
 
         return redirect()->route('admin.enrollments.show', $id)

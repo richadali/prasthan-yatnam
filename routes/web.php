@@ -29,51 +29,6 @@ Route::get('/testimonials', [App\Http\Controllers\TestimonialController::class, 
 Route::get('/gallery', [App\Http\Controllers\GalleryController::class, 'index'])->name('gallery');
 Route::get('/gallery/{id}', [App\Http\Controllers\GalleryController::class, 'show'])->name('gallery.show');
 
-// Debug routes for testimonials
-Route::get('/debug/testimonials', function () {
-    return App\Models\Testimonial::all();
-});
-
-Route::get('/debug/testimonial/{id}', function ($id) {
-    $testimonial = App\Models\Testimonial::findOrFail($id);
-    $testimonial->name = $testimonial->name . ' (Updated)';
-    $result = $testimonial->save();
-    return [
-        'success' => $result,
-        'testimonial' => $testimonial
-    ];
-});
-
-// Test database write functionality
-Route::get('/debug/test-db-write', function () {
-    try {
-        // Try direct DB insert
-        $id = DB::table('testimonials')->insertGetId([
-            'name' => 'Test User ' . time(),
-            'designation' => 'Test Designation',
-            'message' => 'This is a test message to verify database write functionality.',
-            'is_active' => 1,
-            'display_order' => 999,
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
-
-        return [
-            'success' => true,
-            'message' => 'Database write successful',
-            'id' => $id,
-            'record' => DB::table('testimonials')->find($id)
-        ];
-    } catch (\Exception $e) {
-        return [
-            'success' => false,
-            'message' => 'Database write failed',
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ];
-    }
-});
-
 Route::get('/about', function () {
     return view('about.index');
 })->name('about');
@@ -127,9 +82,10 @@ Route::get('/discourses/{discourse_slug}/videos/{video_id}', [VideoController::c
     ->middleware('auth')
     ->name('videos.show');
 
-// Free preview video route (no auth required)
-Route::get('/discourses/{discourse_slug}/preview/{video_id}', [VideoController::class, 'preview'])
-    ->name('videos.preview');
+// Secure video streaming route
+Route::get('/video/stream/{id}', [VideoController::class, 'stream'])
+    ->middleware('auth')
+    ->name('video.stream');
 
 // Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -181,8 +137,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('/discourses/{discourse}/videos/{video}', [App\Http\Controllers\Admin\VideoController::class, 'destroy'])->name('discourses.videos.destroy');
         Route::post('/discourses/{discourse}/videos/reorder', [App\Http\Controllers\Admin\VideoController::class, 'reorder'])->name('discourses.videos.reorder');
 
-        // YouTube API
-        Route::post('/youtube/fetch-details', [App\Http\Controllers\Admin\VideoController::class, 'fetchYouTubeDetails'])->name('youtube.fetch-details');
+        // Direct Video Upload (for large files)
+        Route::post('/video-upload/chunk', [App\Http\Controllers\Admin\VideoUploadController::class, 'uploadChunk'])->name('video.upload.chunk');
+        Route::post('/video-upload/finalize', [App\Http\Controllers\Admin\VideoUploadController::class, 'finalize'])->name('video.upload.finalize');
+        Route::get('/video-upload', [App\Http\Controllers\Admin\VideoUploadController::class, 'showUploadForm'])->name('video.upload.form');
 
         // Testimonial Management
         Route::resource('testimonials', App\Http\Controllers\Admin\TestimonialController::class);

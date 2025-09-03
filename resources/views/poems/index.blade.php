@@ -24,7 +24,7 @@
         width: 100%;
         height: 100%;
         border-radius: 5px;
-        background-color: var(--primary-blue);
+        background-color: white;
         transform-origin: left;
         transform-style: preserve-3d;
         transition: transform 1.2s ease;
@@ -32,9 +32,10 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        color: white;
+        color: black;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         overflow: hidden;
+        border: 1px solid #e0e0e0;
     }
 
     .book-spine {
@@ -42,10 +43,11 @@
         width: 30px;
         height: 100%;
         left: -15px;
-        background: linear-gradient(to right, #0a2463, var(--primary-blue));
+        background: linear-gradient(to right, #e0e0e0, #f5f5f5);
         transform: rotateY(90deg) translateZ(15px);
         z-index: 1;
         border-radius: 3px 0 0 3px;
+        border: 1px solid #d0d0d0;
     }
 
     .book-page {
@@ -110,6 +112,7 @@
     .book-icon {
         font-size: 2.5rem;
         margin-bottom: 15px;
+        color: #333;
     }
 
     .poem-image {

@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Discourse;
 use App\Models\DiscourseVideo;
+use App\Services\VideoProcessingService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class VideoController extends Controller
 {
@@ -35,7 +36,12 @@ class VideoController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'youtube_video_id' => 'required|string|max:20',
+            'video_file' => 'required|file|mimes:mp4,mov,avi,wmv|max:1048576', // 1GB max
+            'video_path' => 'nullable|string',
+            'video_filename' => 'nullable|string',
+            'mime_type' => 'nullable|string',
+            'file_size' => 'nullable|integer',
+            'is_processed' => 'nullable|boolean',
             'sequence' => 'nullable|integer|min:0',
             'duration_seconds' => 'nullable|integer|min:0',
         ]);
@@ -47,7 +53,53 @@ class VideoController extends Controller
         }
 
         // Create the video
-        $discourse->videos()->create($validated);
+        $video = $discourse->videos()->create($validated);
+
+        // Process video file with increased timeout
+        set_time_limit(900); // 15 minutes timeout for large files
+        ini_set('max_execution_time', 900);
+        ini_set('max_input_time', 900);
+
+        // Store the file information in the database first
+        $file = $request->file('video_file');
+        if ($file) {
+            try {
+                // Log the start of upload process
+                \Log::info('Starting video upload', [
+                    'filename' => $file->getClientOriginalName(),
+                    'size' => $file->getSize(),
+                    'discourse_id' => $discourse->id
+                ]);
+
+                // Update video with file info
+                $video->video_filename = $file->getClientOriginalName();
+                $video->mime_type = $file->getMimeType();
+                $video->file_size = $file->getSize();
+                $video->save();
+
+                // Process the video
+                $videoProcessingService = new VideoProcessingService();
+                $success = $videoProcessingService->processVideo($file, $video);
+
+                if (!$success) {
+                    // If upload failed, delete the video and return with error
+                    $video->delete();
+                    return redirect()->back()->withErrors(['video_file' => 'Failed to upload video file.'])->withInput();
+                }
+
+                \Log::info('Video upload completed successfully', [
+                    'filename' => $file->getClientOriginalName(),
+                    'discourse_id' => $discourse->id
+                ]);
+            } catch (\Exception $e) {
+                \Log::error('Video upload error: ' . $e->getMessage(), [
+                    'file' => $file->getClientOriginalName(),
+                    'exception' => $e
+                ]);
+                $video->delete();
+                return redirect()->back()->withErrors(['video_file' => 'Error during video upload: ' . $e->getMessage()])->withInput();
+            }
+        }
 
         return redirect()->route('admin.discourses.videos.index', $discourse)
             ->with('success', 'Video added successfully.');
@@ -68,12 +120,55 @@ class VideoController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'youtube_video_id' => 'required|string|max:20',
+            'video_file' => 'nullable|file|mimes:mp4,mov,avi,wmv|max:1048576', // 1GB max
+            'video_path' => 'nullable|string',
+            'video_filename' => 'nullable|string',
+            'mime_type' => 'nullable|string',
+            'file_size' => 'nullable|integer',
+            'is_processed' => 'nullable|boolean',
             'sequence' => 'required|integer|min:0',
             'duration_seconds' => 'nullable|integer|min:0',
         ]);
 
+        // Update the video
         $video->update($validated);
+
+        // Process new video file if uploaded
+        if ($request->hasFile('video_file')) {
+            // Delete old video if it exists
+            if ($video->video_path) {
+                Storage::delete('public/' . $video->video_path);
+            }
+
+            try {
+                // Set longer timeout
+                set_time_limit(900); // 15 minutes
+                ini_set('max_execution_time', 900);
+                ini_set('max_input_time', 900);
+
+                \Log::info('Starting video update', [
+                    'filename' => $request->file('video_file')->getClientOriginalName(),
+                    'video_id' => $video->id
+                ]);
+
+                $videoProcessingService = new VideoProcessingService();
+                $success = $videoProcessingService->processVideo($request->file('video_file'), $video);
+
+                if (!$success) {
+                    return redirect()->back()->withErrors(['video_file' => 'Failed to upload video file.'])->withInput();
+                }
+
+                \Log::info('Video update completed successfully', [
+                    'video_id' => $video->id
+                ]);
+            } catch (\Exception $e) {
+                \Log::error('Video update error: ' . $e->getMessage(), [
+                    'file' => $request->file('video_file')->getClientOriginalName(),
+                    'exception' => $e
+                ]);
+                return redirect()->back()->withErrors(['video_file' => 'Error during video upload: ' . $e->getMessage()])->withInput();
+            }
+        }
 
         return redirect()->route('admin.discourses.videos.index', $discourse)
             ->with('success', 'Video updated successfully.');
@@ -84,6 +179,11 @@ class VideoController extends Controller
      */
     public function destroy(Discourse $discourse, DiscourseVideo $video)
     {
+        // Delete video file if it exists
+        if ($video->video_path) {
+            Storage::delete('public/' . $video->video_path);
+        }
+
         $video->delete();
 
         return redirect()->route('admin.discourses.videos.index', $discourse)
@@ -107,95 +207,5 @@ class VideoController extends Controller
         }
 
         return response()->json(['success' => true]);
-    }
-
-    /**
-     * Fetch YouTube video details
-     */
-    public function fetchYouTubeDetails(Request $request)
-    {
-        $request->validate([
-            'youtube_video_id' => 'required|string|max:20',
-        ]);
-
-        $videoId = $request->youtube_video_id;
-
-        try {
-            // Check if we have a YouTube API key in config
-            $apiKey = config('services.youtube.api_key');
-
-            if (!$apiKey) {
-                return response()->json([
-                    'error' => 'YouTube API key is not configured. Please add YOUTUBE_API_KEY to your .env file.'
-                ], 400);
-            }
-
-            // Use YouTube API to get video details
-            // Disable SSL verification in local environment to avoid certificate issues
-            $httpOptions = [];
-            if (app()->environment('local')) {
-                $httpOptions['verify'] = false;
-            }
-
-            $response = Http::withOptions($httpOptions)->get('https://www.googleapis.com/youtube/v3/videos', [
-                'part' => 'snippet,contentDetails',
-                'id' => $videoId,
-                'key' => $apiKey
-            ]);
-
-            if (!$response->successful()) {
-                return response()->json([
-                    'error' => 'YouTube API request failed. Please check your API key and quota limits.'
-                ], 400);
-            }
-
-            if (empty($response->json()['items'])) {
-                return response()->json([
-                    'error' => 'Video not found. Please check the YouTube URL.'
-                ], 404);
-            }
-
-            $videoData = $response->json()['items'][0];
-            $title = $videoData['snippet']['title'] ?? '';
-
-            // Parse duration from format like "PT1H30M15S" to seconds
-            $durationString = $videoData['contentDetails']['duration'] ?? 'PT0S';
-            $duration = $this->parseDuration($durationString);
-
-        return response()->json([
-                'title' => $title,
-                'duration_seconds' => $duration,
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Error fetching YouTube video details: ' . $e->getMessage());
-
-            // Provide more helpful error message for SSL issues
-            if (strpos($e->getMessage(), 'SSL certificate problem') !== false) {
-                return response()->json([
-                    'error' => 'SSL certificate issue detected. This is a local development environment issue, not a problem with your API key.',
-                    'solution' => 'The API call has been updated to ignore SSL verification in local environments. Please try again.'
-                ], 500);
-            }
-
-            return response()->json([
-                'error' => 'Error connecting to YouTube API: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * Convert YouTube duration format (ISO 8601) to seconds
-     * Handles format like PT1H30M15S (1 hour, 30 minutes, 15 seconds)
-     */
-    private function parseDuration($durationString)
-    {
-        $pattern = '/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/';
-        preg_match($pattern, $durationString, $matches);
-
-        $hours = !empty($matches[1]) ? (int)$matches[1] : 0;
-        $minutes = !empty($matches[2]) ? (int)$matches[2] : 0;
-        $seconds = !empty($matches[3]) ? (int)$matches[3] : 0;
-
-        return $hours * 3600 + $minutes * 60 + $seconds;
     }
 }
