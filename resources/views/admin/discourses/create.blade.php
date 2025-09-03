@@ -417,6 +417,21 @@
         </div>
     </div>
 </div>
+
+<!-- Upload Progress Modal -->
+<div class="modal fade" id="uploadProgressModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="uploadProgressModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uploadProgressModalLabel">Uploading Videos</h5>
+            </div>
+            <div class="modal-body">
+                <div id="upload-progress-container"></div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -571,6 +586,9 @@
                 e.preventDefault();
                 console.log('=== FORM SUBMIT EVENT FIRED ===');
 
+                const submitBtn = form.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Creating...';
 
                 // Update CKEditor content before submission
                 if (window.editor) {
@@ -608,8 +626,24 @@
                             return;
                         }
 
+                        const uploadProgressModal = new bootstrap.Modal(document.getElementById('uploadProgressModal'));
+                        uploadProgressModal.show();
+                        const progressContainer = document.getElementById('upload-progress-container');
+                        progressContainer.innerHTML = '';
+
                         videoFiles.forEach((file, index) => {
                             if (file) {
+                                const progressId = `upload-progress-${index}`;
+                                const progressHtml = `
+                                    <div class="mb-3">
+                                        <strong>${file.name}</strong>
+                                        <div class="progress" id="${progressId}">
+                                            <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                        </div>
+                                    </div>
+                                `;
+                                progressContainer.innerHTML += progressHtml;
+
                                 const uploader = new ChunkedUploader(file, {
                                     endpoint: "{{ route('admin.video.upload.chunk') }}",
                                     finalize_endpoint: "{{ route('admin.video.upload.finalize') }}",
@@ -618,26 +652,18 @@
                                     sequence: form.querySelector(`input[name="videos[${index}][sequence]"]`).value,
                                     duration_seconds: form.querySelector(`input[name="videos[${index}][duration_seconds]"]`).value,
                                     onProgress: (progress) => {
-                                        console.log(`Upload progress for video ${index}: ${progress}%`);
-                                        const progressWrapper = document.querySelector(`.video-item[data-index="${index}"] .upload-progress`);
-                                        const progressBar = progressWrapper.querySelector('.progress-bar');
-                                        const uploadStatus = progressWrapper.querySelector('.upload-status');
-
-                                        if (progressWrapper) {
-                                            progressWrapper.style.display = 'block';
-                                        }
+                                        const progressBar = document.querySelector(`#${progressId} .progress-bar`);
                                         if (progressBar) {
                                             progressBar.style.width = `${progress}%`;
+                                            progressBar.textContent = `${progress}%`;
                                             progressBar.setAttribute('aria-valuenow', progress);
-                                        }
-                                        if (uploadStatus) {
-                                            uploadStatus.textContent = `Uploading... ${progress}%`;
                                         }
                                     },
                                     onComplete: (response) => {
                                         console.log(`Upload complete for video ${index}:`, response);
                                         uploadsRemaining--;
                                         if (uploadsRemaining === 0) {
+                                            uploadProgressModal.hide();
                                             window.location.href = "{{ route('admin.discourses.index') }}";
                                         }
                                     },
@@ -645,6 +671,7 @@
                                         console.error(`Upload error for video ${index}:`, error);
                                         uploadsRemaining--;
                                         if (uploadsRemaining === 0) {
+                                            uploadProgressModal.hide();
                                             window.location.href = "{{ route('admin.discourses.index') }}";
                                         }
                                     }
@@ -668,6 +695,8 @@
                         }
                         errorContainer.closest('.alert-danger').style.display = 'block';
                     }
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-save me-1"></i> Create Discourse';
                 });
             });
             
