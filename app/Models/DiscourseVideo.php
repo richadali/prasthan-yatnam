@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 class DiscourseVideo extends Model
 {
@@ -28,6 +29,17 @@ class DiscourseVideo extends Model
         'is_processed' => 'boolean',
         'file_size' => 'integer',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($video) {
+            if ($video->video_path) {
+                Storage::disk('public')->delete($video->video_path);
+            }
+        });
+    }
 
     /**
      * Get the discourse that owns the video.

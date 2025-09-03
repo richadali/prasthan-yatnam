@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Discourse extends Model
@@ -52,7 +53,15 @@ class Discourse extends Model
 
         // Delete all related videos when a discourse is deleted
         static::deleting(function ($discourse) {
-            $discourse->videos()->delete();
+            // Delete thumbnail
+            if ($discourse->thumbnail) {
+                Storage::disk('public')->delete($discourse->thumbnail);
+            }
+
+            // Delete videos
+            $discourse->videos()->each(function ($video) {
+                $video->delete();
+            });
         });
     }
 
