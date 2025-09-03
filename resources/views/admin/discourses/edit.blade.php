@@ -437,6 +437,10 @@
             if (e.target.classList.contains('remove-video')) {
                 e.target.closest('.video-item').remove();
             }
+
+            if (e.target.closest('.video-upload-wrapper')) {
+                e.target.closest('.video-upload-wrapper').querySelector('.video-file').click();
+            }
         });
     });
 </script>
