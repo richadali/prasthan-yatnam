@@ -281,6 +281,71 @@
                 <!-- Hidden field for slug -->
                 <input type="hidden" name="slug" id="slug" value="{{ old('slug', $discourse->slug) }}">
 
+                <hr class="my-4">
+
+                <h4 class="mb-4">Add Videos</h4>
+                <div id="videoContainer">
+                    <!-- Existing videos -->
+                    @foreach($discourse->videos as $video)
+                    <div class="video-item" data-index="{{ $loop->index }}">
+                        <div class="row align-items-center">
+                            <div class="col-lg-8">
+                                <div class="mb-3">
+                                    <label class="form-label">Video Title <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control video-title"
+                                        name="videos[{{ $loop->index }}][title]" value="{{ $video->title }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="video-upload-wrapper">
+                                        <input type="file" class="video-file" name="videos[{{ $loop->index }}][video_file]"
+                                            accept="video/mp4,video/quicktime,video/x-msvideo,video/x-ms-wmv">
+                                        <div class="video-upload-text">
+                                            <strong>{{ $video->video_filename }}</strong>
+                                            ({{ number_format($video->file_size / (1024 * 1024), 2) }} MB)
+                                        </div>
+                                        <div class="video-upload-hint">
+                                            Click to change file
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Sequence</label>
+                                            <input type="number" class="form-control video-sequence"
+                                                name="videos[{{ $loop->index }}][sequence]" min="0" value="{{ $video->sequence }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Duration (seconds)</label>
+                                            <input type="number" class="form-control duration-seconds"
+                                                name="videos[{{ $loop->index }}][duration_seconds]" min="0"
+                                                value="{{ $video->duration_seconds }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="d-flex justify-content-center">
+                                    <a href="{{ route('admin.discourses.videos.destroy', [$discourse, $video]) }}"
+                                        class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Are you sure you want to delete this video?')">
+                                        <i class="fas fa-trash me-1"></i> Remove Video
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+
+                <div class="mb-4">
+                    <button type="button" class="btn btn-outline-primary" id="addVideoBtn">
+                        <i class="fas fa-plus-circle me-1"></i> Add Video
+                    </button>
+                </div>
+
                 <div class="d-flex justify-content-end mt-4">
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-save me-1"></i> Update Discourse
@@ -289,222 +354,88 @@
             </form>
         </div>
     </div>
+</div>
 
-    <!-- Videos Section -->
-    <div class="card border-0 shadow-sm mb-4">
-        <div class="card-header bg-white py-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">Manage Videos</h4>
-                <a href="{{ route('admin.discourses.videos.create', $discourse) }}" class="btn btn-primary">
-                    <i class="fas fa-plus-circle me-1"></i> Add New Video
-                </a>
-            </div>
-        </div>
-        <div class="card-body">
-            <p class="text-muted mb-3">Add, edit or remove videos for this discourse.</p>
-            <div class="alert alert-info">
-                <i class="fas fa-info-circle me-2"></i> Videos can be managed from the videos section.
-                <a href="{{ route('admin.discourses.videos.index', $discourse) }}" class="alert-link">Go to Videos</a>
-            </div>
-
-            @if($discourse->videos->count() > 0)
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Thumbnail</th>
-                            <th>Title</th>
-                            <th>Duration</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($discourse->videos->sortBy('sequence') as $video)
-                        <tr>
-                            <td>{{ $video->sequence + 1 }}</td>
-                            <td>
-                                <div style="width: 80px; height: 45px; overflow: hidden; border-radius: 4px;">
-                                    <img src="{{ $video->getThumbnailUrl() }}" alt="{{ $video->title }}"
-                                        style="width: 100%; height: 100%; object-fit: cover;">
-                                </div>
-                            </td>
-                            <td>{{ $video->title }}</td>
-                            <td>{{ $video->formatted_duration }}</td>
-                            <td>
-                                <a href="{{ route('admin.discourses.videos.edit', [$discourse, $video]) }}"
-                                    class="btn btn-sm btn-outline-primary">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form action="{{ route('admin.discourses.videos.destroy', [$discourse, $video]) }}"
-                                    method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger"
-                                        onclick="return confirm('Are you sure you want to delete this video?')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            @else
-            <div class="text-center py-5">
+<template id="videoTemplate">
+    <div class="video-item" data-index="__INDEX__">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
                 <div class="mb-3">
-                    <i class="fas fa-video fa-3x text-muted"></i>
+                    <label class="form-label">Video Title <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control video-title" name="videos[__INDEX__][title]" required>
                 </div>
-                <h5 class="text-muted">No Videos Added Yet</h5>
-                <p>Add videos to this discourse to make it available to users.</p>
-                <a href="{{ route('admin.discourses.videos.create', $discourse) }}" class="btn btn-primary mt-2">
-                    <i class="fas fa-plus-circle me-1"></i> Add First Video
-                </a>
+                <div class="mb-3">
+                    <div class="video-upload-wrapper">
+                        <input type="file" class="video-file" name="videos[__INDEX__][video_file]"
+                            accept="video/mp4,video/quicktime,video/x-msvideo,video/x-ms-wmv" required>
+                        <div class="video-upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="video-upload-text">
+                            <strong>Click to upload video</strong> or drag and drop
+                        </div>
+                        <div class="video-upload-hint">
+                            MP4, MOV, AVI, WMV up to 1GB
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Sequence</label>
+                            <input type="number" class="form-control video-sequence" name="videos[__INDEX__][sequence]"
+                                min="0" value="__INDEX__">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Duration (seconds)</label>
+                            <input type="number" class="form-control duration-seconds"
+                                name="videos[__INDEX__][duration_seconds]" min="0">
+                        </div>
+                    </div>
+                </div>
             </div>
-            @endif
+            <div class="col-lg-4">
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-danger btn-sm remove-video">
+                        <i class="fas fa-trash me-1"></i> Remove Video
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</template>
 
-<!-- Video Preview Modal -->
-<div class="modal fade video-modal" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="videoModalLabel">Video Preview</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="video-embed-container">
-                    <video id="localVideoPlayer" class="video-js vjs-theme-forest" controls preload="auto">
-                        <source src="" type="video/mp4">
-                        <p class="vjs-no-js">
-                            To view this video please enable JavaScript, and consider upgrading to a
-                            web browser that <a href="https://videojs.com/html5-video-support/" target="_blank">supports
-                                HTML5 video</a>
-                        </p>
-                    </video>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
 
 @section('scripts')
 <script src="https://cdn.ckeditor.com/ckeditor5/38.0.1/classic/ckeditor.js"></script>
+<script src="{{ asset('js/chunk-upload.js') }}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialize rich text editor
-        let editor;
         ClassicEditor
             .create(document.querySelector('#description'))
-            .then(newEditor => {
-                editor = newEditor;
-                
-                // Listen for changes in the editor and update the hidden textarea
-                editor.model.document.on('change:data', () => {
-                    document.querySelector('#description').value = editor.getData();
-                });
-            })
             .catch(error => {
                 console.error(error);
             });
-        
-        // Auto-generate slug from title
-        const titleInput = document.getElementById('title');
-        const slugInput = document.getElementById('slug');
-        
-        titleInput.addEventListener('blur', function() {
-            if (titleInput.value !== '' && slugInput.value === '') {
-                slugInput.value = createSlug(titleInput.value);
-            }
+
+        let videoIndex = {{ $discourse->videos->count() }};
+        const videoContainer = document.getElementById('videoContainer');
+        const videoTemplate = document.getElementById('videoTemplate').innerHTML;
+        const addVideoBtn = document.getElementById('addVideoBtn');
+
+        addVideoBtn.addEventListener('click', function() {
+            const newVideo = videoTemplate.replace(/__INDEX__/g, videoIndex);
+            const videoDiv = document.createElement('div');
+            videoDiv.innerHTML = newVideo;
+            videoContainer.appendChild(videoDiv.firstElementChild);
+            videoIndex++;
         });
-        
-        // Toggle expected release date field based on is_upcoming checkbox
-        const isUpcomingCheckbox = document.getElementById('is_upcoming');
-        const expectedReleaseDateContainer = document.getElementById('expected-release-date-container');
-        
-        isUpcomingCheckbox.addEventListener('change', function() {
-            expectedReleaseDateContainer.style.display = this.checked ? 'block' : 'none';
-        });
-        
-        function createSlug(text) {
-            return text
-                .toString()
-                .toLowerCase()
-                .trim()
-                .replace(/\s+/g, '-')     // Replace spaces with -
-                .replace(/[^\w\-]+/g, '') // Remove all non-word chars
-                .replace(/\-\-+/g, '-')   // Replace multiple - with single -
-                .replace(/^-+/, '')       // Trim - from start
-                .replace(/-+$/, '');      // Trim - from end
-        }
-        
-        // Image preview functionality
-        const thumbnailInput = document.getElementById('thumbnail');
-        const previewContainer = document.querySelector('.image-preview');
-        
-        thumbnailInput.addEventListener('change', function() {
-            while (previewContainer.firstChild) {
-                previewContainer.removeChild(previewContainer.firstChild);
-            }
-            
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    previewContainer.appendChild(img);
-                }
-                reader.readAsDataURL(file);
-            } else {
-                // If no new file is selected, show the existing thumbnail if available
-                @if($discourse->thumbnail)
-                    previewContainer.innerHTML = '<img src="{{ $discourse->getThumbnailUrl() }}" alt="{{ $discourse->title }}">';
-                @else
-                    previewContainer.innerHTML = '<div class="preview-placeholder"><i class="fas fa-image fa-3x"></i></div>';
-                @endif
-            }
-        });
-        
-        // Form submission
-        const discourseForm = document.getElementById('discourseForm');
-        discourseForm.addEventListener('submit', function(e) {
-            // Create slug if empty
-            if (!slugInput.value && titleInput.value) {
-                slugInput.value = createSlug(titleInput.value);
-            }
-            
-            // Validate CKEditor content
-            let isValid = true;
-            
-            // Check if editor exists and get its content
-            if (typeof editor !== 'undefined') {
-                const editorContent = editor.getData().trim();
-                const descriptionField = document.querySelector('#description');
-                const descriptionError = document.querySelector('#description-error');
-                
-                // Update the textarea with the editor content
-                descriptionField.value = editorContent;
-                
-                // Check if content is empty
-                if (!editorContent) {
-                    isValid = false;
-                    descriptionField.classList.add('is-invalid');
-                    descriptionError.style.display = 'block';
-                } else {
-                    descriptionField.classList.remove('is-invalid');
-                    descriptionError.style.display = 'none';
-                }
-            }
-            
-            // Stop submission if invalid
-            if (!isValid) {
-                e.preventDefault();
-                return false;
+
+        videoContainer.addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-video')) {
+                e.target.closest('.video-item').remove();
             }
         });
     });
