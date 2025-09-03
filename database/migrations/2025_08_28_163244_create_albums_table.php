@@ -24,8 +24,6 @@ return new class extends Migration
         Schema::create('gallery_images', function (Blueprint $table) {
             $table->id();
             $table->foreignId('album_id')->constrained()->onDelete('cascade');
-            $table->string('title')->nullable();
-            $table->text('description')->nullable();
             $table->string('image_path');
             $table->integer('sort_order')->default(0);
             $table->timestamps();
