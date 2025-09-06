@@ -154,13 +154,120 @@
         height: 3px;
         background-color: var(--primary-orange);
     }
+
+    .team-table {
+        width: 100%;
+        margin: 0 auto 3rem;
+        border-collapse: collapse;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .team-table th,
+    .team-table td {
+        padding: 1rem 1.5rem;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+
+    .team-table th {
+        background-color: var(--primary-blue);
+        color: white;
+        font-weight: 600;
+    }
+
+    .team-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .team-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .team-table .table-caption {
+        font-size: 1.2rem;
+        font-weight: 600;
+        padding: 1.5rem;
+        background-color: #f3f3f3;
+        color: var(--primary-dark);
+        text-align: center;
+        caption-side: top;
+    }
 </style>
 @endsection
 
 @section('content')
 
-<!-- Testimonials Section -->
+<!-- Team Section -->
 <section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="fw-bold section-title">WHO’S WHO OF PY?</h2>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <table class="team-table">
+                    <caption class="table-caption">Executive Committee of Governing Body of the Society Prasthan Yatnam (PY).</caption>
+                    <thead>
+                        <tr>
+                            <th>Sl No.</th>
+                            <th>NAME</th>
+                            <th>DESIGNATION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1.</td>
+                            <td>Raina Bhattacharjee</td>
+                            <td>Director/ Margdarshak/ Founder</td>
+                        </tr>
+                        <tr>
+                            <td>2.</td>
+                            <td>Bhrigu Kumar Mishra</td>
+                            <td>General Secretary cum Treasurer</td>
+                        </tr>
+                        <tr>
+                            <td>3.</td>
+                            <td>Akash Das</td>
+                            <td>Joint Secretary cum Technology & Operations</td>
+                        </tr>
+                        <tr>
+                            <td>4.</td>
+                            <td>Jahnavi Baruah</td>
+                            <td>Finance</td>
+                        </tr>
+                        <tr>
+                            <td>5.</td>
+                            <td>Smita Bezboruah</td>
+                            <td>Finance</td>
+                        </tr>
+                        <tr>
+                            <td>6.</td>
+                            <td>Bobita Goswami</td>
+                            <td>Finance</td>
+                        </tr>
+                        <tr>
+                            <td>7.</td>
+                            <td>Rajita Goswami</td>
+                            <td>General Operations</td>
+                        </tr>
+                        <tr>
+                            <td>8.</td>
+                            <td>Jayashree Kalita</td>
+                            <td>General Operations</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5 bg-light">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8 text-center">
@@ -172,7 +279,7 @@
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 @foreach($testimonials as $testimonial)
-                <div class="testimonial-card">
+                <div class="testimonial-card bg-white">
                     @if($testimonial->image)
                     <img src="{{ asset('storage/' . $testimonial->image) }}" alt="{{ $testimonial->name }}"
                         class="testimonial-img">
