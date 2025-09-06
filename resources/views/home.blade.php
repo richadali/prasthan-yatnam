@@ -22,14 +22,33 @@
         top: 20px;
         left: 0;
         right: 0;
-        text-align: center;
         background-color: rgba(0, 0, 0, 0.6);
         color: white;
-        padding: 8px 15px;
+        padding: 8px 0;
         font-size: 1rem;
         font-weight: 500;
-        animation: fadeInDown 1s ease-out, pulse 2s infinite;
         z-index: 10;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .hero-tag-content {
+        display: inline-block;
+        padding-left: 100%;
+        animation: marquee 15s linear infinite;
+    }
+
+    .hero-tag-content p {
+        margin-bottom: 0;
+    }
+
+    @keyframes marquee {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-100%);
+        }
     }
 
     @keyframes fadeInDown {
@@ -315,7 +334,9 @@
         <div class="hero-content" style="max-width: 100%;">
             @if($heroImage->tag)
             <div class="hero-tag">
-                {{ $heroImage->tag }}
+                <div class="hero-tag-content">
+                    {!! $heroImage->tag !!}
+                </div>
             </div>
             @endif
 

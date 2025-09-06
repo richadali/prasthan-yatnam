@@ -5,8 +5,8 @@
     <!-- Header -->
     <div class="container py-4">
         <h1 class="text-center mb-3" style="color: #000080;">Prasthan Yatnam</h1>
-        <p class="text-center motto-text">Peace Love and Healing</p>
-        <p class="text-center mb-4 motto-text">Sarve Bhavantu Sukhinaha</p>
+        <p class="text-center motto-text" style="color: #FA8128;">Peace Love and Healing</p>
+        <p class="text-center mb-4 motto-text" style="color: #FA8128;">Sarve Bhavantu Sukhinaha</p>
     </div>
 
     <div class="container py-3">
@@ -64,7 +64,7 @@
                         have been misinterpreted.</li>
                     <li>Live and Let Live. For Universal Brotherhood of mankind and for International Peace, this
                         principle is an important prerequisite. Hence in Prasthan Yatnam, we learn about everyone's
-                        ideology (110 different sects covered till date) and at home one can practice whatever he/she
+                        ideology (124 different sects covered till date) and at home one can practice whatever he/she
                         prefers.</li>
                 </ol>
 
@@ -125,9 +125,9 @@
                     Prasthan Yatnam provides that joyous bonhomie. We are waiting to embrace you if
                     you choose to knock our door. We turn noone away.
                 </p>
-                <p class="mb-4">
-                    Peace, love and healing.<br>
-                    Sarve Bhavantu Sukhinaha.
+                <p class="mb-4" style="font-size: 22px"><b>
+                        Peace, love and healing.<br>
+                        Sarve Bhavantu Sukhinaha.</b>
                 </p>
 
 

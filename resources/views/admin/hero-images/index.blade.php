@@ -23,7 +23,7 @@
                         class="img-fluid rounded shadow-sm" style="max-height: 300px;">
                 </div>
                 <div class="col-md-4">
-                    <h5>{{ $currentActive->tag ?? 'No Tag' }}</h5>
+                    <h5>{!! $currentActive->tag ?? 'No Tag' !!}</h5>
                     <p class="text-muted">Currently active hero image</p>
                     <div class="d-flex gap-2">
                         <a href="{{ route('admin.hero-images.edit', $currentActive->id) }}"
@@ -68,7 +68,7 @@
                                     alt="{{ $image->tag ?? 'Hero Image' }}" class="img-thumbnail"
                                     style="max-height: 80px;">
                             </td>
-                            <td>{{ $image->tag ?? 'No Tag' }}</td>
+                            <td>{!! $image->tag ?? 'No Tag' !!}</td>
                             <td>
                                 @if($image->is_active)
                                 <span class="badge bg-success">Active</span>

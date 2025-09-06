@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Discourse;
+use App\Models\DiscourseVideo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -199,6 +200,15 @@ class DiscourseController extends Controller
                             'duration_seconds' => $videoData['duration_seconds'] ?? null,
                         ]
                     );
+                } elseif (isset($videoData['id'])) {
+                    $video = DiscourseVideo::find($videoData['id']);
+                    if ($video) {
+                        $video->update([
+                            'title' => $videoData['title'],
+                            'sequence' => $videoData['sequence'] ?? $index,
+                            'duration_seconds' => $videoData['duration_seconds'] ?? null,
+                        ]);
+                    }
                 }
             }
         }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\HeroImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class HeroImageController extends Controller
 {
@@ -35,13 +36,13 @@ class HeroImageController extends Controller
     {
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048', // 2MB max (matching PHP upload_max_filesize)
-            'tag' => 'nullable|string|max:255',
+            'tag' => 'nullable|string|max:65535',
             'is_active' => 'boolean',
         ]);
 
         try {
             // Enhanced debug information
-            \Log::info('HeroImageController@store: Starting image upload process', [
+            Log::info('HeroImageController@store: Starting image upload process', [
                 'request_all' => $request->all(),
                 'has_file' => $request->hasFile('image'),
                 'file_name' => $request->hasFile('image') ? $request->file('image')->getClientOriginalName() : 'No file',
@@ -53,7 +54,7 @@ class HeroImageController extends Controller
 
             // Handle image upload
             $imagePath = $request->file('image')->store('hero-images', 'public');
-            \Log::info('HeroImageController@store: Image stored at: ' . $imagePath);
+            Log::info('HeroImageController@store: Image stored at: ' . $imagePath);
 
             // Create hero image record
             $heroImage = new HeroImage();
@@ -61,13 +62,13 @@ class HeroImageController extends Controller
             $heroImage->tag = $request->tag;
             $heroImage->is_active = $request->boolean('is_active');
 
-            \Log::info('HeroImageController@store: Before save', [
+            Log::info('HeroImageController@store: Before save', [
                 'hero_image' => $heroImage->toArray()
             ]);
 
             $saveResult = $heroImage->save();
 
-            \Log::info('HeroImageController@store: After save', [
+            Log::info('HeroImageController@store: After save', [
                 'save_result' => $saveResult,
                 'hero_image_id' => $heroImage->id,
                 'hero_image' => $heroImage->fresh()->toArray()
@@ -79,7 +80,7 @@ class HeroImageController extends Controller
                     ->where('is_active', true)
                     ->update(['is_active' => false]);
 
-                \Log::info('HeroImageController@store: Deactivated other images', [
+                Log::info('HeroImageController@store: Deactivated other images', [
                     'update_count' => $updateCount
                 ]);
             }
@@ -87,17 +88,17 @@ class HeroImageController extends Controller
             return redirect()->route('admin.hero-images.index')
                 ->with('success', 'Hero image uploaded successfully.');
         } catch (\Illuminate\Http\Exceptions\PostTooLargeException $e) {
-            \Log::error('File upload error - Post too large', ['error' => $e->getMessage()]);
+            Log::error('File upload error - Post too large', ['error' => $e->getMessage()]);
             return redirect()->back()
                 ->with('error', 'The uploaded file is too large. Maximum allowed size is 2MB.')
                 ->withInput();
         } catch (\Illuminate\Contracts\Filesystem\FileNotFoundException $e) {
-            \Log::error('File upload error - File not found', ['error' => $e->getMessage()]);
+            Log::error('File upload error - File not found', ['error' => $e->getMessage()]);
             return redirect()->back()
                 ->with('error', 'The uploaded file could not be found or accessed.')
                 ->withInput();
         } catch (\Illuminate\Database\QueryException $e) {
-            \Log::error('HeroImageController@store: Database query exception', [
+            Log::error('HeroImageController@store: Database query exception', [
                 'error' => $e->getMessage(),
                 'sql' => $e->getSql(),
                 'bindings' => $e->getBindings(),
@@ -107,7 +108,7 @@ class HeroImageController extends Controller
                 ->with('error', 'Database error while saving hero image. Please check the logs.')
                 ->withInput();
         } catch (\Exception $e) {
-            \Log::error('HeroImageController@store: General exception', [
+            Log::error('HeroImageController@store: General exception', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
@@ -144,7 +145,7 @@ class HeroImageController extends Controller
 
         $request->validate([
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048', // 2MB max (matching PHP upload_max_filesize)
-            'tag' => 'nullable|string|max:255',
+            'tag' => 'nullable|string|max:65535',
             'is_active' => 'boolean',
         ]);
 

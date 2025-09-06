@@ -4,6 +4,14 @@
 
 @section('page_title', 'Add New Hero Image')
 
+@section('styles')
+<style>
+    .ck-editor__editable {
+        min-height: 150px;
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="container-fluid px-0">
     <div class="card border-0 shadow-sm">
@@ -40,9 +48,8 @@
 
                         <div class="mb-3">
                             <label for="tag" class="form-label">Tag Line</label>
-                            <input type="text" class="form-control @error('tag') is-invalid @enderror" id="tag"
-                                name="tag" value="{{ old('tag') }}"
-                                placeholder="e.g. Cover image for the month of September 2025 by Dipankar Baua">
+                            <textarea class="form-control @error('tag') is-invalid @enderror" id="tag"
+                                name="tag" rows="5">{{ old('tag') }}</textarea>
                             <div class="form-text">This tag will be displayed with animation on the hero image</div>
                             @error('tag')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -90,6 +97,7 @@
 @endsection
 
 @section('scripts')
+<script src="https://cdn.ckeditor.com/ckeditor5/38.0.1/classic/ckeditor.js"></script>
 <script>
     // File size validation and image preview functionality
     function validateFileSize(input, maxSizeMB) {
@@ -118,5 +126,12 @@
             reader.readAsDataURL(this.files[0]);
         }
     });
+
+    // Initialize CKEditor for tag line
+    ClassicEditor
+        .create(document.querySelector('#tag'))
+        .catch(error => {
+            console.error(error);
+        });
 </script>
 @endsection

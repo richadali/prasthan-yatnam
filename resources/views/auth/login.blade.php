@@ -92,7 +92,7 @@
                 <div class="card login-card">
                     <div class="login-header text-center">
                         <h3 class="mb-2">Welcome</h3>
-                        <p class="mb-3">Continue your journey with Prasthan Yatnam</p>
+                        <p class="mb-3">Embark on your spiritual journey with Prasthan Yatnam</p>
 
                         <!-- Account Navigation Tabs -->
                         <div class="account-tabs mb-3">

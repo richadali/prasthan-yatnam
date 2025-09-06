@@ -145,17 +145,6 @@
 @endsection
 
 @section('content')
-<!-- Testimonial Header -->
-<section class="testimonial-header">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 text-center">
-                <h1 class="fw-bold mb-3">What People Say About Us</h1>
-                <p class="lead">Discover how Prasthan Yatnam has touched the lives of our community members</p>
-            </div>
-        </div>
-    </div>
-</section>
 
 <!-- Testimonials Section -->
 <section class="py-5">
