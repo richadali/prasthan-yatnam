@@ -24,24 +24,20 @@
     }
 
     .testimonial-card {
+        display: flex;
         border-radius: 15px;
         overflow: hidden;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        margin-bottom: 3rem;
+        margin-bottom: 2rem;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         border: 1px solid #eee;
-        break-inside: avoid;
-        page-break-inside: avoid;
+        align-items: center;
     }
 
-    .testimonial-masonry {
-        column-count: 2;
-        column-gap: 2rem;
-    }
-
-    @media (max-width: 991px) {
-        .testimonial-masonry {
-            column-count: 1;
+    @media (max-width: 767px) {
+        .testimonial-card {
+            flex-direction: column;
+            text-align: center;
         }
     }
 
@@ -51,26 +47,40 @@
     }
 
     .testimonial-img {
-        width: 140px;
-        height: 140px;
+        width: 120px;
+        height: 120px;
         object-fit: cover;
-        border-radius: 50%;
-        border: 5px solid white;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        margin-bottom: 1rem;
+        border-radius: 10px;
+        border: 5px solid darkgrey;
+        margin-right: 2rem;
+        flex-shrink: 0;
+    }
+
+    @media (max-width: 767px) {
+        .testimonial-img {
+            margin-right: 0;
+            margin-bottom: 1rem;
+        }
     }
 
     .testimonial-icon-placeholder {
-        width: 140px;
-        height: 140px;
-        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        border-radius: 10px;
         background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-light, #5b92e5) 100%);
-        display: inline-flex;
+        display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 1rem;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        border: 5px solid white;
+        margin-right: 2rem;
+        flex-shrink: 0;
+        border: 5px solid darkgrey;
+    }
+
+    @media (max-width: 767px) {
+        .testimonial-icon-placeholder {
+            margin-right: 0;
+            margin-bottom: 1rem;
+        }
     }
 
     .testimonial-icon-placeholder i {
@@ -82,6 +92,7 @@
     .testimonial-content {
         padding: 2rem;
         position: relative;
+        flex-grow: 1;
     }
 
     .testimonial-text {
@@ -156,10 +167,10 @@
         </div>
 
         @if($testimonials->count() > 0)
-        <div class="testimonial-masonry">
-            @foreach($testimonials as $testimonial)
-            <div class="testimonial-card">
-                <div class="testimonial-content text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                @foreach($testimonials as $testimonial)
+                <div class="testimonial-card">
                     @if($testimonial->image)
                     <img src="{{ asset('storage/' . $testimonial->image) }}" alt="{{ $testimonial->name }}"
                         class="testimonial-img">
@@ -168,14 +179,16 @@
                         <i class="fas fa-user"></i>
                     </div>
                     @endif
-                    <div class="testimonial-text mb-4">
-                        {{ $testimonial->message }}
+                    <div class="testimonial-content">
+                        <div class="testimonial-text mb-4">
+                            {{ $testimonial->message }}
+                        </div>
+                        <h4 class="testimonial-name">{{ $testimonial->name }}</h4>
+                        <p class="testimonial-designation">{{ $testimonial->designation }}</p>
                     </div>
-                    <h4 class="testimonial-name">{{ $testimonial->name }}</h4>
-                    <p class="testimonial-designation">{{ $testimonial->designation }}</p>
                 </div>
+                @endforeach
             </div>
-            @endforeach
         </div>
         @else
         <div class="row">

@@ -33,6 +33,8 @@ Route::get('/about', function () {
     return view('about.index');
 })->name('about');
 
+Route::get('/help-desk', [App\Http\Controllers\HelpDeskController::class, 'index'])->name('help-desk');
+
 // Authentication Routes
 Route::middleware('guest')->group(function () {
     // Registration Routes

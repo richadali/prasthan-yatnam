@@ -3,12 +3,12 @@
         <div class="row align-items-center">
             <div class="col-md-4">
                 <p class="small text-white-50 mb-md-0">
-                    &copy; {{ date('Y') }} Prasthan Yatnam. All rights reserved.
+                    This web-portal and all the contents included here are Copyright © protected.
                 </p>
             </div>
             <div class="col-md-4 text-center">
                 <p class="small text-white-50 mb-md-0">
-                    Conceptualization and Design by Akash Das <br>
+                    Conceptualization and Design by AKASH DAS <br>
                     <a href="https://richadali.dev" target="_blank" style="text-decoration:none">Developed by Richad
                         Ali</a>
                 </p>
