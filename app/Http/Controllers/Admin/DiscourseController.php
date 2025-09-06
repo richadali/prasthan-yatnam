@@ -128,21 +128,28 @@ class DiscourseController extends Controller
      */
     public function update(Request $request, Discourse $discourse)
     {
-        $validated = $request->validate(
-            [
-                'title' => 'required|string|max:255',
-                'description' => 'required|string',
-                'thumbnail' => 'nullable|image|max:51200',
-                'price' => 'required|numeric|min:0',
-                'is_active' => 'boolean',
-                'is_upcoming' => 'boolean',
-                'expected_release_date' => 'nullable|date',
-                'slug' => 'nullable|string|unique:discourses,slug,' . $discourse->id,
-            ],
-            [
-                'slug.unique' => 'A discourse with this title already exists. Please choose a different title.',
-            ]
-        );
+        try {
+            $validated = $request->validate(
+                [
+                    'title' => 'required|string|max:255',
+                    'description' => 'required|string',
+                    'thumbnail' => 'nullable|image|max:51200',
+                    'price' => 'required|numeric|min:0',
+                    'is_active' => 'boolean',
+                    'is_upcoming' => 'boolean',
+                    'expected_release_date' => 'nullable|date',
+                    'slug' => 'nullable|string|unique:discourses,slug,' . $discourse->id,
+                ],
+                [
+                    'slug.unique' => 'A discourse with this title already exists. Please choose a different title.',
+                ]
+            );
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => $e->errors(),
+            ], 422);
+        }
 
         // Handle boolean fields
         $validated['is_active'] = $request->has('is_active');
@@ -162,17 +169,44 @@ class DiscourseController extends Controller
                 Log::info('New thumbnail uploaded', ['path' => $path]);
             } catch (\Exception $e) {
                 Log::error('Thumbnail upload failed during update', ['error' => $e->getMessage()]);
-                return redirect()->back()
-                    ->with('error', 'Error uploading thumbnail: ' . $e->getMessage())
-                    ->withInput();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error uploading thumbnail: ' . $e->getMessage()
+                ], 500);
             }
         }
 
         // Update the discourse
         $discourse->update($validated);
 
-        return redirect()->route('admin.discourses.index')
-            ->with('success', 'Discourse updated successfully.');
+        // Handle videos if any
+        if ($request->has('videos')) {
+            foreach ($request->videos as $index => $videoData) {
+                if ($request->hasFile("videos.{$index}.video_file")) {
+                    $file = $request->file("videos.{$index}.video_file");
+                    $path = $file->store('videos', 'public');
+
+                    $discourse->videos()->updateOrCreate(
+                        ['id' => $videoData['id'] ?? null],
+                        [
+                            'title' => $videoData['title'],
+                            'video_path' => $path,
+                            'video_filename' => $file->getClientOriginalName(),
+                            'mime_type' => $file->getMimeType(),
+                            'file_size' => $file->getSize(),
+                            'is_processed' => false,
+                            'sequence' => $videoData['sequence'] ?? $index,
+                            'duration_seconds' => $videoData['duration_seconds'] ?? null,
+                        ]
+                    );
+                }
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Discourse updated successfully.'
+        ]);
     }
 
     /**

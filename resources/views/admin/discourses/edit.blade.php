@@ -280,6 +280,7 @@
 
                 <!-- Hidden field for slug -->
                 <input type="hidden" name="slug" id="slug" value="{{ old('slug', $discourse->slug) }}">
+                <input type="hidden" name="discourse_id" id="discourse_id" value="{{ $discourse->id }}">
 
                 <hr class="my-4">
 
@@ -294,6 +295,7 @@
                                     <label class="form-label">Video Title <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control video-title"
                                         name="videos[{{ $loop->index }}][title]" value="{{ $video->title }}" required>
+                                    <input type="hidden" name="videos[{{ $loop->index }}][id]" value="{{ $video->id }}">
                                 </div>
                                 <div class="mb-3">
                                     <div class="video-upload-wrapper">
@@ -407,6 +409,21 @@
     </div>
 </template>
 
+<!-- Upload Progress Modal -->
+<div class="modal fade" id="uploadProgressModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="uploadProgressModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uploadProgressModalLabel">Uploading Videos</h5>
+            </div>
+            <div class="modal-body">
+                <div id="upload-progress-container"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -424,12 +441,65 @@
         const videoContainer = document.getElementById('videoContainer');
         const videoTemplate = document.getElementById('videoTemplate').innerHTML;
         const addVideoBtn = document.getElementById('addVideoBtn');
+        const videoFiles = [];
 
         addVideoBtn.addEventListener('click', function() {
             const newVideo = videoTemplate.replace(/__INDEX__/g, videoIndex);
             const videoDiv = document.createElement('div');
             videoDiv.innerHTML = newVideo;
             videoContainer.appendChild(videoDiv.firstElementChild);
+
+            const newVideoItem = videoContainer.querySelector(`.video-item[data-index="${videoIndex}"]`);
+            const uploadWrapper = newVideoItem.querySelector('.video-upload-wrapper');
+            const fileInput = newVideoItem.querySelector('.video-file');
+            const titleInput = newVideoItem.querySelector('.video-title');
+            const durationInput = newVideoItem.querySelector('.duration-seconds');
+
+            uploadWrapper.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files.length > 0) {
+                    const file = this.files[0];
+                    const fileName = file.name;
+                    const fileSize = (file.size / (1024 * 1024)).toFixed(2);
+
+                    const video = document.createElement('video');
+                    video.preload = 'metadata';
+                    
+                    video.onloadedmetadata = function() {
+                        const duration = Math.round(video.duration);
+                        videoFiles[videoIndex] = {
+                            file: file,
+                            title: titleInput.value || fileName.replace(/\.[^/.]+$/, ""),
+                            sequence: videoIndex,
+                            duration: duration || 0
+                        };
+
+                        if (duration && duration > 0) {
+                            durationInput.value = duration;
+                        }
+                        window.URL.revokeObjectURL(video.src);
+                    };
+                    
+                    video.src = URL.createObjectURL(file);
+
+                    uploadWrapper.innerHTML = `
+                        <div class="video-upload-text">
+                            <strong>${fileName}</strong> (${fileSize} MB)
+                        </div>
+                        <div class="video-upload-hint">
+                            Click to change file
+                        </div>
+                    `;
+
+                    if (!titleInput.value.trim()) {
+                        titleInput.value = fileName.replace(/\.[^/.]+$/, "");
+                    }
+                }
+            });
+
             videoIndex++;
         });
 
@@ -437,11 +507,127 @@
             if (e.target.classList.contains('remove-video')) {
                 e.target.closest('.video-item').remove();
             }
-
-            if (e.target.closest('.video-upload-wrapper')) {
-                e.target.closest('.video-upload-wrapper').querySelector('.video-file').click();
-            }
         });
+
+        const form = document.getElementById('discourseForm');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log('=== FORM SUBMIT EVENT FIRED ===');
+
+                const submitBtn = form.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Updating...';
+
+                // Update CKEditor content before submission
+                if (window.editor) {
+                    const descriptionTextarea = document.querySelector('#description');
+                    descriptionTextarea.value = window.editor.getData();
+                    console.log('Updated description with CKEditor content.');
+                }
+
+                const formData = new FormData(form);
+
+                // Submit the main form data first
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                }).then(response => {
+                    if (!response.ok) {
+                        return response.json().then(errorData => {
+                            throw errorData;
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        const discourseId = {{ $discourse->id }};
+
+                        // Start chunked uploads for each video
+                        let uploadsRemaining = videoFiles.filter(file => file).length;
+                        if (uploadsRemaining === 0) {
+                            window.location.href = "{{ route('admin.discourses.index') }}";
+                            return;
+                        }
+
+                        const uploadProgressModal = new bootstrap.Modal(document.getElementById('uploadProgressModal'));
+                        uploadProgressModal.show();
+                        const progressContainer = document.getElementById('upload-progress-container');
+                        progressContainer.innerHTML = '';
+
+                        videoFiles.forEach((file, index) => {
+                            if (file) {
+                                const progressId = `upload-progress-${index}`;
+                                const progressHtml = `
+                                    <div class="mb-3">
+                                        <strong>${file.file.name}</strong>
+                                        <div class="progress" id="${progressId}">
+                                            <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                        </div>
+                                    </div>
+                                `;
+                                progressContainer.innerHTML += progressHtml;
+
+                                const uploader = new ChunkedUploader(file.file, {
+                                    endpoint: "{{ route('admin.video.upload.chunk') }}",
+                                    finalize_endpoint: "{{ route('admin.video.upload.finalize') }}",
+                                    discourseId: discourseId,
+                                    title: videoFiles[index].title,
+                                    sequence: videoFiles[index].sequence,
+                                    duration_seconds: videoFiles[index].duration,
+                                    onProgress: (progress) => {
+                                        const progressBar = document.querySelector(`#${progressId} .progress-bar`);
+                                        if (progressBar) {
+                                            progressBar.style.width = `${progress}%`;
+                                            progressBar.textContent = `${progress}%`;
+                                            progressBar.setAttribute('aria-valuenow', progress);
+                                        }
+                                    },
+                                    onComplete: (response) => {
+                                        console.log(`Upload complete for video ${index}:`, response);
+                                        uploadsRemaining--;
+                                        if (uploadsRemaining === 0) {
+                                            uploadProgressModal.hide();
+                                            window.location.href = "{{ route('admin.discourses.index') }}";
+                                        }
+                                    },
+                                    onError: (error) => {
+                                        console.error(`Upload error for video ${index}:`, error);
+                                        uploadsRemaining--;
+                                        if (uploadsRemaining === 0) {
+                                            uploadProgressModal.hide();
+                                            window.location.href = "{{ route('admin.discourses.index') }}";
+                                        }
+                                    }
+                                });
+                                uploader.start();
+                            }
+                        });
+                    }
+                }).catch(errorData => {
+                    console.error('An error occurred during form submission:', errorData);
+                    const errorContainer = document.querySelector('.alert-danger ul');
+                    if (errorContainer) {
+                        errorContainer.innerHTML = '';
+                        for (const field in errorData.errors) {
+                            const messages = errorData.errors[field];
+                            messages.forEach(message => {
+                                const li = document.createElement('li');
+                                li.textContent = message;
+                                errorContainer.appendChild(li);
+                            });
+                        }
+                        errorContainer.closest('.alert-danger').style.display = 'block';
+                    }
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-save me-1"></i> Update Discourse';
+                });
+            });
+        }
     });
 </script>
 @endsection
