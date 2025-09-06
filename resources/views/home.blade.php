@@ -34,20 +34,21 @@
 
     .hero-tag-content {
         display: inline-block;
-        padding-left: 100%;
-        animation: marquee 15s linear infinite;
+        padding-left: 35%;
+        animation: marquee-left-to-right 25s linear infinite;
     }
 
     .hero-tag-content p {
         margin-bottom: 0;
     }
 
-    @keyframes marquee {
+    @keyframes marquee-left-to-right {
         0% {
-            transform: translateX(0);
-        }
-        100% {
             transform: translateX(-100%);
+        }
+
+        100% {
+            transform: translateX(100%);
         }
     }
 
