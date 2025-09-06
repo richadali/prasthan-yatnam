@@ -50,5 +50,19 @@
         font-weight: bolder;
         font-size: 1.2rem;
     }
+
+    @media (max-width: 767.98px) {
+        h1 {
+            font-size: 1.8rem;
+        }
+
+        p {
+            font-size: 1rem;
+        }
+
+        .motto-text {
+            font-size: 1rem;
+        }
+    }
 </style>
 @endsection
