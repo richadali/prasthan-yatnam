@@ -193,6 +193,14 @@
             width: 180px;
             height: 250px;
         }
+
+        .book-title {
+            font-size: 1.2rem;
+        }
+
+        .book-icon {
+            font-size: 2rem;
+        }
     }
 </style>
 @endsection
@@ -205,7 +213,7 @@
     @if(count($poems) > 0)
     <div class="row">
         @foreach($poems as $poem)
-        <div class="col-lg-4 col-md-6 mb-4">
+        <div class="col-lg-4 col-md-6 col-12 mb-4 d-flex justify-content-center">
             <div class="book-container">
                 <div class="book" data-id="{{ $poem->id }}" data-image="{{ asset('storage/' . $poem->image) }}"
                     data-title="{{ $poem->title }}">

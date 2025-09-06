@@ -201,5 +201,28 @@
         font-weight: bolder;
         font-size: 1.2rem;
     }
+
+    @media (max-width: 767.98px) {
+        h1 {
+            font-size: 1.8rem;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+        }
+
+        p,
+        ol {
+            font-size: 1rem;
+        }
+
+        .motto-text {
+            font-size: 1rem;
+        }
+
+        p.mb-4[style*="font-size: 22px"] {
+            font-size: 18px !important;
+        }
+    }
 </style>
 @endsection
