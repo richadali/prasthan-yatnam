@@ -158,7 +158,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link fw-medium {{ request()->is('testimonials') ? 'active' : '' }}"
-                        href="{{ url('/testimonials') }}">TESTIMONIAL</a>
+                        href="{{ url('/testimonials') }}">PEOPLE</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link fw-medium {{ request()->is('gallery') || request()->is('gallery/*') ? 'active' : '' }}"
