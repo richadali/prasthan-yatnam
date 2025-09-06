@@ -6,16 +6,16 @@
 <style>
     .book-container {
         margin-bottom: 40px;
-        perspective: 1000px;
+        perspective: 1500px;
     }
 
     .book {
         position: relative;
-        width: 50%;
-        height: 250px;
+        width: 220px;
+        height: 300px;
         transform-style: preserve-3d;
         transform-origin: center left;
-        transition: transform 0.5s ease;
+        transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         cursor: pointer;
     }
 
@@ -23,81 +23,92 @@
         position: absolute;
         width: 100%;
         height: 100%;
-        border-radius: 5px;
-        background-color: white;
+        border-radius: 2px 10px 10px 2px;
+        background-color: #79443B;
+        background-image:
+            linear-gradient(to right, rgba(0, 0, 0, 0.2) 0%, rgba(255, 255, 255, 0.1) 10%, rgba(0, 0, 0, 0.1) 20%, transparent 40%),
+            url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjNzQ0NDNiIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDVMNSAwWk02IDRMNCA2Wk0tMSAxTDEgLTFaIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLW9wYWNpdHk9IjAuMSI+PC9wYXRoPgo8L3N2Zz4=');
         transform-origin: left;
         transform-style: preserve-3d;
-        transition: transform 1.2s ease;
+        transition: transform 1s ease-in-out;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        color: black;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        overflow: hidden;
-        border: 1px solid #e0e0e0;
+        color: white;
+        padding-left: 30px;
+        box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+        border: 1px solid #4a2c25;
+    }
+    
+    .book-cover::before {
+        content: '';
+        position: absolute;
+        left: 20px;
+        top: 0;
+        width: 3px;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.2);
     }
 
     .book-spine {
         position: absolute;
-        width: 30px;
+        width: 40px;
         height: 100%;
-        left: -15px;
-        background: linear-gradient(to right, #e0e0e0, #f5f5f5);
-        transform: rotateY(90deg) translateZ(15px);
-        z-index: 1;
-        border-radius: 3px 0 0 3px;
-        border: 1px solid #d0d0d0;
+        left: 0;
+        background: #5C4033;
+        transform: rotateY(-90deg) translateX(-100%);
+        transform-origin: right;
+        z-index: 0;
+        border-radius: 2px 0 0 2px;
+        box-shadow: inset 5px 0 10px rgba(0, 0, 0, 0.2);
     }
 
     .book-page {
         position: absolute;
         width: 100%;
         height: 100%;
-        background-color: #f8f8f8;
-        border-radius: 0 5px 5px 0;
+        top: 0;
+        left: 0;
+        background-color: #fdfaf4;
+        border-radius: 0 8px 8px 0;
         transform-origin: left;
+        transition: transform 0.8s ease-in-out;
         z-index: -1;
         display: flex;
         justify-content: center;
         align-items: center;
         padding: 15px;
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
     .book-page-1 {
-        background-color: #f0f0f0;
-        transform: rotateY(0.01deg);
+        transition-delay: 0.1s;
     }
 
     .book-page-2 {
-        background-color: #e8e8e8;
-        transform: rotateY(0.02deg);
-    }
-
-    .book-page-3 {
-        background-color: #e0e0e0;
-        transform: rotateY(0.03deg);
-    }
-
-    .book.open .book-cover {
-        transform: rotateY(-160deg);
-        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
-    }
-
-    .book.open .book-page-1 {
-        transform: rotateY(-20deg);
         transition-delay: 0.2s;
     }
 
+    .book-page-3 {
+        transition-delay: 0.3s;
+    }
+
+    .book.open .book-cover {
+        transform: rotateY(-170deg) translateZ(-10px);
+        box-shadow: -10px 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .book.open .book-page-1 {
+        transform: rotateY(-25deg);
+    }
+
     .book.open .book-page-2 {
-        transform: rotateY(-40deg);
-        transition-delay: 0.4s;
+        transform: rotateY(-50deg);
     }
 
     .book.open .book-page-3 {
-        transform: rotateY(-60deg);
-        transition-delay: 0.6s;
+        transform: rotateY(-145deg);
     }
 
     .book-title {
@@ -112,7 +123,7 @@
     .book-icon {
         font-size: 2.5rem;
         margin-bottom: 15px;
-        color: #333;
+        color: white;
     }
 
     .poem-image {
@@ -179,7 +190,8 @@
     /* Responsive adjustments */
     @media (max-width: 768px) {
         .book {
-            height: 200px;
+            width: 180px;
+            height: 250px;
         }
     }
 </style>

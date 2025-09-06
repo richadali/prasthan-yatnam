@@ -15,122 +15,139 @@
                 <!-- Background Section -->
                 <h3 class="mb-3" style="color: #000080;">Background:</h3>
                 <p class="mb-4">
-                    Privileged to be born in a clan wherein I have grown up with vivid
-                    memories of my paternal grandfather Tonkeswar Sharma ringing the ghonta (bell)
-                    in adoration of Lord Narayan (Saligram) in the Guxai Ghor (room for prayer) and my
-                    maternal grandfather Shankardhar Barooah in meditative contemplation penning
-                    down "The Vedanta in New Light", coupled with the cosmopolitan ambience flavoured
-                    with traditional roots provided by my parents Girindranath Sharma and Nilima Sharma I
+                    Privileged to be born in a clan wherein I have grown up with vivid memories of my paternal
+                    grandfather Tonkeswar Sharma ringing the ghonta (bell) in adoration of Lord Narayan (Saligram) in
+                    the Guxai Ghor (room for prayer) and my maternal grandfather Shankardhar Barooah in meditative
+                    contemplation penning down ‘The Vedanta in New Light’ coupled with the cosmopolitan ambience
+                    flavoured with traditional roots provided by my parents Girindranath Sharma and Nilima Sharma, I
                     have embarked on a different journey in life.
+
                 </p>
 
                 <!-- Concept Section -->
                 <h3 class="mb-3" style="color: #000080;">The Concept of Prasthan Yatnam:</h3>
                 <p>
-                    I realized the need for a platform as an aftercare
-                    for a lot of people and also for family/friends/associates and anyone else who
-                    needs it for developing meaning and purpose in life.
+                    I realized the need for a platform as an aftercare for a lot of people and also for family/ friends/
+                    associates and anyone else who needs it for developing meaning and purpose in life.
+
                 </p>
                 <p class="mb-4">
-                    Being spiritually inclined, I often go for many camps/discourses/workshops on
-                    positive living etc. conducted by all kinds of institutions to pick up the gems
-                    for myself and my loved ones. Therein I realized that generally every institution
-                    barring a limited few, try to thrust down their ideologies on the buffet era people!! Thus
-                    the idea of Prasthan Yatnam was born within me, influenced greatly by the all
-                    embracing Sanatan Dharma.
+                    Being spiritually inclined, I often go for many camps/ discourses/ workshops on positive living etc.
+                    conducted by all kinds of institutions to pick up the gems for myself and my loved ones. Therein I
+                    realized that generally every institution, barring a limited few, tries to thrust down their
+                    ideologies on the buffet era people!! Thus, the idea of <strong>Prasthan Yatnam (PY)</strong> was
+                    born within me,
+                    influenced greatly by the all-embracing Sanatan Dharma.
+
                 </p>
 
                 <!-- What is Section -->
                 <h3 class="mb-3" style="color: #000080;">What is Prasthan Yatnam:</h3>
                 <p>
-                    It is a humble endeavor to develop a movement wherein
-                    every Thursday members gather to sit in group meditation with the music of
-                    different sects. Thereafter a brief input is given about the sect whose music is being
-                    used, followed by sharing of experiences by the participants. God willing, one day
-                    this movement will culminate into an Organisation!!
+                    It is a humble endeavor to develop a movement wherein, every Thursday, members gather to sit in
+                    group meditation with the music of different sects. Thereafter, a brief input is given about the
+                    sect whose music is being used, followed by the sharing of experiences by the participants. PY was
+                    established on the 9th of May, 2013, and with the blessings of GOD, it has now been registered as a
+                    society [October 2022].
+
                 </p>
-                <p class="mb-4"><strong>Established:</strong> 9th of May, 2013</p>
 
                 <!-- Motto Section -->
                 <h3 class="mb-3" style="color: #000080;">The fourfold Motto:</h3>
-                <ol class="mb-4">
+                <ol class="mb-4" style="font-style: italic; font-weight: bold">
                     <li>Spirituality is not religiosity. It is Universality.</li>
-                    <li>Meditation is the best tool to untangle, tangled emotions leading to freedom and peace.</li>
-                    <li>Going back to our roots. In today's world the reverse of the renaissance has become necessary
+                    <li>Meditation is the best tool to untangle tangled emotions, leading to freedom and peace.
+                    </li>
+                    <li>Going back to our roots. In today's world, the reverse of the renaissance has become necessary
                         because people have lost their identity and are spiritually bankrupt. The youth are left with no
-                        one to really guide them except 'Google Search'!! People are looking for peace outside whereas
-                        peace in an internal business which can be realized through the scriptures which have dynamite
-                        messages but unfortunately people have gone far away from them and also sadly the scriptures
-                        have been misinterpreted.</li>
+                        one to really guide them except 'Google Search'!! People are looking for peace outside, whereas
+                        peace is an internal business which can be realized through the scriptures, which have dynamite
+                        messages, but unfortunately, people have gone far away from them, and also sadly, the scriptures
+                        have been misinterpreted.
+                    </li>
                     <li>Live and Let Live. For Universal Brotherhood of mankind and for International Peace, this
-                        principle is an important prerequisite. Hence in Prasthan Yatnam, we learn about everyone's
-                        ideology (124 different sects covered till date) and at home one can practice whatever he/she
-                        prefers.</li>
+                        principle is an important prerequisite. Here, in PY, we learn about everyone's ideology [124
+                        different sects covered to date], and at home, one can practice whatever one prefers.
+                    </li>
                 </ol>
 
                 <!-- Logo and Color -->
                 <h3 class="mb-3" style="color: #000080;">Logo and Color:</h3>
-                <p class="mb-4">Snow Clad mountain with the Sun Rising. White for Peace. Orange for Brilliance.</p>
+                <p class="mb-4">Snow-clad mountain with the Sun Rising. <strong>WHITE</strong> for Peace and
+                    <strong>ORANGE</strong> for Brilliance.
+                </p>
 
                 <!-- Inspiration -->
                 <h3 class="mb-3" style="color: #000080;">Inspiration:</h3>
                 <p class="mb-4">
-                    Deeply inspired by the Gyan Yagnas of Revered Swami Chinmayanandaji
-                    and the powerful silent meditation of Rishi Aurobindo and The Divine Mother, Secular
-                    idea of "Sab ka Malik hai Ek" of Shirdi Sai Baba, thoughts of Buddha/Swami
-                    Vivekananda and many other spiritual Giants and also the 12 step
-                    principle of "Together we can, alone I cannot".
+                    Deeply inspired by the Gyan Yagnas of Revered <strong>Swami Chinmayanandaji </strong><span
+                        style="font-weight: 400;">and the powerful silent meditation of </span><strong>Rishi
+                        Aurobindo</strong><span style="font-weight: 400;"> and The Divine Mother, the Secular ideas of
+                        "Sab ka Malik hai Ek" of </span><strong>Shirdi Sai Baba</strong><span
+                        style="font-weight: 400;">, the thoughts of Buddha/ Swami Vivekananda, and many other spiritual
+                        Giants and also the 12-step principle of "</span><strong>Together we can, alone I
+                        cannot".</strong>
                 </p>
 
                 <!-- Why the Name -->
                 <h3 class="mb-3" style="color: #000080;">Why the Name:</h3>
                 <p class="mb-4">
-                    Poignantly influenced by the narration of my mother regarding how at
-                    the deathbed of my maternal grandmother, Annapurna Devi, my grandfather bid her
-                    farewell with a 'bel paat' (a auspicious leaf of the Hindus) and said "Ataire yatra
-                    kalot tumi hodai bel paat di bidai di sila, aji tumar aie moha yatrat tumi ai bel paat loi
-                    Brahmalookoloi "Prasthan" kora'. (during everyone's journey you have always sent
-                    them off with a bel paat. Today on your final journey, take this bel paat and
-                    proceed (Prasthan) to (Brahmalook). Thus Prasthan Yatnam, Prasthan (proceed) Yatnam
-                    (attempt) An attempt to proceed.
+                    Poignantly influenced by the narration of my mother regarding how at the deathbed of my maternal
+                    grandmother, Annapurna Devi, my grandfather bid her farewell with a '<a
+                        href="https://ijrap.net/admin/php/uploads/2607_pdf.pdf" target="_blank"><em><span
+                                style="font-weight: 400;">bel
+                                paat</span></em></a>' (an auspicious leaf of the Hindus)
+                    and said &ldquo;</span><strong>Ataire yatra kalot tumi hodai bel paat di bidai di sila, aji
+                        tumar aie moha yatrat tumi ai bel paat loi Brahmalookoloi</strong><span
+                        style="font-weight: 400;"> &lsquo;</span><strong>Prasthan&rsquo; kora</strong><span
+                        style="font-weight: 400;">&rdquo;. [During everyone's journey, you have always sent them off
+                        with a bel paat. Today on your final journey, take this bel paat and proceed (Prasthan) to
+                        (Brahmalook)]. Thus, </span><strong>Prasthan-Yatnam</strong><span style="font-weight: 400;">,
+                    </span><strong>Prasthan (proceed)</strong> <strong>Yatnam (attempt)</strong><span
+                        style="font-weight: 400;"> signifies &lsquo;</span><strong><em>an attempt to
+                            proceed&rsquo;.</em></strong>
                 </p>
 
                 <!-- Membership -->
                 <h3 class="mb-3" style="color: #000080;">Membership:</h3>
                 <p class="mb-4">Caste/Creed/sect/religion/sex/age/species no bar. Open to like-minded people who want to
-                    evolve.</p>
+                    evolve.
+                </p>
 
                 <!-- Vision and Mission -->
                 <h3 class="mb-3" style="color: #000080;">Vision and Mission of Prasthan Yatnam:</h3>
                 <p>
-                    In today's world of fast lanes with ever-increasing traffic, pollution has heightened
-                    to its peak. Thus Prasthan Yatnam makes an attempt to be an oxygen mask to save one
-                    from the compromised air around. It is a kind of a Rainbow Bridge or a Bridge Course
-                    or a balanced platform especially for youngsters to have a breath of fresh air amidst the
-                    hurry bury of life. Not all are destined nor inclined to climb the lofty spiritual heights
-                    of the Himalayas, yet in their hearts, they have a longing for solace.
+                    In today's world of fast lanes with ever-increasing traffic, pollution has reached its peak. Thus,
+                    PY makes a sincere attempt to be an oxygen mask to save one from the compromised air around. It is a
+                    kind of a <em><span style="font-weight: 400;">Rainbow Bridge</span></em><span
+                        style="font-weight: 400;"> or a </span><em><span style="font-weight: 400;">Bridge
+                            Course</span></em><span style="font-weight: 400;"> or a balanced platform, especially for
+                        youngsters to have a breath of fresh air amidst the hurry-burry of life. Not all are destined or
+                        inclined to climb the lofty spiritual heights of the Himalayas, yet in their hearts, they have a
+                        longing for solace.</span>
+
                 </p>
                 <p>
-                    In the midst of modern-day living, play and interaction, suddenly something happens
-                    within and life seems to take on a more meaningful shade and rays of
-                    tranquility seem to sip into our existence. Prasthan Yatnam makes a humble attempt to provide just
-                    that.
+                    In the midst of modern-day living, play and interaction, suddenly something happens within, and life
+                    seems to take on a more meaningful shade, and rays of tranquility seem to seep into our existence.
+                    PY
+                    makes a humble attempt to provide just that.
+
                 </p>
                 <p>
-                    Universality makes us open-minded to embrace humanity...We are no profound giants
-                    but mere commoners who find a balanced meaning and purpose in life no matter what
-                    our age, past and backgrounds are.
+                    <strong>Universality</strong><span style="font-weight: 400;"> makes us open-minded to embrace
+                        humanity. We are no profound giants but mere commoners who find a balanced </span><em><span
+                            style="font-weight: 400;">meaning and purpose </span></em><span style="font-weight: 400;">in
+                        life, no matter what our age, past and backgrounds are.</span>
                 </p>
                 <p>
-                    Prasthan Yatnam provides that joyous bonhomie. We are waiting to embrace you if
-                    you choose to knock our door. We turn noone away.
+                    PY provides that joyous bonhomie. We are waiting to embrace you if you choose to knock on our door.
+                    We turn no one away.
                 </p>
                 <p class="mb-4" style="font-size: 22px"><b>
-                        Peace, love and healing.<br>
-                        Sarve Bhavantu Sukhinaha.</b>
+                        🌹🌼 Peace, love and healing.<br>
+                        Sarve Bhavantu Sukhinaha 🌹🌼</b>
                 </p>
-
-
             </div>
         </div>
     </div>
