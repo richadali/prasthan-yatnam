@@ -115,12 +115,13 @@
         }
 
         .nav-item {
-            margin-bottom: 5px;
+            margin-bottom: 1px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .nav-link {
-            padding: 12px;
+            padding: 5px;
+            font-size: 0.9rem;
         }
     }
 </style>

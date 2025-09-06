@@ -30,13 +30,13 @@
     }
 
     @media (max-width: 767.98px) {
-        footer .text-center {
-            text-align: left !important;
-            margin: 0.5rem 0;
+        footer .col-md-4 {
+            text-align: center !important;
+            margin-bottom: 0.5rem;
         }
 
         footer .text-md-end {
-            text-align: left !important;
+            text-align: center !important;
         }
     }
 </style>
