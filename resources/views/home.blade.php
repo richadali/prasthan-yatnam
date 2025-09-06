@@ -269,7 +269,7 @@
     @media (max-width: 768px) {
         .hero-tag {
             top: 0;
-            font-size: 0.8rem;
+            font-size: 0.5rem;
         }
 
         .about-section {
