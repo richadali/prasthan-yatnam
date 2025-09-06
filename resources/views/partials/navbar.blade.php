@@ -168,14 +168,14 @@
                     <a class="nav-link fw-medium {{ request()->is('about') ? 'active' : '' }}"
                         href="{{ url('/about') }}">ABOUT</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-medium {{ request()->is('help-desk') ? 'active' : '' }}"
+                        href="{{ url('/help-desk') }}">HELP-DESK</a>
+                </li>
                 @guest
                 <li class="nav-item">
                     <a class="nav-link fw-medium {{ request()->is('login') ? 'active' : '' }}"
                         href="{{ route('login') }}">LOGIN</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link fw-medium {{ request()->is('help-desk') ? 'active' : '' }}"
-                        href="{{ url('/help-desk') }}">HELP-DESK</a>
                 </li>
                 @endguest
                 @auth
