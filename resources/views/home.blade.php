@@ -277,6 +277,7 @@
             height: auto;
             min-height: 500px;
             padding: 2rem 0;
+            margin-top: 0;
         }
 
         .about-section .container {
@@ -332,6 +333,10 @@
 
         .carousel-indicators {
             bottom: -35px;
+        }
+
+        .featured-courses .text-center {
+            margin-bottom: 1rem !important;
         }
     }
 </style>
