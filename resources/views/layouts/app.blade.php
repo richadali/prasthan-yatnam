@@ -42,6 +42,9 @@
         body {
             font-family: 'Poppins', sans-serif;
             overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         .btn-primary {
@@ -89,7 +92,7 @@
 <body>
     @include('partials.navbar')
 
-    <main>
+    <main style="flex: 1;">
         @yield('content')
     </main>
 
