@@ -194,6 +194,27 @@
         text-align: center;
         caption-side: top;
     }
+
+    @media (max-width: 767px) {
+        .team-table th,
+        .team-table td {
+            padding: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .testimonial-header {
+            padding: 3rem 0;
+        }
+
+        .testimonial-text {
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .testimonial-name {
+            font-size: 1.1rem;
+        }
+    }
 </style>
 @endsection
 
