@@ -3,7 +3,7 @@
         <div class="row align-items-center">
             <div class="col-md-4">
                 <p class="small text-white-50 mb-md-0">
-                    This web-portal and all the contents included here are Copyright © protected.
+                    All contents included in this web portal are Copyright © protected.
                 </p>
             </div>
             <div class="col-md-4 text-center">
