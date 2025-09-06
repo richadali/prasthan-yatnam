@@ -47,13 +47,14 @@
     }
 
     .testimonial-img {
-        width: 120px;
-        height: 120px;
+        width: 150px;
+        height: 150px;
         object-fit: cover;
-        border-radius: 10px;
+        border-radius: 50%;
         border: 5px solid darkgrey;
         margin-right: 2rem;
         flex-shrink: 0;
+        margin: 30px
     }
 
     @media (max-width: 767px) {
@@ -64,9 +65,9 @@
     }
 
     .testimonial-icon-placeholder {
-        width: 120px;
-        height: 120px;
-        border-radius: 10px;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
         background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-light, #5b92e5) 100%);
         display: flex;
         align-items: center;
@@ -74,6 +75,7 @@
         margin-right: 2rem;
         flex-shrink: 0;
         border: 5px solid darkgrey;
+        margin: 30px
     }
 
     @media (max-width: 767px) {
