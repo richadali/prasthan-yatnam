@@ -11,8 +11,10 @@
     <div class="container py-3">
         <div class="row justify-content-center">
             <div class="col-lg-10">
-                <p>We look forward to your valuable feedback and are open to any queries. In case of any trouble while using our platform and its utilities, please contact us.</p>
-                <p>Email us at: <a href="mailto:prasthanytanm@prasthanyatnam.org">prasthanytanm@prasthanyatnam.org</a></p>
+                <p>We look forward to your valuable feedback and are open to any queries. In case of any trouble while
+                    using our platform and its utilities, please contact us.</p>
+                <p>Email us at: <a href="mailto:prasthanyatnam@prasthanyatnam.org">prasthanyatnam@prasthanyatnam.org</a>
+                </p>
             </div>
         </div>
     </div>
