@@ -171,7 +171,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link fw-medium {{ request()->is('help-desk') ? 'active' : '' }}"
-                        href="{{ url('/help-desk') }}">HELP-DESK</a>
+                        href="{{ url('/help-desk') }}">HELP DESK</a>
                 </li>
                 @guest
                 <li class="nav-item">

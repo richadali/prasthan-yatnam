@@ -469,8 +469,8 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8 text-center">
-                <h2 class="fw-bold section-title">FOUNDER CUM DIRECTOR'S MESSAGE</h2>
-                <p class="mb-4" style="font-size: 1.2rem;">Peace, love and healing..Sarve Bhavantu Sukhinaha..</p>
+                <h2 class="fw-bold section-title">FOUNDER DIRECTOR’S MESSAGE</h2>
+                <p class="mb-4" style="font-size: 1.2rem;">Peace, Love and Healing..Sarve Bhavantu Sukhinaha..</p>
                 <p class="mb-4">
                     We are joyous to launch Prasthan Yatnam's webportal to the World.
                     We hope and pray that it serves the purpose of unifying the world in this conflict ridden times and
@@ -479,11 +479,11 @@
                 <p class="mb-5">
                     Our endeavour is to 'Live and Let Live', to embrace One and all, to pick up the gems from all
                     quarters, to remain forever open minded.
-                    We at Prasthan Yatnam, understand spirituality to be Universility. Thus we are making a humble
+                    We at Prasthan Yatnam, understand spirituality to be universality. Thus we are making a humble
                     attempt to provide a soothing healthy atmosphere, free from any kind of
                     dogma/prejudice/fanatism/cultism for a balanced holistic overall growth of a being.
                 </p>
-                <a href="{{ url('/about') }}" class="btn navy-btn px-4 py-2">KNOW MORE ABOUT US</a>
+                <a href="{{ url('/about') }}" class="btn navy-btn px-4 py-2">More about PY and the portal</a>
             </div>
         </div>
     </div>

@@ -191,4 +191,9 @@
     </div>
 </section>
 @endif
+<div class="container text-center mt-3">
+    <p style="font-size: 8pt; color: grey;">
+        We acknowledge Pixabay for providing us with some license-free images for proper use.
+    </p>
+</div>
 @endsection

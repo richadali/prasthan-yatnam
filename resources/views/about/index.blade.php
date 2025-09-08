@@ -67,7 +67,7 @@
                     </li>
                     <li>Live and Let Live. For Universal Brotherhood of mankind and for International Peace, this
                         principle is an important prerequisite. Here, in PY, we learn about everyone's ideology [124
-                        different sects covered to date], and at home, one can practice whatever one prefers.
+                        different sects covered till date], and at home, one can practice whatever one prefers.
                     </li>
                 </ol>
 
@@ -114,6 +114,43 @@
                     evolve.
                 </p>
 
+                <!-- Dedication Section -->
+                <p>
+                    After taking baby steps of perseverance and sadhana for a decade, today, i.e., on 10th September
+                    2025, the auspicious occasion of the launch of the web-portal has finally arrived!!! It's a very
+                    poignant moment for ALL of us.
+                </p>
+                <p>
+                    I would like to offer it at the feet of the Divine and ALL the Spiritual Giants who have inspired,
+                    even though they are no longer in their physical body.
+                </p>
+                <p>
+                    I would like to dedicate this web-portal to the loving memory of my parents (Girin & Nilima Sharma)
+                    for their eternal inspiration/ encouragement and support even in absentia. Kokaideo (Prafulla
+                    Sharma) for his encouraging support of ‘Caraiveti Caraiveti’ (meaning ‘keep moving’).
+                </p>
+                <p>
+                    Aroop Bhattacharjee, my greatest buddy, for giving us the terms ‘Marg Darshak’ and ‘Ashirvadi’ and
+                    his ever-active support and encouragement.
+                </p>
+                <p>
+                    Jack, for bringing in the 'species no bar' concept under membership criteria and his powerfully
+                    gentle presence in the meditation sessions!!!
+                </p>
+                <p>
+                    To ALL the Prasthan Yatnam (PY) members, without whose hard work and unconditional, active support,
+                    this web-portal would not have seen the light of day.
+                </p>
+                <p>
+                    Last but not least, my Siblings and the children/ ALL my friends/ well-wishers and ALL technical
+                    hands for their silent, subtle but Solid support.
+                </p>
+                <p class="text-start">
+                    <strong>RAINA BHATTACHARJEE</strong><br>
+                    (Founder Director/ Marg Darshak)
+                </p>
+
+
                 <!-- Vision and Mission -->
                 <h3 class="mb-3" style="color: #000080;">Vision and Mission of Prasthan Yatnam:</h3>
                 <p>
@@ -145,8 +182,8 @@
                     We turn no one away.
                 </p>
                 <p class="mb-4" style="font-size: 22px"><b>
-                        🌹🌼 Peace, love and healing.<br>
-                        Sarve Bhavantu Sukhinaha 🌹🌼</b>
+                        🕊️❤️➕ Peace, love and healing.<br>
+                        Sarve Bhavantu Sukhinaha 🕊️❤️➕</b>
                 </p>
             </div>
         </div>
