@@ -40,7 +40,7 @@
         box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
         border: 1px solid #4a2c25;
     }
-    
+
     .book-cover::before {
         content: '';
         position: absolute;
@@ -126,15 +126,23 @@
         color: white;
     }
 
+    .poem-image-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        overflow: hidden;
+    }
+
     .poem-image {
         max-width: 100%;
         max-height: 100%;
-        object-fit: contain;
+        object-fit: cover;
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     }
 
     .poem-image-link {
-         cursor: zoom-in;
+        cursor: zoom-in;
     }
 
     .no-poems {
@@ -190,9 +198,13 @@
                     <div class="book-page book-page-1"></div>
                     <div class="book-page book-page-2"></div>
                     <div class="book-page book-page-3">
-                        <a href="{{ asset('storage/' . $poem->image) }}" data-fancybox="poem-gallery" data-caption="{{ $poem->title }}" class="poem-image-link">
-                            <img src="{{ asset('storage/' . $poem->image) }}" alt="{{ $poem->title }}" class="poem-image">
-                        </a>
+                        <div class="poem-image-container">
+                            <a href="{{ asset('storage/' . $poem->image) }}" data-fancybox="poem-gallery"
+                                data-caption="{{ $poem->title }}" class="poem-image-link">
+                                <img src="{{ asset('storage/' . $poem->image) }}" alt="{{ $poem->title }}"
+                                    class="poem-image">
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
