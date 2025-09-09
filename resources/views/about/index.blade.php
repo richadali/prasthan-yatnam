@@ -183,7 +183,7 @@
                     We turn no one away.
                 </p>
                 <p class="mb-4" style="font-size: 22px"><b>
-                        ☮️❤️➕ Peace, love and healing.<br>
+                        ☮️❤️➕ Peace, Love and Healing.<br>
                         Sarve Bhavantu Sukhinaha ☮️❤️➕</b>
                 </p>
             </div>
