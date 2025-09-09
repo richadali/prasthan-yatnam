@@ -483,7 +483,7 @@
                     attempt to provide a soothing healthy atmosphere, free from any kind of
                     dogma/prejudice/fanatism/cultism for a balanced holistic overall growth of a being.
                 </p>
-                <a href="{{ url('/about') }}" class="btn navy-btn px-4 py-2">More about PY and the portal</a>
+                <a href="{{ url('/about') }}" class="btn navy-btn px-4 py-2">KNOW MORE ABOUT US</a>
             </div>
         </div>
     </div>

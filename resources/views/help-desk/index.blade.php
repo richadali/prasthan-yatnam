@@ -12,7 +12,7 @@
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <p>We look forward to your valuable feedback and are open to any queries. In case of any trouble while
-                    using our platform and its utilities, please contact us.</p>
+                    using our platform and it's utilities, please contact us.</p>
                 <p>Email us at: <a href="mailto:prasthanyatnam@prasthanyatnam.org">prasthanyatnam@prasthanyatnam.org</a>
                 </p>
             </div>
