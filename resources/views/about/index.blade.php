@@ -145,7 +145,7 @@
                 <p>
                     Last but not least, my Siblings and the children/ ALL my friends/ well-wishers and ALL technical
                     hands for their silent, subtle but Solid support.
-                </p>
+                </p><br>
                 <p class="text-start">
                     <strong>RAINA BHATTACHARJEE</strong><br>
                     (Founder Director/ Marg Darshak)
@@ -183,8 +183,8 @@
                     We turn no one away.
                 </p>
                 <p class="mb-4" style="font-size: 22px"><b>
-                        🕊️❤️➕ Peace, love and healing.<br>
-                        Sarve Bhavantu Sukhinaha 🕊️❤️➕</b>
+                        ☮️❤️➕ Peace, love and healing.<br>
+                        Sarve Bhavantu Sukhinaha ☮️❤️➕</b>
                 </p>
             </div>
         </div>

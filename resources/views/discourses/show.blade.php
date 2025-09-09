@@ -217,7 +217,8 @@
                             </div>
                         </div>
                         <div>
-                            @if($hasAccess && !$isUpcoming)
+                            {{-- @if($hasAccess && !$isUpcoming) --}}
+                            @if(!$isUpcoming)
                             <a href="{{ route('videos.show', ['discourse_slug' => $discourse->slug, 'video_id' => $video->id]) }}"
                                 class="btn btn-primary btn-sm">
                                 Watch Video

@@ -45,10 +45,17 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login']);
 
-    // Password Reset Routes (placeholder for now)
-    Route::get('/forgot-password', function () {
-        return view('auth.passwords.email');
-    })->name('password.request');
+    // Forgot Password Routes
+    Route::get('forgot-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('forgot-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+
+    // OTP Routes
+    Route::get('password/otp', [App\Http\Controllers\Auth\ResetPasswordController::class, 'showOtpForm'])->name('password.otp.form');
+    Route::post('password/otp', [App\Http\Controllers\Auth\ResetPasswordController::class, 'verifyOtp'])->name('password.otp.verify');
+
+    // Reset Password Routes
+    Route::get('reset-password', [App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('reset-password', [App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
 });
 
 // Authenticated Routes
@@ -81,14 +88,12 @@ Route::get('/my-discourses', [DiscourseController::class, 'myDiscourses'])
 
 // Video routes
 Route::get('/discourses/{discourse_slug}/videos/{video_id}', [VideoController::class, 'show'])
-    ->middleware('auth')
+    // ->middleware('auth')
     ->name('videos.show');
-
 // Secure video streaming route
 Route::get('/video/stream/{id}', [VideoController::class, 'stream'])
-    ->middleware('auth')
+    // ->middleware('auth')
     ->name('video.stream');
-
 // Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {
     // Root admin route - check if admin is logged in, otherwise redirect to admin login
