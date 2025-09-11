@@ -49,25 +49,27 @@
 
                     <div class="col-md-4">
                         <div class="mb-3">
-                            <label for="image" class="form-label">Poem Image <span class="text-danger">*</span></label>
-                            <input type="file" class="form-control @error('image') is-invalid @enderror" id="image"
-                                name="image" required>
-                            @error('image')
+                            <label for="file" class="form-label">Poem File (Image or PDF) <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control @error('file') is-invalid @enderror" id="file"
+                                name="file" required accept="image/*,.pdf">
+                            @error('file')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            <div class="form-text">Upload an image of the poem (JPEG, PNG, GIF, max 2MB)</div>
+                            <div class="form-text">Upload an image or PDF of the poem (max 2MB)</div>
                         </div>
 
                         <div class="mb-3">
                             <div class="d-flex justify-content-center mt-3">
                                 <div class="image-preview border rounded p-2 text-center position-relative"
                                     style="min-height: 300px; width: 100%; background-color: #f8f9fa;">
-                                    <img id="preview" src="#" alt="Image Preview"
-                                        style="max-width: 100%; max-height: 280px; display: none; object-fit: contain;">
-                                    <div id="placeholder"
-                                        class="position-absolute top-50 start-50 translate-middle text-center">
-                                        <i class="fas fa-file-image fa-3x text-secondary mb-2"></i>
-                                        <div class="text-muted">Image preview will appear here</div>
+                                    <img id="preview" src="#" alt="Image Preview" style="max-width: 100%; max-height: 280px; display: none; object-fit: contain;">
+                                    <div id="pdf-preview" class="position-absolute top-50 start-50 translate-middle text-center" style="display: none;">
+                                        <i class="fas fa-file-pdf fa-3x text-secondary mb-2"></i>
+                                        <div class="text-muted">PDF selected</div>
+                                    </div>
+                                    <div id="placeholder" class="position-absolute top-50 start-50 translate-middle text-center">
+                                        <i class="fas fa-file-upload fa-3x text-secondary mb-2"></i>
+                                        <div class="text-muted">File preview will appear here</div>
                                     </div>
                                 </div>
                             </div>
@@ -89,25 +91,34 @@
 @section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const imageInput = document.getElementById('image');
+        const fileInput = document.getElementById('file');
         const preview = document.getElementById('preview');
+        const pdfPreview = document.getElementById('pdf-preview');
         const placeholder = document.getElementById('placeholder');
         
-        imageInput.addEventListener('change', function() {
+        fileInput.addEventListener('change', function() {
             const file = this.files[0];
             if (file) {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                        pdfPreview.style.display = 'none';
+                        placeholder.style.display = 'none';
+                    }
+                    
+                    reader.readAsDataURL(file);
+                } else if (file.type === 'application/pdf') {
+                    preview.style.display = 'none';
+                    pdfPreview.style.display = 'block';
                     placeholder.style.display = 'none';
                 }
-                
-                reader.readAsDataURL(file);
             } else {
                 preview.style.display = 'none';
-                placeholder.style.display = 'flex';
+                pdfPreview.style.display = 'none';
+                placeholder.style.display = 'block';
             }
         });
     });

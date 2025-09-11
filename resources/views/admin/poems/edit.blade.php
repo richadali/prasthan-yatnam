@@ -50,38 +50,47 @@
 
                     <div class="col-md-4">
                         <div class="mb-3">
-                            <label for="image" class="form-label">Poem Image</label>
-                            <input type="file" class="form-control @error('image') is-invalid @enderror" id="image"
-                                name="image">
-                            @error('image')
+                            <label for="file" class="form-label">Poem File (Image or PDF)</label>
+                            <input type="file" class="form-control @error('file') is-invalid @enderror" id="file"
+                                name="file" accept="image/*,.pdf">
+                            @error('file')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            <div class="form-text">Upload a new image to replace the current one (JPEG, PNG, GIF, max
-                                2MB)</div>
+                            <div class="form-text">Upload a new file to replace the current one (max 2MB)</div>
                         </div>
 
                         <div class="mb-3">
                             <div class="d-flex justify-content-center mt-3">
                                 <div class="image-preview border rounded p-2 text-center position-relative"
                                     style="min-height: 300px; width: 100%; background-color: #f8f9fa;">
-                                    @if($poem->image)
-                                    <img id="preview" src="{{ asset('storage/' . $poem->image) }}"
-                                        alt="{{ $poem->title }}"
-                                        style="max-width: 100%; max-height: 280px; display: block; object-fit: contain;">
-                                    <div id="placeholder"
-                                        class="position-absolute top-50 start-50 translate-middle text-center"
-                                        style="display: none;">
-                                        <i class="fas fa-file-image fa-3x text-secondary mb-2"></i>
-                                        <div class="text-muted">Image preview will appear here</div>
-                                    </div>
+                                    @if($poem->file_path)
+                                        @if(Str::startsWith($poem->file_type, 'image/'))
+                                            <img id="preview" src="{{ asset('storage/' . $poem->file_path) }}" alt="{{ $poem->title }}" style="max-width: 100%; max-height: 280px; display: block; object-fit: contain;">
+                                            <div id="pdf-preview" class="position-absolute top-50 start-50 translate-middle text-center" style="display: none;">
+                                                <i class="fas fa-file-pdf fa-3x text-secondary mb-2"></i>
+                                                <div class="text-muted">PDF selected</div>
+                                            </div>
+                                        @elseif($poem->file_type === 'application/pdf')
+                                            <img id="preview" src="#" alt="Image Preview" style="max-width: 100%; max-height: 280px; display: none; object-fit: contain;">
+                                            <div id="pdf-preview" class="position-absolute top-50 start-50 translate-middle text-center">
+                                                <i class="fas fa-file-pdf fa-3x text-secondary mb-2"></i>
+                                                <div class="text-muted">Current file is a PDF</div>
+                                            </div>
+                                        @endif
+                                        <div id="placeholder" class="position-absolute top-50 start-50 translate-middle text-center" style="display: none;">
+                                            <i class="fas fa-file-upload fa-3x text-secondary mb-2"></i>
+                                            <div class="text-muted">File preview will appear here</div>
+                                        </div>
                                     @else
-                                    <img id="preview" src="#" alt="Image Preview"
-                                        style="max-width: 100%; max-height: 280px; display: none; object-fit: contain;">
-                                    <div id="placeholder"
-                                        class="position-absolute top-50 start-50 translate-middle text-center">
-                                        <i class="fas fa-file-image fa-3x text-secondary mb-2"></i>
-                                        <div class="text-muted">No image uploaded</div>
-                                    </div>
+                                        <img id="preview" src="#" alt="Image Preview" style="max-width: 100%; max-height: 280px; display: none; object-fit: contain;">
+                                        <div id="pdf-preview" class="position-absolute top-50 start-50 translate-middle text-center" style="display: none;">
+                                            <i class="fas fa-file-pdf fa-3x text-secondary mb-2"></i>
+                                            <div class="text-muted">PDF selected</div>
+                                        </div>
+                                        <div id="placeholder" class="position-absolute top-50 start-50 translate-middle text-center">
+                                            <i class="fas fa-file-upload fa-3x text-secondary mb-2"></i>
+                                            <div class="text-muted">No file uploaded</div>
+                                        </div>
                                     @endif
                                 </div>
                             </div>
@@ -103,22 +112,30 @@
 @section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const imageInput = document.getElementById('image');
+        const fileInput = document.getElementById('file');
         const preview = document.getElementById('preview');
+        const pdfPreview = document.getElementById('pdf-preview');
         const placeholder = document.getElementById('placeholder');
-        
-        imageInput.addEventListener('change', function() {
+
+        fileInput.addEventListener('change', function() {
             const file = this.files[0];
             if (file) {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                        pdfPreview.style.display = 'none';
+                        placeholder.style.display = 'none';
+                    }
+                    
+                    reader.readAsDataURL(file);
+                } else if (file.type === 'application/pdf') {
+                    preview.style.display = 'none';
+                    pdfPreview.style.display = 'block';
                     placeholder.style.display = 'none';
                 }
-                
-                reader.readAsDataURL(file);
             }
         });
     });

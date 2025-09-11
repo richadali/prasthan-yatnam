@@ -8,7 +8,8 @@ class Poem extends Model
 {
     protected $fillable = [
         'title',
-        'image',
+        'file_path',
+        'file_type',
         'display_order',
     ];
 

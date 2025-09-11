@@ -199,11 +199,20 @@
                     <div class="book-page book-page-2"></div>
                     <div class="book-page book-page-3">
                         <div class="poem-image-container">
-                            <a href="{{ asset('storage/' . $poem->image) }}" data-fancybox="poem-gallery"
+                            @if (Str::startsWith($poem->file_type, 'image/'))
+                            <a href="{{ asset('storage/' . $poem->file_path) }}" data-fancybox="poem-gallery"
                                 data-caption="{{ $poem->title }}" class="poem-image-link">
-                                <img src="{{ asset('storage/' . $poem->image) }}" alt="{{ $poem->title }}"
+                                <img src="{{ asset('storage/' . $poem->file_path) }}" alt="{{ $poem->title }}"
                                     class="poem-image">
                             </a>
+                            @elseif ($poem->file_type === 'application/pdf')
+                                <a href="{{ asset('storage/' . $poem->file_path) }}" download class="poem-pdf-link">
+                                    <div class="text-center">
+                                        <i class="fas fa-file-pdf fa-4x text-secondary"></i>
+                                        <p class="mt-2">Download PDF</p>
+                                    </div>
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -259,10 +268,20 @@
                 openBook(this);
 
                 const imageLink = this.querySelector('.poem-image-link');
+                const pdfLink = this.querySelector('.poem-pdf-link');
+
                 if (imageLink) {
                     setTimeout(() => {
                         imageLink.click();
                     }, 800);
+                } else if (pdfLink) {
+                    pdfLink.click();
+                    setTimeout(() => {
+                        if (activeBook) {
+                            closeBook(activeBook);
+                            activeBook = null;
+                        }
+                    }, 400); // Close the book shortly after initiating download
                 }
             });
         });
