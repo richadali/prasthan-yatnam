@@ -106,6 +106,7 @@
         s box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
         font-weight: 500;
         transition: all 0.3s ease;
+        min-width: 170px;
     }
 
     .navy-btn:hover {
@@ -122,6 +123,7 @@
         box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
         font-weight: 500;
         transition: all 0.3s ease;
+        min-width: 170px;
     }
 
     .orange-btn:hover {

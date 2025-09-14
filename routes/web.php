@@ -8,6 +8,7 @@ use App\Http\Controllers\VideoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\PaymentController;
 
 // Public routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -18,6 +19,7 @@ Route::get('/discourses', function () {
 
 Route::get('/poems', [App\Http\Controllers\PoemController::class, 'index'])->name('poems');
 Route::get('/poems/{id}', [App\Http\Controllers\PoemController::class, 'show'])->name('poems.show');
+Route::get('/poems/{id}/download', [App\Http\Controllers\PoemController::class, 'download'])->name('poems.download');
 
 Route::get('/activity', function () {
     return view('activity.index');
@@ -34,6 +36,8 @@ Route::get('/about', function () {
 })->name('about');
 
 Route::get('/help-desk', [App\Http\Controllers\HelpDeskController::class, 'index'])->name('help-desk');
+
+Route::get('/payment', [PaymentController::class, 'index'])->name('payment');
 
 // Authentication Routes
 Route::middleware('guest')->group(function () {

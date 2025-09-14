@@ -177,6 +177,7 @@
     }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 @endsection
 
 @section('content')
@@ -206,7 +207,7 @@
                                     class="poem-image">
                             </a>
                             @elseif ($poem->file_type === 'application/pdf')
-                                <a href="{{ asset('storage/' . $poem->file_path) }}" download class="poem-pdf-link">
+                                <a href="{{ route('poems.download', $poem->id) }}" class="poem-pdf-link">
                                     <div class="text-center">
                                         <i class="fas fa-file-pdf fa-4x text-secondary"></i>
                                         <p class="mt-2">Download PDF</p>
@@ -231,6 +232,7 @@
 
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const books = document.querySelectorAll('.book');
@@ -275,13 +277,34 @@
                         imageLink.click();
                     }, 800);
                 } else if (pdfLink) {
-                    pdfLink.click();
+                    // Prevent default link behavior
+                    e.preventDefault();
+                    
+                    // Get the poem title from the book cover
+                    const poemTitle = this.querySelector('.book-title').textContent.trim();
+                    
+                    // Show a confirmation dialog
+                    Swal.fire({
+                        title: 'Download Started',
+                        html: `Your download for "<strong>${poemTitle}</strong>" has started.`,
+                        icon: 'success',
+                        timer: 3000,
+                        timerProgressBar: true,
+                        showConfirmButton: false,
+                        toast: true,
+                        position: 'top-end',
+                    });
+
+                    // Start the download
+                    window.location.href = pdfLink.href;
+
+                    // Close the book after a short delay
                     setTimeout(() => {
                         if (activeBook) {
                             closeBook(activeBook);
                             activeBook = null;
                         }
-                    }, 400); // Close the book shortly after initiating download
+                    }, 800);
                 }
             });
         });

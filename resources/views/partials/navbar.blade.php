@@ -127,8 +127,8 @@
 </style>
 
 <!-- Header Banner -->
-<div class="header-banner mb-3">
-    <img src="{{ asset('images/HEADER3.jpg') }}" alt="Prasthan Yatnam Header" class="img-fluid w-100">
+<div class="header-banner">
+    <img src="{{ asset('images/HEADER2.jpg') }}" alt="Prasthan Yatnam Header" class="img-fluid w-100">
 
 </div>
 
@@ -168,6 +168,10 @@
                 <li class="nav-item">
                     <a class="nav-link fw-medium {{ request()->is('about') ? 'active' : '' }}"
                         href="{{ url('/about') }}">ABOUT</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-medium {{ request()->is('payment') ? 'active' : '' }}"
+                        href="{{ url('/payment') }}">PAYMENT</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link fw-medium {{ request()->is('help-desk') ? 'active' : '' }}"
