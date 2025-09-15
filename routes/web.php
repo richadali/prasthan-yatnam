@@ -167,4 +167,5 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('albums', App\Http\Controllers\Admin\AlbumController::class);
         Route::resource('gallery-images', App\Http\Controllers\Admin\GalleryImageController::class);
     });
+        Route::resource('users', App\Http\Controllers\Admin\UserController::class);
 });
