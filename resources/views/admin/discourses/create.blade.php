@@ -235,8 +235,8 @@
                                 </div>
                             </div>
                             <input type="file" class="form-control @error('thumbnail') is-invalid @enderror"
-                                id="thumbnail" name="thumbnail" accept="image/*">
-                            <div class="form-text">Recommended size: 640×480 pixels</div>
+                                id="thumbnail" name="thumbnail" accept="image/*" onchange="validateFileSize(this, 2)">
+                            <div class="form-text">Recommended size: 640×480 pixels (Max: 2MB)</div>
                             @error('thumbnail')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -439,6 +439,18 @@
 <script src="{{ asset('js/chunk-upload.js') }}"></script>
 
 <script>
+    // File size validation and image preview functionality
+    function validateFileSize(input, maxSizeMB) {
+        if (input.files && input.files[0]) {
+            const fileSizeMB = input.files[0].size / (1024 * 1024);
+            if (fileSizeMB > maxSizeMB) {
+                alert(`File size exceeds ${maxSizeMB}MB. Please select a smaller file.`);
+                input.value = '';
+                return false;
+            }
+        }
+        return true;
+    }
     document.addEventListener('DOMContentLoaded', function() {
         console.log('Initializing CKEditor...');
         

@@ -39,7 +39,7 @@ class DiscourseController extends Controller
                 [
                     'title' => 'required|string|max:255',
                     'description' => 'required|string',
-                    'thumbnail' => 'nullable|image|max:51200',
+                    'thumbnail' => 'nullable|image|max:2048',
                     'price' => 'required|numeric|min:0',
                     'is_active' => 'boolean',
                     'is_upcoming' => 'boolean',
@@ -134,7 +134,7 @@ class DiscourseController extends Controller
                 [
                     'title' => 'required|string|max:255',
                     'description' => 'required|string',
-                    'thumbnail' => 'nullable|image|max:51200',
+                    'thumbnail' => 'nullable|image|max:2048',
                     'price' => 'required|numeric|min:0',
                     'is_active' => 'boolean',
                     'is_upcoming' => 'boolean',
