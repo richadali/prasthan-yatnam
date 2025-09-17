@@ -156,7 +156,7 @@
 
 <!-- Upcoming Discourses Section -->
 @if(count($upcomingDiscourses) > 0)
-<section class="discourse-section upcoming-section">
+<section class="discourse-section upcoming-section" id="upcoming-discourses">
     <div class="container">
         <h2 class="section-title">Upcoming Discourses</h2>
         <div class="row g-4">

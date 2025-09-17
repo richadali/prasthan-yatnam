@@ -287,6 +287,17 @@
     </div>
 </section>
 
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="fw-bold section-title">PY Ashirvadis (Sewaks/ Volunteers)</h2>
+                <p>Adrika Barthakur / Shruti Goswami / Jishnu Pathak / Amarjyoti Barua / Boroxa Priyam / Julie Mahanta / Akash Das / Jahnavi Barua / Bobita Goswami / Smita Bezboruah / Sandeepan Kakati / Bhrigu Mishra / Santona Das / Arindam Sharma</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Testimonials Section -->
 <section class="py-5 bg-light">
     <div class="container">

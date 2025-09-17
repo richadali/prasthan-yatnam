@@ -110,14 +110,14 @@
 
                 <!-- Membership -->
                 <h3 class="mb-3" style="color: #000080;">Membership:</h3>
-                <p class="mb-4">Caste/Creed/sect/religion/sex/age/species no bar. Open to like-minded people who want to
+                <p class="mb-5">Caste/Creed/sect/religion/sex/age/species no bar. Open to like-minded people who want to
                     evolve.
                 </p>
 
                 <!-- Dedication Section -->
-                <h3 class="mb-3" style="color: #000080;">9/5/2013...Fast Forward..10/9/2025..</h3>
+                <h3 class="mb-3" style="color: #000080;">9/5/2013...Fast Forward..22/9/2025..</h3>
                 <p>
-                    After taking baby steps of perseverance and sadhana for a decade, today, i.e., on 10th September
+                    After taking baby steps of perseverance and sadhana for a decade, today, i.e., on 22nd September
                     2025, the auspicious occasion of the launch of the web-portal has finally arrived!!! It's a very
                     poignant moment for ALL of us.
                 </p>
@@ -125,17 +125,25 @@
                     I would like to offer it at the feet of the Divine and ALL the Spiritual Giants who have inspired,
                     even though they are no longer in their physical body.
                 </p>
+                <h3 class="mb-3" style="color: #FA8128;">Dedication:</h3>
                 <p>
-                    I would like to dedicate this web-portal to the loving memory of my parents (Girin & Nilima Sharma)
-                    for their eternal inspiration/ encouragement and support even in absentia. Kokaideo (Prafulla
-                    Sharma) for his encouraging support of ‘Caraiveti Caraiveti’ (meaning ‘keep moving’).
+                    I would like to dedicate this web-portal to the loving memory of my parents (<b>Girin</b> &
+                    <b>Nilima Sharma</b>)
+                    for their eternal inspiration/ encouragement and support even in absentia.
                 </p>
                 <p>
-                    Aroop Bhattacharjee, my greatest buddy, for giving us the terms ‘Marg Darshak’ and ‘Ashirvadi’ and
+                    <b>Kokaideo</b>
+                    (<b>Prafulla
+                        Sharma</b>) for his encouraging support of "Caraiveti Caraiveti (move ahead), I am with you".
+                </p>
+                <p>
+                    <b>Aroop Bhattacharjee</b>, my greatest buddy, for giving us the terms ‘Marg Darshak’ and
+                    ‘Ashirvadi’ and
                     his ever-active support and encouragement.
                 </p>
                 <p>
-                    Jack, for bringing in the 'species no bar' concept under membership criteria and his powerfully
+                    <b>Jack</b>, for bringing in the 'species no bar' concept under membership criteria and his
+                    powerfully
                     gentle presence in the meditation sessions!!!
                 </p>
                 <p>
@@ -147,6 +155,7 @@
                     hands for their silent, subtle but Solid support.
                 </p><br>
                 <p class="text-start">
+                    <img src="{{ asset('images/signature.png') }}" alt="Signature" style="width: 200px;"><br>
                     <strong>RAINA BHATTACHARJEE</strong><br>
                     (Founder Director/ Marg Darshak)
                 </p>
@@ -184,7 +193,7 @@
                 </p>
                 <p class="mb-4" style="font-size: 22px"><b>
                         ☮️❤️➕ Peace, Love and Healing.<br>
-                        Sarve Bhavantu Sukhinaha ☮️❤️➕</b>
+                        Sarve Bhavantu Sukhinaha 🙏🙏</b>
                 </p>
             </div>
         </div>

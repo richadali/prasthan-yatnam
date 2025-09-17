@@ -404,8 +404,18 @@
                                 <div id="password-match-feedback"></div>
                             </div>
 
+                            <!-- Google reCAPTCHA -->
+                            <div class="form-group">
+                                <div id="g-recaptcha"></div>
+                                @error('g-recaptcha-response')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
                             <div class="form-group mb-0 mt-4">
-                                <button type="submit" class="btn navy-btn w-100 py-2">
+                                <button type="submit" id="registerBtn" class="btn navy-btn w-100 py-2" disabled>
                                     Register
                                 </button>
                             </div>
@@ -419,9 +429,26 @@
 @endsection
 
 @section('scripts')
+<script src="https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit" async defer></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
+    function onRecaptchaLoad() {
+        grecaptcha.render('g-recaptcha', {
+            'sitekey': '{{ env('RECAPTCHA_SITE_KEY') }}',
+            'callback': onRecaptchaSuccess,
+            'expired-callback': onRecaptchaExpired
+        });
+    }
+
+    function onRecaptchaSuccess(token) {
+        document.getElementById('registerBtn').disabled = false;
+    }
+
+    function onRecaptchaExpired() {
+        document.getElementById('registerBtn').disabled = true;
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         // Initialize Select2 for country code dropdown
         $('#country_code').select2({

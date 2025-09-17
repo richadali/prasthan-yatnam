@@ -66,11 +66,14 @@ class RegisterController extends Controller
             ],
             'organization' => ['required', 'string', 'max:255'],
             'password' => ['required', 'string', 'confirmed', Password::min(8)->mixedCase()->numbers()],
+            'g-recaptcha-response' => ['required', 'captcha'],
         ], [
             'phone.regex' => 'Phone number should contain 6-15 digits only, without spaces or special characters.',
             'email.email' => 'Please enter a valid email address.',
             'email.unique' => 'This email address is already registered. Please login or use a different email.',
             'phone.unique' => 'This phone number is already registered. Please login or use a different number.',
+            'g-recaptcha-response.required' => 'Please verify that you are not a robot.',
+            'g-recaptcha-response.captcha' => 'Captcha error! Try again later or contact site admin.',
         ]);
 
         if ($validator->fails()) {
