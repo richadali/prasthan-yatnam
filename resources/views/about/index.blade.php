@@ -121,11 +121,13 @@
                     2025, the auspicious occasion of the launch of the web-portal has finally arrived!!! It's a very
                     poignant moment for ALL of us.
                 </p>
+                <h3 class="mb-3" style="color: #FA8128;">Dedication:</h3>
                 <p>
-                    I would like to offer it at the feet of the Divine and ALL the Spiritual Giants who have inspired,
+                    I would like to offer it at the feet of the <b>Divine</b> and ALL the <b>Spiritual Giants</b> who
+                    have
+                    inspired,
                     even though they are no longer in their physical body.
                 </p>
-                <h3 class="mb-3" style="color: #FA8128;">Dedication:</h3>
                 <p>
                     I would like to dedicate this web-portal to the loving memory of my parents (<b>Girin</b> &
                     <b>Nilima Sharma</b>)
@@ -147,12 +149,15 @@
                     gentle presence in the meditation sessions!!!
                 </p>
                 <p>
-                    To ALL the Prasthan Yatnam (PY) members, without whose hard work and unconditional, active support,
+                    To ALL the <b>Prasthan Yatnam (PY) members</b>, without whose hard work and unconditional, active
+                    support,
                     this web-portal would not have seen the light of day.
                 </p>
                 <p>
-                    Last but not least, my Siblings and the children/ ALL my friends/ well-wishers and ALL technical
-                    hands for their silent, subtle but Solid support.
+                    Last but not least, my <b>Siblings</b> and the <b>children</b>/ ALL my <b>friends</b>/
+                    <b>well-wishers</b>
+                    and ALL<b> technical
+                        hands</b> for their silent, subtle but Solid support.
                 </p><br>
                 <p class="text-start">
                     <img src="{{ asset('images/signature.png') }}" alt="Signature" style="width: 200px;"><br>
