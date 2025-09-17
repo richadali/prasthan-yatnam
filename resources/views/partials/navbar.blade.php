@@ -167,7 +167,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link fw-medium {{ request()->is('about') ? 'active' : '' }}"
-                        href="{{ url('/about') }}">ABOUT</a>
+                        href="{{ url('/about') }}">ABOUT US</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link fw-medium {{ request()->is('payment') ? 'active' : '' }}"
