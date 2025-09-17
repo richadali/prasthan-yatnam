@@ -464,9 +464,10 @@
             @endif
         </div>
     </div>
-        <div class="text-center mt-4">
-            <a href="{{ route('discourses.index') }}#upcoming-discourses" class="btn navy-btn px-4 py-2">Upcoming Discourses</a>
-        </div>
+    <div class="text-center mt-5">
+        <a href="{{ route('discourses.index') }}#upcoming-discourses" class="btn navy-btn px-4 py-2">Upcoming
+            Discourses</a>
+    </div>
     </div>
 </section>
 
