@@ -158,6 +158,7 @@
 <section class="discourse-section upcoming-section" id="upcoming-discourses">
     <div class="container">
         <h2 class="section-title">Upcoming Discourses</h2>
+        @if(count($upcomingDiscourses) > 0)
         <div class="row g-4">
             @foreach($upcomingDiscourses as $discourse)
             <div class="col-md-6 col-lg-4">
@@ -181,13 +182,15 @@
                             <span class="discourse-price">₹{{ number_format($discourse->price, 2) }}</span>
                             @else
                             <span class="discourse-price free">Free</span>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
             @endforeach
         </div>
-        <div class="row justify-content-center">
+        @endif
+        <div class="row justify-content-center mt-4">
             <div class="col-md-8">
                 <ul class="list-group">
                     <li class="list-group-item">Connect between Sufism/Vedanta/Humanism/Psychology</li>
@@ -202,7 +205,6 @@
         </div>
     </div>
 </section>
-@endif
 <div class="container text-center mt-3">
     <p style="font-size: 8pt; color: grey;">
         We acknowledge Pixabay for providing us with some license-free images for proper use.
