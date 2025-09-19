@@ -163,8 +163,9 @@
             @foreach($upcomingDiscourses as $discourse)
             <div class="col-md-6 col-lg-4">
                 <div class="discourse-card">
-                    <img src="{{ $discourse->thumbnail ? asset('storage/' . $discourse->thumbnail) : asset('images/discourses/default.jpg') }}"
-                        alt="{{ $discourse->title }}" class="discourse-thumbnail">
+                    {{-- <img
+                        src="{{ $discourse->thumbnail ? asset('storage/' . $discourse->thumbnail) : asset('images/discourses/default.jpg') }}"
+                        alt="{{ $discourse->title }}" class="discourse-thumbnail"> --}}
                     <div class="card-body p-4">
                         <h3 class="discourse-title">{{ $discourse->title }}</h3>
                         <p class="discourse-description">{{ strip_tags($discourse->description) }}</p>
