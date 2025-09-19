@@ -189,6 +189,19 @@
             </div>
             @endforeach
         </div>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <ul class="list-group">
+                    <li class="list-group-item">Connect between Sufism/Vedanta/Humanism/Psychology</li>
+                    <li class="list-group-item">Series on Silence</li>
+                    <li class="list-group-item">Series on Solitude</li>
+                    <li class="list-group-item">Rumi</li>
+                    <li class="list-group-item">Myths regarding Hinduism</li>
+                    <li class="list-group-item">Nectar of Ramakrishna's Kathamrita</li>
+                </ul>
+                <p class="text-center mt-3">And many more...</p>
+            </div>
+        </div>
     </div>
 </section>
 @endif
