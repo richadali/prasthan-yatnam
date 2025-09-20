@@ -16,7 +16,8 @@
             <div class="col-md-4">
                 <div class="text-md-end">
                     <a href="#" class="text-white-50 text-decoration-none small me-3">Privacy Policy</a>
-                    <a href="#" class="text-white-50 text-decoration-none small">Terms of Use</a>
+                    <a href="{{ asset('images/Acknowledgment form.pdf') }}" target="_blank"
+                        class="text-white-50 text-decoration-none small">Acknowledgements</a>
                 </div>
             </div>
         </div>

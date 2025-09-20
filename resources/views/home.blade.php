@@ -136,7 +136,7 @@
     /* Featured Courses */
     .featured-courses {
         padding: 5rem 0;
-        background: url('{{ asset("images/himalaya.jpg") }}') no-repeat;
+        background: url('{{ asset("images/homepagept2.jpg") }}') no-repeat;
         background-size: cover;
         background-position: center;
         color: white;
