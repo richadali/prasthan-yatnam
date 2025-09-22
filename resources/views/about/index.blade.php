@@ -115,9 +115,9 @@
                 </p>
 
                 <!-- Dedication Section -->
-                <h3 class="mb-3" style="color: #000080;">9/5/2013...Fast Forward..22/9/2025..</h3>
+                <h3 class="mb-3" style="color: #000080;">9/5/2013...Fast Forward..26/9/2025..</h3>
                 <p>
-                    After taking baby steps of perseverance and sadhana for a decade, today, i.e., on 22nd September
+                    After taking baby steps of perseverance and sadhana for a decade, today, i.e., on 26th September
                     2025, the auspicious occasion of the launch of the web-portal has finally arrived!!! It's a very
                     poignant moment for ALL of us.
                 </p>
