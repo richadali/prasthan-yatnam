@@ -178,10 +178,10 @@
                         href="{{ url('/help-desk') }}">HELP DESK</a>
                 </li>
                 @guest
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link fw-medium {{ request()->is('login') ? 'active' : '' }}"
                         href="{{ route('login') }}">LOGIN</a>
-                </li>
+                </li> --}}
                 @endguest
                 @auth
                 <li class="nav-item dropdown">

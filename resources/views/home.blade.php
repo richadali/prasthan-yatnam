@@ -366,11 +366,11 @@
             @endif
 
             @guest
-            <div class="d-flex justify-content-center gap-3 hero-buttons"
+            {{-- <div class="d-flex justify-content-center gap-3 hero-buttons"
                 style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
                 <a href="{{ url('/login') }}" class="btn navy-btn px-4 py-2">LOGIN</a>
                 <a href="{{ url('/register') }}" class="btn orange-btn px-4 py-2">REGISTER</a>
-            </div>
+            </div> --}}
             @endguest
         </div>
     </div>
